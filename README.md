@@ -14,11 +14,7 @@ To install node and nvm, run 'npm install -g npm'.
 
 You will also need to install a virtual environment for the backend.
 
-1. Change directories to the backend folder. Install a virtual environment by running
-'python -m venv venv'. To activate the environment, run 'venv/Scripts/activate' if you're
-using Windows powershell. If you're on MacOS, run 'source venv/bin/activate'. To install
-the dependencies, run 'pip install requirements.txt'. Run 'deactivate' to exit the virtual
-environment.
+1. Change directories to the backend folder. To install the dependencies, run 'pip install requirements.txt' if you're Windows. If you're on Mac, run 'pip3 install -r requirements.txt'.
 
 2. Change directories to the frontend folder, and then run 'npm install'.
 
