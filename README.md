@@ -29,3 +29,13 @@ Crown Mid-Fidelity Wireframes: https://www.figma.com/proto/X8UFYfEIgkpUzK1axY3P6
 XC475 website: https://sites.google.com/view/spark-innovation-course/home-syllabus
 
 Miro board: https://tinyurl.com/Fall23-spark-miro-team
+
+Before start front-end code:
+    install react-native navigation library
+        type following code in your terminal(must under folder "frontend")
+            npm install @react-navigation/native @react-navigation/stack
+
+To start the front-end page:
+    1. you need to install xcode on your machine
+    2. type this in promt or terminal "npm run ios" (this is for ios simulator)
+    3. you should see a simulator on your desktop, if not, check your background running programs
