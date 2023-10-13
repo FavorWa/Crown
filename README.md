@@ -5,20 +5,14 @@ This repo holds the code for Crown: a mobile app made for people with textured h
 
 Crown provides an escape from the trial-and-error period that most people go through. Users can select filters that refine their search to products, routines, and hairstylists that best fit them. In addition, they can join groups to find a community and read reviews on hairstylists.
 
-To install Crown, you will have to install Python (which includes pip) and node/nvm.
+To install Crown, you will have to install Python (which includes pip/pip3) and node/nvm.
 
 Since we are using VSCode, here is a guide to installing Python on VSCode for both Windows
 and MacOS: https://code.visualstudio.com/docs/python/python-tutorial.
 
 To install node and nvm, run 'npm install -g npm'.
 
-You will also need to install a virtual environment for the backend.
-
-1. Change directories to the backend folder. Install a virtual environment by running
-'python -m venv venv'. To activate the environment, run 'venv/Scripts/activate' if you're
-using Windows powershell. If you're on MacOS, run 'source venv/bin/activate'. To install
-the dependencies, run 'pip install requirements.txt'. Run 'deactivate' to exit the virtual
-environment.
+1. Change directories to the backend folder. To install the dependencies, run 'pip install requirements.txt' if you're Windows. If you're on Mac, run 'pip3 install -r requirements.txt'.
 
 2. Change directories to the frontend folder, and then run 'npm install'.
 
