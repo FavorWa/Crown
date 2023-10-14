@@ -1,2 +1,3 @@
 backend/venv/
+backend/firebase_credentials.json
 frontend/node_modules/
