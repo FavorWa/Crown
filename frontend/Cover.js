@@ -6,15 +6,19 @@ export default function Cover({ navigation }) {
 
   return (
         <SafeAreaView style={styles.container}>
-          <ImageBackground
-            source={require('./assets/Logo.png')}
-            style={styles.backgroundImage}
-          >
-          </ImageBackground>
-          
+
           <TouchableOpacity onPress={() => navigation.replace('HomePage')}>
-              <Text style={[styles.crownText, styles.crownTextMargin]}>Crown</Text>
+            <ImageBackground
+              // source={require('./assets/Logo.png')}
+              source={require('./assets/new_cover.png')}
+              style={styles.new_cover}
+            >
+            </ImageBackground>
           </TouchableOpacity>
+
+          {/* <TouchableOpacity onPress={() => navigation.replace('HomePage')}>
+              <Text style={[styles.crownText, styles.crownTextMargin]}>Crown</Text>
+          </TouchableOpacity> */}
     
           <StatusBar style="auto" />
         </SafeAreaView>
@@ -35,6 +39,15 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  new_cover: {
+    flex: 1,
+    width: '100%', 
+    aspectRatio: 2, 
+    resizeMode: 'cover',
+    position: 'absolute',
+    top: -90,
+    left: -200,
   },
   crownText: {
     textAlign: 'center',

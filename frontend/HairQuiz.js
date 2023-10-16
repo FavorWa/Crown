@@ -36,6 +36,10 @@ export default function HairQuiz({ navigation }) {
         }
       ])
     }
+    
+    const OnPressHandler3 = () => {
+      setConfirmation(true);
+    }
     // const onPressHandler = () => {
     //     // navigation.navigate('HomePage');
     //     // navigation.navigate('HairQuizQuestion');
@@ -74,6 +78,18 @@ export default function HairQuiz({ navigation }) {
                 source={require('./assets/Rectangle4.png')}
                 style={styles.rectangle2}
             ></Image>
+          </Pressable>
+
+          <Pressable 
+            onPress={OnPressHandler3}
+          >
+            <Image 
+              source={require('./assets/Rectangle4.png')}
+              style={styles.rectangle3}
+            ></Image>
+            <Text style={styles.agree}>
+              Agree
+            </Text>
           </Pressable>
       </View>
     )
@@ -126,6 +142,22 @@ export default function HairQuiz({ navigation }) {
         position: 'absolute',
         left: 33,
         top: 450,
+    },
+    rectangle3: {
+      backgroundColor: `rgba(217, 217, 217, 1)`,
+      width: 70,
+      height: 28,
+      position: 'absolute',
+      left: 272,
+      top: 580,
+    },
+    agree: {
+      textAlign: 'left',
+      fontWeight: '500',
+      fontSize: 20,
+      color: 'blue',
+      left: 280,
+      top: 580,
     },
 
     container: {
