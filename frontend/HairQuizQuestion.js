@@ -13,8 +13,8 @@ export default function HairQuizQuestion({ navigation }) {
           <Text style={styles.crownText}>
             Hair Quiz
           </Text>
-          <Text style={styles.question}>
-            question
+          <Text numberOfLines={2} style={styles.question}>
+            Which most closely resembles your hair type?
           </Text>
           <Image 
             source={require('./assets/Rectangle4.png')}
@@ -25,6 +25,9 @@ export default function HairQuizQuestion({ navigation }) {
             source={require('./assets/Rectangle4.png')}
             style={styles.rectangle2}
           ></Image>
+          <Text style={styles.Answer}>
+            A. Coily
+          </Text>
           <Image 
             source={require('./assets/Rectangle4.png')}
             style={styles.rectangle3}
@@ -61,10 +64,17 @@ export default function HairQuizQuestion({ navigation }) {
       top: 20,
     },
     question: {
+      // textAlign: 'left',
+      // fontWeight: '500',
+      // fontSize: 18,
+      // color: 'black',
+      // left: 33,
+      // top: 40,
       textAlign: 'left',
       fontWeight: '500',
       fontSize: 18,
       color: 'black',
+      width: '80%', // Set a specific width to limit the text to a certain width
       left: 33,
       top: 40,
     },
@@ -74,7 +84,15 @@ export default function HairQuizQuestion({ navigation }) {
         height: 151,
         position: 'absolute',
         left: 33,
-        top: 130,
+        top: 145,
+    },
+    Answer: {
+      textAlign: 'left',
+      fontWeight: '500',
+      fontSize: 18,
+      color: 'black',
+      left: 48,
+      top: 242,
     },
     rectangle2: {
         backgroundColor: `rgba(217, 217, 217, 1)`,

@@ -9,7 +9,7 @@ export default function HomePage({ navigation }) {
   }
 
   return(
-    <View>
+    <View style={styles.container}>
       <Pressable
         onPress={onPressHandler}
       >
@@ -20,6 +20,14 @@ export default function HomePage({ navigation }) {
           source={require('./assets/Rectangle4.png')}
           style={styles.rectangle4}
         ></Image>
+        
+        <Image 
+          source={require('./assets/Rectangle4.png')}
+          style={styles.rectangle36}
+        ></Image>
+        <Text style={styles.takeTheQuiz}>
+          Take the Quiz
+        </Text>
       </Pressable>
       
       <Text style={styles.blogs}>
@@ -37,6 +45,12 @@ export default function HomePage({ navigation }) {
           source={require('./assets/Rectangle4.png')}
           style={styles.rectangle7}
       ></Image>
+      <Text style={styles.blogTitle1}>
+        Fall 2023 hairstyles
+      </Text>
+      {/* <Text sytle={styles.blogTitle1}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      </Text> */}
 
       <Text style={styles.inspiration}>
         Inspiration
@@ -61,9 +75,7 @@ export default function HomePage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgba(237, 224, 212, 1)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'white',
   },
   backgroundImage: {
     flex: 1,
@@ -81,9 +93,26 @@ const styles = StyleSheet.create({
     left: 33,
     top: 30,
   },
-  crownTextMargin: {
-    marginTop: -200,
+  takeTheQuiz: {
+    textAlign: `left`,
+    color: 'rgba(0, 0, 0, 1)',
+    fontWeight: 400,
+    fontSize: 14,
+    letterSpacing: 0,
+    width: 91,
+    height: 22,
+    position: `absolute`,
+    left: 254,
+    top: 230,
   },
+  rectangle36: {
+    backgroundColor: 'rgba(201, 162, 39, 1)',
+    width: 103.5,
+    height: 24,
+    position: 'absolute',
+    left: 249,
+    top: 228,
+  }, 
   rectangle4: {
     backgroundColor: 'rgba(217, 217, 217, 1)',
     width: 320,
@@ -98,7 +127,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     left: 33,
-    top: 213,
+    top: 233,
   },
   rectangle5: {
     backgroundColor: `rgba(217, 217, 217, 1)`,
@@ -106,7 +135,31 @@ const styles = StyleSheet.create({
     height: 139,
     position: 'absolute',
     left: 33,
-    top: 263,
+    top: 287,
+  },
+  blogTitle1: {
+    color: 'rgba(0, 0, 0, 1)',
+    fontStyle: 'normal',
+    fontFamily: 'Inter',
+    fontWeight: '500',
+    fontSize: 14, 
+    letterSpacing: 0,
+    textDecoration: 'none',
+    textTransform: 'none',
+    left: 33,
+    top: 330,
+  },
+  blogText1: {
+    color: 'rgba(0, 0, 0, 1)',
+    fontStyle: 'normal',
+    fontFamily: 'Inter',
+    fontWeight: '500',
+    fontSize: 14, 
+    letterSpacing: 0,
+    textDecoration: 'none',
+    textTransform: 'none',
+    left: 33,
+    top: 330,
   },
   rectangle6: {
     backgroundColor: `rgba(217, 217, 217, 1)`,
@@ -114,7 +167,7 @@ const styles = StyleSheet.create({
     height: 139,
     position: 'absolute',
     right: 40,
-    top: 263,
+    top: 287,
   },
   rectangle7: {
     backgroundColor: `rgba(217, 217, 217, 1)`,
@@ -122,7 +175,7 @@ const styles = StyleSheet.create({
     height: 84,
     position: 'absolute',
     left: 33,
-    top: 417,
+    top: 441,
   },
   inspiration: {
     textAlign: 'left',
@@ -130,7 +183,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     left: 33,
-    top: 470,
+    top: 485,
   },
   rectangle8: {
     backgroundColor: `rgba(217, 217, 217, 1)`,
@@ -138,7 +191,7 @@ const styles = StyleSheet.create({
     height: 84,
     position: 'absolute',
     left: 33,
-    top: 544,
+    top: 580,
   },
   rectangle9: {
     backgroundColor: `rgba(217, 217, 217, 1)`,
@@ -146,7 +199,7 @@ const styles = StyleSheet.create({
     height: 84,
     position: 'absolute',
     left: 147,
-    top: 544,
+    top: 580,
   },
   rectangle10: {
     backgroundColor: `rgba(217, 217, 217, 1)`,
@@ -154,6 +207,6 @@ const styles = StyleSheet.create({
     height: 84,
     position: 'absolute',
     left: 262,
-    top: 544,
-  },
+    top: 580,
+  }, 
 });
