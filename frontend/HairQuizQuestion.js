@@ -1,11 +1,63 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable, Input } from 'react-native';
+
+
 
 export default function HairQuizQuestion({ navigation }) {
-    const onPressHandler = () => {
+  
+  const [curlPattern, setCurlPattern] = useState(null);
+  const [hairDegree, setHairDegree] = useState(null);
+  const [hairType, setHairType] = useState(null)
+
+  const onPressHandler = () => {
       // navigation.navigate('HomePage');
       navigation.goBack();
+    }
+    const handleCurlPatternButtonPress = (type) => {
+      setCurlPattern(type);
+  }
+
+    const handleHairDegreeButtonPress = (degree) => {
+      console.log(degree);
+      setHairDegree(degree);
+      returnCurlPattern();
+    }
+  
+
+    const returnCurlPattern = () => {
+      let hairType = '';
+      
+      switch (curlPattern){ 
+        case 'wavy':
+          hairType = '2';
+        break;
+        case 'curly':
+          hairType = '3';
+        break;
+        case 'coily':
+          hairType = '4';
+        break;
+        default:
+      }
+      switch (hairDegree){
+        case 'wide':
+          hairType += 'A';
+        break;
+        case 'medium':
+          hairType += 'B';
+        break;
+        case 'tight':
+          hairType += 'C';
+        break;
+        default:
+      }
+
+      if (hairType === '') {
+        hairType = 'Invalid';
+      }
+      console.log(hairType)
+      setHairType(hairType)
     }
   
     return(
@@ -13,29 +65,50 @@ export default function HairQuizQuestion({ navigation }) {
           <Text style={styles.crownText}>
             Hair Quiz
           </Text>
-          <Text numberOfLines={2} style={styles.question}>
-            Which most closely resembles your hair type?
+          <Text style={styles.question}>
+            Is your hair straight, wavy, curly, or coily?
           </Text>
-          <Image 
-            source={require('./assets/Rectangle4.png')}
-            style={styles.rectangle1}
-          ></Image>
-
-          <Image 
-            source={require('./assets/Rectangle4.png')}
-            style={styles.rectangle2}
-          ></Image>
-          <Text style={styles.Answer}>
-            A. Coily
-          </Text>
-          <Image 
-            source={require('./assets/Rectangle4.png')}
-            style={styles.rectangle3}
-          ></Image>
-          <Image 
-            source={require('./assets/Rectangle4.png')}
-            style={styles.rectangle4}
-          ></Image>
+          <View>
+            <Text style={styles.question}>Select your hair type:</Text>
+            <TouchableOpacity onPress={() => handleCurlPatternButtonPress('wavy')}>
+                <View style={styles.choice}>
+                    <View style={styles.radio}></View>
+                    <Text>Wavy</Text>
+                </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleCurlPatternButtonPress('curly')}>
+                <View style={styles.choice}>
+                    <View style={styles.radio}></View>
+                    <Text>Curly</Text>
+                </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleCurlPatternButtonPress('coily')}>
+                <View style={styles.choice}>
+                    <View style={styles.radio}></View>
+                    <Text>Coily</Text>
+                </View>
+            </TouchableOpacity>
+            
+            {curlPattern && (
+                <View>
+                    <Text style={styles.question}>Select your hair degree:</Text>
+                    <TouchableOpacity onPress={() => handleHairDegreeButtonPress('wide')} style={styles.button}>
+                        <Text style={styles.buttonText}>Wide</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleHairDegreeButtonPress('medium')} style={styles.button}>
+                        <Text style={styles.buttonText}>Medium</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleHairDegreeButtonPress('tight')} style={styles.button}>
+                        <Text style={styles.buttonText}>Tight</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+            {hairType &&(
+              <View>
+                <Text style={styles.buttonText}>You have {hairType} hair</Text>
+              </View>
+            )}
+        </View>
         </View>
     )
 }
@@ -55,6 +128,12 @@ export default function HairQuizQuestion({ navigation }) {
       justifyContent: 'center',
       alignItems: 'center',
     },
+    choice: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginHorizontal: 10,
+      marginTop: 60,
+    }, 
     crownText: {
       textAlign: 'left',
       fontWeight: '500',
@@ -77,6 +156,11 @@ export default function HairQuizQuestion({ navigation }) {
       width: '80%', // Set a specific width to limit the text to a certain width
       left: 33,
       top: 40,
+      flexDirection: 'row',
+    },
+    buttonText:{
+      marginTop:40,
+      flexDirection: 'row',
     },
     rectangle1: {
         backgroundColor: `rgba(217, 217, 217, 1)`,
