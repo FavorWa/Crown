@@ -103,7 +103,6 @@ export default function HairQuizQuestion({ navigation }) {
                     </TouchableOpacity>
                 </View>
             )}
-
             {hairType &&(
               <View>
                 <Text style={styles.buttonText}>You have {hairType} hair</Text>
@@ -144,10 +143,17 @@ export default function HairQuizQuestion({ navigation }) {
       top: 20,
     },
     question: {
+      // textAlign: 'left',
+      // fontWeight: '500',
+      // fontSize: 18,
+      // color: 'black',
+      // left: 33,
+      // top: 40,
       textAlign: 'left',
       fontWeight: '500',
       fontSize: 18,
       color: 'black',
+      width: '80%', // Set a specific width to limit the text to a certain width
       left: 33,
       top: 40,
       flexDirection: 'row',
@@ -162,7 +168,15 @@ export default function HairQuizQuestion({ navigation }) {
         height: 151,
         position: 'absolute',
         left: 33,
-        top: 130,
+        top: 145,
+    },
+    Answer: {
+      textAlign: 'left',
+      fontWeight: '500',
+      fontSize: 18,
+      color: 'black',
+      left: 48,
+      top: 242,
     },
     rectangle2: {
         backgroundColor: `rgba(217, 217, 217, 1)`,
