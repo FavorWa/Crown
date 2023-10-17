@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Cover from './Cover';
-import HomePage from './HomePage';
+import Homepage from './Homepage';
 import HairQuiz from './HairQuiz';
 import HairQuizQuestion from './HairQuizQuestion'; 
 
@@ -20,8 +20,8 @@ export default function App() {
           component={Cover}
         />
         <Stack.Screen 
-          name="HomePage" 
-          component={HomePage}
+          name="Homepage" 
+          component={Homepage}
         />
         <Stack.Screen 
           name="HairQuiz" 
