@@ -16,6 +16,13 @@ To install node and nvm, run 'npm install -g npm'.
 
 2. Change directories to the frontend folder, and then run 'npm install'.
 
+3. We need a file to store backend secrets - information that the app needs but can't be shown
+on the github. Create a secrets.py file in the backend folder and make a variable called mongodb_uri
+that holds the connection string for the mongodb database. You can initialize your own database
+and get your own connection string by signing up for MongoDB Atlas: https://www.mongodb.com/cloud/atlas/register
+
+Or, you can use the Crown official database (contact Thienan ttran010@bu.edu)
+
 Here are some mockups of our app: https://readymag.com/anitaemokpae/4201898/3/
 
 And here are links to items that document our development process:
