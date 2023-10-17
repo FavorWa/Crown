@@ -7,7 +7,7 @@ export default function Cover({ navigation }) {
   return (
         <SafeAreaView style={styles.container}>
 
-          <TouchableOpacity onPress={() => navigation.replace('HomePage')}>
+          <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
             <ImageBackground
               // source={require('./assets/Logo.png')}
               source={require('./assets/new_cover.png')}
