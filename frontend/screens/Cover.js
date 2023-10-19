@@ -10,7 +10,7 @@ export default function Cover({ navigation }) {
           <TouchableOpacity onPress={() => navigation.replace('HomePage')}>
             <ImageBackground
               // source={require('./assets/Logo.png')}
-              source={require('./assets/new_cover.png')}
+              source={require('../assets/new_cover.png')}
               style={styles.new_cover}
             >
             </ImageBackground>

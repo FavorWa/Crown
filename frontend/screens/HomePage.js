@@ -17,12 +17,12 @@ export default function HomePage({ navigation }) {
           Hair Quiz
         </Text>
         <Image
-          source={require('./assets/Rectangle4.png')}
+          source={require('../assets/Rectangle4.png')}
           style={styles.rectangle4}
         ></Image>
         
         <Image 
-          source={require('./assets/Rectangle4.png')}
+          source={require('../assets/Rectangle4.png')}
           style={styles.rectangle36}
         ></Image>
         <Text style={styles.takeTheQuiz}>
@@ -34,15 +34,15 @@ export default function HomePage({ navigation }) {
         Blogs
       </Text>
       <Image
-          source={require('./assets/Rectangle4.png')}
+          source={require('../assets/Rectangle4.png')}
           style={styles.rectangle5}
       ></Image>
       <Image
-          source={require('./assets/Rectangle4.png')}
+          source={require('../assets/Rectangle4.png')}
           style={styles.rectangle6}
       ></Image>
       <Image
-          source={require('./assets/Rectangle4.png')}
+          source={require('../assets/Rectangle4.png')}
           style={styles.rectangle7}
       ></Image>
       <Text style={styles.blogTitle1}>
@@ -56,15 +56,15 @@ export default function HomePage({ navigation }) {
         Inspiration
       </Text>
       <Image
-          source={require('./assets/Rectangle4.png')}
+          source={require('../assets/Rectangle4.png')}
           style={styles.rectangle8}
       ></Image>
       <Image
-          source={require('./assets/Rectangle4.png')}
+          source={require('../assets/Rectangle4.png')}
           style={styles.rectangle9}
       ></Image>
       <Image
-          source={require('./assets/Rectangle4.png')}
+          source={require('../assets/Rectangle4.png')}
           style={styles.rectangle10}
       ></Image>
 

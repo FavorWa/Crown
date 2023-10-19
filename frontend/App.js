@@ -3,10 +3,10 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Cover from './Cover';
-import HomePage from './HomePage';
-import HairQuiz from './HairQuiz';
-import HairQuizQuestion from './HairQuizQuestion'; 
+import Cover from './screens/Cover';
+import HomePage from './screens/HomePage';
+import HairQuiz from './screens/HairQuiz';
+import HairQuizQuestion from './screens/HairQuizQuestion'; 
 
 
 const Stack = createStackNavigator();

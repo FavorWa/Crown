@@ -62,7 +62,7 @@ export default function HairQuiz({ navigation }) {
                 Hair Quiz
             </Text>
             <Image
-                source={require('./assets/Rectangle4.png')}
+                source={require('../assets/Rectangle4.png')}
                 style={styles.rectangle1}
             ></Image>
 
@@ -75,7 +75,7 @@ export default function HairQuiz({ navigation }) {
                 Agreement 
             </Text>
             <Image 
-                source={require('./assets/Rectangle4.png')}
+                source={require('../assets/Rectangle4.png')}
                 style={styles.rectangle2}
             ></Image>
           </Pressable>
@@ -84,7 +84,7 @@ export default function HairQuiz({ navigation }) {
             onPress={OnPressHandler3}
           >
             <Image 
-              source={require('./assets/Rectangle4.png')}
+              source={require('../assets/Rectangle4.png')}
               style={styles.rectangle3}
             ></Image>
             <Text style={styles.agree}>
