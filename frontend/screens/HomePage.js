@@ -9,7 +9,7 @@ export default function Homepage({ navigation }) {
         Hair Quiz
       </Text>
       <Image
-        source={require('./assets/Rectangle4.png')}
+        source={require('../assets/Rectangle4.png')}
         style={styles.rectangle4}
       ></Image>
       
@@ -26,9 +26,9 @@ export default function Homepage({ navigation }) {
           source={require('../assets/Rectangle4.png')}
           style={styles.rectangle6}
       ></Image>
-      <Text style={styles.hairquiz}>Products</Text>
       <Pressable
         onPress={() => navigation.navigate("ProductsPage")}>
+          <Text style={styles.hairquiz}>Products</Text>
           <Image
             source={require('../assets/Rectangle4.png')}
             style={styles.rectangle5} 

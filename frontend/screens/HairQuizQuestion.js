@@ -21,7 +21,7 @@ export default function HairQuizQuestion({ navigation }) {
           question: "Which most closely resembles your hair type?",
           description: "It's OK if it's not an exact match!",
           notSureText: 'NOT SURE?',
-          images: [require('./assets/Rectangle4.png'), require('./assets/Rectangle4.png'), require('./assets/Rectangle4.png')],
+          images: [require('../assets/Rectangle4.png'), require('../assets/Rectangle4.png'), require('../assets/Rectangle4.png')],
           answers: ['Coily', 'Curly', 'Wavy']
         },
       ],
@@ -33,7 +33,7 @@ export default function HairQuizQuestion({ navigation }) {
           question: "How tightly wounded are your curls naturally?",
           description: "Ex.: Would you say you are on the tighter or wider side of wavy?",
           notSureText: 'NOT SURE?',
-          images: [require('./assets/Rectangle4.png'), require('./assets/Rectangle4.png'), require('./assets/Rectangle4.png')],
+          images: [require('../assets/Rectangle4.png'), require('../assets/Rectangle4.png'), require('../assets/Rectangle4.png')],
           answers: ['Wide', 'Medium', 'Tight']
         },
       ],
@@ -45,7 +45,7 @@ export default function HairQuizQuestion({ navigation }) {
           question: "What's the thickness of your hair?",
           description: "Just the thickness of a single strand.",
           notSureText: 'NOT SURE?',
-          images: [require('./assets/Rectangle4.png'), require('./assets/Rectangle4.png'), require('./assets/Rectangle4.png')],
+          images: [require('../assets/Rectangle4.png'), require('../assets/Rectangle4.png'), require('../assets/Rectangle4.png')],
           answers: ['Fine', 'Medium', 'Thick']
         },
       ],
@@ -92,7 +92,7 @@ export default function HairQuizQuestion({ navigation }) {
               <View style={{...styles.imageRow, marginTop: 25}}>
                 {item.answers.map((answer, index) => (
                     <View key={index} style={styles.rectangleContainer}>
-                      <Image source={require('./assets/Rectangle4.png')} style={styles.rectangle2} />
+                      <Image source={require('../assets/Rectangle4.png')} style={styles.rectangle2} />
                       <Text style={styles.rectangleText}>{answer}</Text>
                     </View>
                 ))}

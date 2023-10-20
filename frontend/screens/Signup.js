@@ -43,7 +43,7 @@ export default function SignUp({ navigation }) {
             ></TextInput>
 
             
-            <Image source={require('./assets/Rectangle4.png')} style={styles.signInBackground} />
+            <Image source={require('../assets/Rectangle4.png')} style={styles.signInBackground} />
             <TouchableOpacity>    
                 <Text style={styles.signIn}> Sign In </Text>
             </TouchableOpacity>
