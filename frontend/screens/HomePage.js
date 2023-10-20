@@ -35,16 +35,16 @@ export default function HomePage({ navigation }) {
       </Text>
       <Image
           source={require('../assets/Rectangle4.png')}
-          style={styles.rectangle5}
-      ></Image>
-      <Image
-          source={require('../assets/Rectangle4.png')}
           style={styles.rectangle6}
       ></Image>
-      <Image
-          source={require('../assets/Rectangle4.png')}
-          style={styles.rectangle7}
-      ></Image>
+      <Text style={styles.hairquiz}>Products</Text>
+      <Pressable
+        onPress={() => navigation.navigate("Products")}>
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.rectangle5} 
+          />
+      </Pressable>
       <Text style={styles.blogTitle1}>
         Fall 2023 hairstyles
       </Text>

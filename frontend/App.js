@@ -7,6 +7,7 @@ import Cover from './screens/Cover';
 import HomePage from './screens/HomePage';
 import HairQuiz from './screens/HairQuiz';
 import HairQuizQuestion from './screens/HairQuizQuestion'; 
+import Products from './screens/Products';
 
 
 const Stack = createStackNavigator();
@@ -30,6 +31,10 @@ export default function App() {
         <Stack.Screen 
           name="HairQuizQuestion" 
           component={HairQuizQuestion}
+        />
+        <Stack.Screen 
+          name="Products"
+          component={Products}
         />
       </Stack.Navigator>
     </NavigationContainer>
