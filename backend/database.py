@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from .secrets import mongodb_uri
+from secret_values import mongodb_uri
 def get_database():
  
    # Provide the mongodb atlas url to connect python to mongodb using pymongo
@@ -15,4 +15,4 @@ def get_database():
 if __name__ == "__main__":   
   
    # Get the database
-   dbname = get_database()
+   db = get_database()

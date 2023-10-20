@@ -1,9 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from .database import get_database
+from database import get_database
+from productsRouter import productsRouter
 
 db = get_database()
 app = FastAPI()
+app.include_router(productsRouter, prefix="/products")
 
 
 @app.get("/")

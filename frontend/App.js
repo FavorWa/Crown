@@ -3,11 +3,12 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Cover from './Cover';
-import Homepage from './Homepage';
-import HairQuiz from './HairQuiz';
-import HairQuizQuestion from './HairQuizQuestion'; 
-import SignUp from './Signup';
+import Cover from './screens/Cover.js';
+import Homepage from './screens/HomePage';
+import HairQuiz from './screens/HairQuiz';
+import HairQuizQuestion from './screens/HairQuizQuestion'; 
+import SignUp from './screens/Signup';
+import ProductsPage from './screens/ProductsPage';
 
 const Stack = createStackNavigator();
 
@@ -31,9 +32,14 @@ export default function App() {
           name="HairQuizQuestion" 
           component={HairQuizQuestion}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="SignUp" 
-          component={SignUp}
+          component={SignUp}>
+        
+        </Stack.Screen>
+        <Stack.Screen 
+          name="ProductsPage"
+          component={ProductsPage}
         />
       </Stack.Navigator>
     </NavigationContainer>
