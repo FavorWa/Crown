@@ -39,7 +39,7 @@ export default function HomePage({ navigation }) {
       ></Image>
       <Text style={styles.hairquiz}>Products</Text>
       <Pressable
-        onPress={() => navigation.navigate("Products")}>
+        onPress={() => navigation.navigate("ProductsPage")}>
           <Image
             source={require('../assets/Rectangle4.png')}
             style={styles.rectangle5} 
