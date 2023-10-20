@@ -1,5 +1,7 @@
 backend/venv/
 backend/firebase_credentials.json
-backend/secrets.py
+backend/secret_values.py
+backend/__pycache__/
+frontend/secrets.js
 frontend/node_modules/
 node_modules
