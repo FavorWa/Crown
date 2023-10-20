@@ -18,7 +18,7 @@ export default function Homepage({ navigation }) {
           Take the Quiz
         </Text>
       </TouchableOpacity>
-        
+
       <Text style={styles.blogs}>
         Blogs
       </Text>

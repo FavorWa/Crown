@@ -16,11 +16,11 @@ export default function Cover({ navigation }) {
             </ImageBackground>
           </TouchableOpacity>
 
-          {/* <TouchableOpacity onPress={() => navigation.replace('HomePage')}>
-              <Text style={[styles.crownText, styles.crownTextMargin]}>Crown</Text>
-          </TouchableOpacity> */}
+          <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+              <Text style={styles.signup}>SignUp/Login</Text>
+          </TouchableOpacity>
     
-          <StatusBar style="auto" />
+          {/* <StatusBar style="auto" /> */}
         </SafeAreaView>
     );
 }
@@ -41,13 +41,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   new_cover: {
-    flex: 1,
+    flex: 0,
     width: '100%', 
-    aspectRatio: 2, 
+    aspectRatio: 1.2, 
     resizeMode: 'cover',
-    position: 'absolute',
-    top: -90,
-    left: -200,
+    marginLeft: 20,
+    marginRight: 20,
   },
   crownText: {
     textAlign: 'center',
@@ -57,5 +56,9 @@ const styles = StyleSheet.create({
   },
   crownTextMargin: {
     marginTop: -200,
+  },
+  signup: {
+    margin: 40,
+    color: 'black',
   },
 });

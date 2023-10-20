@@ -1,205 +1,237 @@
 import React, {useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable, Input } from 'react-native';
+import { StyleSheet, Text, View, Image, SectionList, TouchableOpacity, Pressable, Input } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
 export default function HairQuizQuestion({ navigation }) {
   
-  const [curlPattern, setCurlPattern] = useState(null);
-  const [hairDegree, setHairDegree] = useState(null);
-  const [hairType, setHairType] = useState(null)
-
   const onPressHandler = () => {
       // navigation.navigate('HomePage');
       navigation.goBack();
-    }
-    const handleCurlPatternButtonPress = (type) => {
-      setCurlPattern(type);
   }
-
-    const handleHairDegreeButtonPress = (degree) => {
-      console.log(degree);
-      setHairDegree(degree);
-      returnCurlPattern();
-    }
   
 
-    const returnCurlPattern = () => {
-      let hairType = '';
+  const data = [
+    {
+      key: '1',
+      data: [
+        {
+          question: "Which most closely resembles your hair type?",
+          description: "It's OK if it's not an exact match!",
+          notSureText: 'NOT SURE?',
+          images: [require('./assets/Rectangle4.png'), require('./assets/Rectangle4.png'), require('./assets/Rectangle4.png')],
+          answers: ['Coily', 'Curly', 'Wavy']
+        },
+      ],
+    },
+    {
+      key: '2',
+      data: [
+        {
+          question: "How tightly wounded are your curls naturally?",
+          description: "Ex.: Would you say you are on the tighter or wider side of wavy?",
+          notSureText: 'NOT SURE?',
+          images: [require('./assets/Rectangle4.png'), require('./assets/Rectangle4.png'), require('./assets/Rectangle4.png')],
+          answers: ['Wide', 'Medium', 'Tight']
+        },
+      ],
+    },
+    {
+      key: '3',
+      data: [
+        {
+          question: "What's the thickness of your hair?",
+          description: "Just the thickness of a single strand.",
+          notSureText: 'NOT SURE?',
+          images: [require('./assets/Rectangle4.png'), require('./assets/Rectangle4.png'), require('./assets/Rectangle4.png')],
+          answers: ['Fine', 'Medium', 'Thick']
+        },
+      ],
+    },
+  ];
+  
+  
+  
+  return(
+    <ScrollView>
+      <Text style={styles.crownText}> Hair Characteristics </Text>
+      <Text style={styles.secondLine}> Let's figure out what's right for you!</Text>
       
-      switch (curlPattern){ 
-        case 'wavy':
-          hairType = '2';
-        break;
-        case 'curly':
-          hairType = '3';
-        break;
-        case 'coily':
-          hairType = '4';
-        break;
-        default:
-      }
-      switch (hairDegree){
-        case 'wide':
-          hairType += 'A';
-        break;
-        case 'medium':
-          hairType += 'B';
-        break;
-        case 'tight':
-          hairType += 'C';
-        break;
-        default:
-      }
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={styles.TextContainer}>
+          <Text style={styles.textInsideContainer}>
+            Our Hair Quiz is formulated to help you figure out your hair type and which products 
+            and regimens may be best suited for you. Please be as honest as possible in your responses
+            to ensure accurate results, if you're not sure, we can help you out!
+          </Text>
+          <Text style={styles.line}> {/* Line */} </Text>
+          <TouchableOpacity>
+            <Text style={styles.gotit}>
+              Got It!
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
 
-      if (hairType === '') {
-        hairType = 'Invalid';
-      }
-      console.log(hairType)
-      setHairType(hairType)
-    }
-  
-    return(
-        <View>
-          <Text style={styles.crownText}>
-            Hair Quiz
-          </Text>
-          <Text style={styles.question}>
-            Is your hair straight, wavy, curly, or coily?
-          </Text>
-          <View>
-            <Text style={styles.question}>Select your hair type:</Text>
-            <TouchableOpacity onPress={() => handleCurlPatternButtonPress('wavy')}>
-                <View style={styles.choice}>
-                    <View style={styles.radio}></View>
-                    <Text>Wavy</Text>
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleCurlPatternButtonPress('curly')}>
-                <View style={styles.choice}>
-                    <View style={styles.radio}></View>
-                    <Text>Curly</Text>
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleCurlPatternButtonPress('coily')}>
-                <View style={styles.choice}>
-                    <View style={styles.radio}></View>
-                    <Text>Coily</Text>
-                </View>
-            </TouchableOpacity>
-            
-            {curlPattern && (
-                <View>
-                    <Text style={styles.question}>Select your hair degree:</Text>
-                    <TouchableOpacity onPress={() => handleHairDegreeButtonPress('wide')} style={styles.button}>
-                        <Text style={styles.buttonText}>Wide</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleHairDegreeButtonPress('medium')} style={styles.button}>
-                        <Text style={styles.buttonText}>Medium</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleHairDegreeButtonPress('tight')} style={styles.button}>
-                        <Text style={styles.buttonText}>Tight</Text>
-                    </TouchableOpacity>
-                </View>
-            )}
-            {hairType &&(
-              <View>
-                <Text style={styles.buttonText}>You have {hairType} hair</Text>
+      <SectionList
+        keyExtractor={(item) => item.key}
+        sections={data}
+        renderItem={({ item }) => {
+          return(
+            <View style={styles.QuestionBox}>
+              <Text style={styles.text}>{item.question}</Text>
+              <Text style={styles.miniText}>{item.description}</Text>
+              <Text style={styles.Notsure}>{item.notSureText}</Text>
+              <View style={styles.imageRow}>
+                {item.images.map((image, index) => (
+                  <Image key={index} source={image} style={styles.rectangle1} />
+                ))}
               </View>
-            )}
-        </View>
-        </View>
-    )
+              <View style={{...styles.imageRow, marginTop: 25}}>
+                {item.answers.map((answer, index) => (
+                    <View key={index} style={styles.rectangleContainer}>
+                      <Image source={require('./assets/Rectangle4.png')} style={styles.rectangle2} />
+                      <Text style={styles.rectangleText}>{answer}</Text>
+                    </View>
+                ))}
+              </View>
+            </View>
+          )
+        }}
+      />
+
+      <TouchableOpacity style={styles.nextContainer}>
+        <Text style={styles.next}>
+          Next
+        </Text>
+      </TouchableOpacity>
+    </ScrollView>
+  )
 }
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: 'rgba(237, 224, 212, 1)',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    backgroundImage: {
-      flex: 1,
-      width: '100%',
-      height: '100%',
-      resizeMode: 'cover',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    choice: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginHorizontal: 10,
-      marginTop: 60,
-    }, 
-    crownText: {
-      textAlign: 'left',
-      fontWeight: '500',
-      fontSize: 48,
-      color: 'black',
-      left: 33,
-      top: 20,
-    },
-    question: {
-      // textAlign: 'left',
-      // fontWeight: '500',
-      // fontSize: 18,
-      // color: 'black',
-      // left: 33,
-      // top: 40,
-      textAlign: 'left',
-      fontWeight: '500',
-      fontSize: 18,
-      color: 'black',
-      width: '80%', // Set a specific width to limit the text to a certain width
-      left: 33,
-      top: 40,
-      flexDirection: 'row',
-    },
-    buttonText:{
-      marginTop:40,
-      flexDirection: 'row',
-    },
-    rectangle1: {
-        backgroundColor: `rgba(217, 217, 217, 1)`,
-        width: 305,
-        height: 151,
-        position: 'absolute',
-        left: 33,
-        top: 145,
-    },
-    Answer: {
-      textAlign: 'left',
-      fontWeight: '500',
-      fontSize: 18,
-      color: 'black',
-      left: 48,
-      top: 242,
-    },
-    rectangle2: {
-        backgroundColor: `rgba(217, 217, 217, 1)`,
-        width: 91,
-        height: 84,
-        position: 'absolute',
-        left: 37,
-        top: 310,
-    },
-    rectangle3: {
+
+const styles = StyleSheet.create({
+  container:{
+    flex: 1,
+  },
+  crownText: {
+    textAlign: 'left',
+    fontWeight: 'bold',
+    fontSize: 24,
+    color: 'black',
+    marginTop: 24,
+    marginLeft: 40,
+  },
+  secondLine:{
+    textAlign: 'left',
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#713200',
+    marginBottom: 20,
+    marginLeft: 40,
+  },
+  TextContainer: {
+    width: 352,
+    height: 129,
+    flexShrink: 0,
+    borderRadius: 4,
+    borderWidth: 0.5,
+    borderColor: '#472415',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 30,
+  },
+  textInsideContainer: {
+    color: '#472415',
+    marginHorizontal: 10,
+  },
+  line: {
+    width: '95%',
+    height: 0.5,
+    backgroundColor: '#713200',
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  gotit: {
+    color: 'black',
+    fontSize: 20,
+    fontStyle: 'italic',
+    marginLeft: 260,
+  },
+  text: {
+    color: '#000000',
+    fontSize: 25,
+    fontStyle: 'italic',
+    marginTop: 10,
+    textAlignVertical: 'center', // Center the text vertically
+    alignSelf: 'flex-start', // Align the text to the start (left) horizontally
+  },
+  miniText: {
+    color: '#000000',
+    fontSize: 15,
+    fontStyle: 'italic',
+    marginTop: 10,
+    textAlignVertical: 'center', // Center the text vertically
+    alignSelf: 'flex-start', // Align the text to the start (left) horizontally
+  },
+  Notsure: {
+    color: 'black',
+    fontSize: 25,
+    textAlignVertical: 'center', // Center the text vertically
+    alignSelf: 'flex-end', // Align the text to the start (left) horizontally
+    marginTop: 10,
+    marginBottom: 10,
+    marginRight: 15,
+  },
+  rectangle1: {
       backgroundColor: `rgba(217, 217, 217, 1)`,
       width: 91,
-      height: 84,
-      position: 'absolute',
-      left: 142,
-      top: 310,
-    },
-    rectangle4: {
-      backgroundColor: `rgba(217, 217, 217, 1)`,
-      width: 91,
-      height: 84,
-      position: 'absolute',
-      left: 250,
-      top: 310,
-    },
-  });
+      height: 95,
+      marginHorizontal: 15,
+  },
+  QuestionBox: {
+    margin: 10, // Set equal left and right margins
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 400, // Set a specific width for the container
+  },
+  rectangle2: {
+    tintColor: `rgba(237, 224, 212, 1)`,
+    width: 91,
+    height: 95,
+    marginHorizontal: 15,
+  },
+  imageRow: {
+    flexDirection: 'row', // Arrange images in a row horizontally
+    alignItems: 'center', // Center items vertically within the row
+  },
+  rectangleContainer: {
+    alignItems: 'center', // Center items horizontally
+    justifyContent: 'center', // Center items vertically
+  },
+  rectangleText: {
+    textAlign: 'center',
+    top: -55, // Adjust the margin-top as needed for additional spacing
+  },
+  next: {
+    color: 'black',
+    fontSize: 28,
+    fontWeight: '400',
+  },
+  nextContainer: {
+    backgroundColor: '#C9A227', // Orange background color
+    height: 45, // Height of the rectangle
+    width: 75, // Width of the rectangle
+    marginTop: 15,
+    marginBottom: 50,
+    left: 300,
+    justifyContent: 'center', // Center content vertically inside the rectangle
+    alignItems: 'center', // Center content horizontally inside the rectangle
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 4, // Add border radius of 4
+  },
+});

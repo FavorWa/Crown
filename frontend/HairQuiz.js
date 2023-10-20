@@ -40,18 +40,6 @@ export default function HairQuiz({ navigation }) {
     const OnPressHandler3 = () => {
       setConfirmation(true);
     }
-    // const onPressHandler = () => {
-    //     // navigation.navigate('HomePage');
-    //     // navigation.navigate('HairQuizQuestion');
-    //     if (confirmation === false){
-    //         Alert.alert('Warning', 'If you take the hairquiz, you must acknowledge our terms and agreement',[
-    //             {text:'OK'}
-    //         ])
-    //     }
-    //     else{
-    //         navigation.navigate('HairQuizQuestion');
-    //     }
-    // } 
       
     return(
       <View>
@@ -80,17 +68,12 @@ export default function HairQuiz({ navigation }) {
             ></Image>
           </Pressable>
 
-          <Pressable 
-            onPress={OnPressHandler3}
-          >
-            <Image 
-              source={require('./assets/Rectangle4.png')}
-              style={styles.rectangle3}
-            ></Image>
+          <TouchableOpacity onPress={OnPressHandler3}>
             <Text style={styles.agree}>
               Agree
             </Text>
-          </Pressable>
+          </TouchableOpacity>
+
       </View>
     )
   }
@@ -121,7 +104,7 @@ export default function HairQuiz({ navigation }) {
     },
     rectangle1: {
         backgroundColor: `rgba(217, 217, 217, 1)`,
-        width: 320,
+        width: 345,
         height: 330,
         position: 'absolute',
         left: 33,
@@ -137,7 +120,7 @@ export default function HairQuiz({ navigation }) {
     },
     rectangle2: {
         backgroundColor: `rgba(217, 217, 217, 1)`,
-        width: 320,
+        width: 345,
         height: 149,
         position: 'absolute',
         left: 33,
@@ -154,9 +137,9 @@ export default function HairQuiz({ navigation }) {
     agree: {
       textAlign: 'left',
       fontWeight: '500',
-      fontSize: 20,
+      fontSize: 28,
       color: 'blue',
-      left: 280,
+      left: 300,
       top: 580,
     },
 
