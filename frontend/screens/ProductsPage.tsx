@@ -3,7 +3,7 @@ import { Style } from "react-native-paper/lib/typescript/components/List/utils"
 import { Text, TouchableRipple, List, Searchbar, RadioButton, ActivityIndicator } from "react-native-paper"
 import { useState, useEffect } from "react"
 import openWebPage from "../functions/openWebPage"
-import { FRONTEND_BASE_URL } from "../secrets.js"
+import { FRONTEND_BASE_URL } from "../secrets"
 
 interface Product {
     title: string,
