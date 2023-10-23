@@ -1,7 +1,36 @@
 import React from 'react';
+import { useState } from 'react';
 import { Image, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity} from 'react-native';
 
 export default function SignUp({ navigation }) {
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleSignUp = () => {
+
+    fetch('http://localhost:8000/sign_up', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        password: password
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        // Handle the response data here
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  };
 
   return (
         <View style={styles.container}>
@@ -13,6 +42,8 @@ export default function SignUp({ navigation }) {
             keyboardType='web-search'
             keyboardAppearance='default'
             maxLength={20}
+            onChangeText={text => setName(text)}
+            value={name}
             ></TextInput>
 
             <Text style={styles.name}> Email </Text>
@@ -21,6 +52,8 @@ export default function SignUp({ navigation }) {
             keyboardType='web-search'
             keyboardAppearance='default'
             maxLength={40}
+            onChangeText={text => setEmail(text)}
+            value={email}
             ></TextInput>
 
             <Text style={styles.name}> Password </Text>
@@ -29,6 +62,8 @@ export default function SignUp({ navigation }) {
             keyboardType='web-search'
             keyboardAppearance='default'
             maxLength={40}
+            onChangeText={text => setPassword(text)}
+            value={password}
             secureTextEntry
             ></TextInput>
 
@@ -38,11 +73,13 @@ export default function SignUp({ navigation }) {
             keyboardType='web-search'
             keyboardAppearance='default'
             maxLength={40}
+            onChangeText={text => setConfirmPassword(text)}
+          value={confirmPassword}
             secureTextEntry
             ></TextInput>
               
             <Image source={require('../assets/Rectangle4.png')} style={styles.signInBackground} />
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleSignUp}>
               <Text style={styles.signIn}> Sign In </Text>
             </TouchableOpacity>
 
