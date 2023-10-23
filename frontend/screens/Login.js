@@ -1,14 +1,46 @@
-import React from 'react';
-import { useState } from 'react';
-import { Image, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Login({ navigation }) {
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
 
   const toggleKeepSignIn = () => {
     setKeepLoggedIn(!keepLoggedIn);
   };
+
+
+  const userLogin = () => {
+
+    fetch('http://localhost:8000/log_in', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        // Handle the response data here
+        if (data.detail) {
+          console.error('Error:', data.detail); // Log the error if there is one
+        } else {
+          navigation.navigate('Homepage'); // Navigate to the login screen
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  };
+
 
   return (
         <View style={styles.container}>
@@ -22,6 +54,8 @@ export default function Login({ navigation }) {
             keyboardType='web-search'
             keyboardAppearance='default'
             maxLength={40}
+            onChangeText={text => setEmail(text)}
+            value={email}
             ></TextInput>
 
             <Text style={styles.name}> Password </Text>
@@ -30,6 +64,8 @@ export default function Login({ navigation }) {
             keyboardType='web-search'
             keyboardAppearance='default'
             maxLength={40}
+            onChangeText={text => setPassword(text)}
+            value={password}
             secureTextEntry
             ></TextInput>
 
@@ -43,7 +79,7 @@ export default function Login({ navigation }) {
             </View>
             
             <Image source={require('../assets/Rectangle4.png')} style={styles.signInBackground} />
-            <TouchableOpacity>
+            <TouchableOpacity onPress={userLogin}>
                 <Text style={styles.logIn}> Log in </Text>
             </TouchableOpacity>
 
