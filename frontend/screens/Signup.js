@@ -1,15 +1,19 @@
-import React from 'react';
-import { useState } from 'react';
-import { Image, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-export default function SignUp({ navigation }) {
-
+export default function SignUp() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigation = useNavigation();
 
   const handleSignUp = () => {
+    if (password !== confirmPassword) {
+      console.error('Error: Password and confirm password do not match.');
+      return;
+    }
 
     fetch('http://localhost:8000/sign_up', {
       method: 'POST',
@@ -26,6 +30,11 @@ export default function SignUp({ navigation }) {
       .then(data => {
         console.log(data);
         // Handle the response data here
+        if (data.detail) {
+          console.error('Error:', data.detail); // Log the error if there is one
+        } else {
+          navigation.navigate('Login'); // Navigate to the login screen
+        }
       })
       .catch(error => {
         console.error('Error:', error);

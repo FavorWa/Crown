@@ -3,12 +3,13 @@ from pydantic import BaseModel
 from database import get_database
 from productsRouter import productsRouter
 from signUp import router as sign_up_router
-
+from login import router as log_in_router
 
 db = get_database()
 app = FastAPI()
-# app.include_router(productsRouter, prefix="/products")
+app.include_router(productsRouter, prefix="/products")
 app.include_router(sign_up_router)
+app.include_router(log_in_router)
 
 @app.get("/")
 async def root():

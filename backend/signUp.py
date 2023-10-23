@@ -1,6 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError
 from pydantic import BaseModel
+from fastapi.responses import JSONResponse
 from secret_values import mongodb_uri
 
 router = APIRouter()
@@ -20,21 +22,21 @@ class User(BaseModel):
     email: str
     password: str
 
+
 @router.post('/sign_up')
 async def sign_up(user: User):
-    print("Hello")
-    user_data = {
-        "name": user.name,
-        "email": user.email,
-        "password": user.password
-    }
-    users_collection.insert_one(user_data)
-
-    return {"message": "Hello World"}
-
-@router.get('/test')
-async def test():
-    return {"message": "test"}
+    try:
+        print("Hello")
+        user_data = {
+            "name": user.name,
+            "email": user.email,
+            "password": user.password
+        }
+        result = users_collection.insert_one(user_data)
+        if result.inserted_id:
+            return {"message": "Sign up successful."}
+    except DuplicateKeyError:
+        raise HTTPException(status_code=400, detail="Email already exists in the database.")
 
 
 # def sign_up(name, email, password):
