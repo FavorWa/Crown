@@ -4,6 +4,8 @@ from pymongo.errors import DuplicateKeyError
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 from secret_values import mongodb_uri
+import re
+
 
 router = APIRouter()
 
@@ -32,6 +34,10 @@ async def sign_up(user: User):
             "email": user.email,
             "password": user.password
         }
+        if not user.name or not user.email or not user.password:
+            raise HTTPException(status_code=400, detail="Email, name or password cannot be empty.")
+        if len(user.password) < 8 or not re.search(r"\d", user.password) or not re.search(r"[a-zA-Z]", user.password):
+            raise HTTPException(status_code=400, detail="Password must be at least 8 characters long and contain at least one letter and one number.")
         result = users_collection.insert_one(user_data)
         if result.inserted_id:
             return {"message": "Sign up successful."}
