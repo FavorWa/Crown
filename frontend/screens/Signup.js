@@ -34,6 +34,7 @@ export default function SignUp() {
           console.error('Error:', data.detail); // Log the error if there is one
         } else {
           navigation.navigate('Login'); // Navigate to the login screen
+          console.clear();
         }
       })
       .catch(error => {
