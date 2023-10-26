@@ -46,6 +46,11 @@ export default function App() {
           name="ProductsPage"
           component={ProductsPage}
         />
+
+        <Stack.Screen
+          name="Blogs"
+          component={Blogs} 
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
