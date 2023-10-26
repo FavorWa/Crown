@@ -2,26 +2,26 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-export default function SignUp() {
-  const [name, setName] = useState('');
+export default function Login({ navigation }) {
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const navigation = useNavigation();
+  
+  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
 
-  const handleSignUp = () => {
-    if (password !== confirmPassword) {
-      console.error('Error: Password and confirm password do not match.');
-      return;
-    }
+  const toggleKeepSignIn = () => {
+    setKeepLoggedIn(!keepLoggedIn);
+  };
 
-    fetch('http://localhost:8000/sign_up', {
+
+  const userLogin = () => {
+
+    fetch('http://localhost:8000/log_in', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        name: name,
         email: email,
         password: password
       })
@@ -33,7 +33,7 @@ export default function SignUp() {
         if (data.detail) {
           console.error('Error:', data.detail); // Log the error if there is one
         } else {
-          navigation.navigate('Login'); // Navigate to the login screen
+          navigation.navigate('Homepage'); // Navigate to the login screen
           console.clear();
         }
       })
@@ -42,19 +42,12 @@ export default function SignUp() {
       });
   };
 
+
   return (
         <View style={styles.container}>
-            <Text style={styles.signup}> Sign Up </Text>
+            <Text style={styles.login}> Log in </Text>
 
-            <Text style={styles.name}> Name </Text>
-            <TextInput style={styles.input} 
-            placeholder='e.g. John'
-            keyboardType='web-search'
-            keyboardAppearance='default'
-            maxLength={20}
-            onChangeText={text => setName(text)}
-            value={name}
-            ></TextInput>
+            <Text style={styles.secondLine}> Sign in with your data that you entered during your registration</Text>
 
             <Text style={styles.name}> Email </Text>
             <TextInput style={styles.input}
@@ -77,24 +70,22 @@ export default function SignUp() {
             secureTextEntry
             ></TextInput>
 
-            <Text style={styles.name}> Confirm Password </Text>
-            <TextInput style={styles.input}
-            placeholder='min. 8 characters'
-            keyboardType='web-search'
-            keyboardAppearance='default'
-            maxLength={40}
-            onChangeText={text => setConfirmPassword(text)}
-          value={confirmPassword}
-            secureTextEntry
-            ></TextInput>
-              
+            <Text style={styles.forgetPassword}> Forget Password </Text>
+
+            <View style={styles.rowContainer}>
+                <TouchableOpacity onPress={toggleKeepSignIn} style={styles.buttonContainer}>
+                    <Text style={styles.buttonText}>{keepLoggedIn ? '✔️' : '◻️'}</Text>
+                </TouchableOpacity>
+                <Text style={styles.keepsignin}> Keep me logged in </Text>
+            </View>
+            
             <Image source={require('../assets/Rectangle4.png')} style={styles.signInBackground} />
-            <TouchableOpacity onPress={handleSignUp}>
-              <Text style={styles.signIn}> Sign In </Text>
+            <TouchableOpacity onPress={userLogin}>
+                <Text style={styles.logIn}> Log in </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.replace('Login')}>    
-                <Text style={styles.bottomText1}> Have an account? <Text style={styles.boldText}>Login</Text></Text>
+            <TouchableOpacity onPress={() => navigation.replace('SignUp')}> 
+                <Text style={styles.bottomText1}> Don't have an account? <Text style={styles.boldText}>Sign up</Text></Text>
             </TouchableOpacity>
         </View>
     );
@@ -105,7 +96,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#EDE0D4',
   },
-  signup: {
+  login: {
     color: 'black',
     fontSize: 60,
     fontStyle: 'normal',
@@ -113,6 +104,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.1,
     marginTop: 20,
     marginLeft: 30,
+  },
+  secondLine: {
+    color: 'black',
+    fontSize: 18,
+    marginTop: 20,
+    width: 428,
+    paddingHorizontal: 35, // Add this line
   },
   name: {
     color: 'black',
@@ -132,12 +130,37 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontSize: 20,
   },
-  signIn: {
+  forgetPassword: {
+    color: 'black',
+    fontSize: 14,
+    fontWeight: '600',
+    letterSpacing: 0.1,
+    marginTop: 25,
+    marginLeft: 40,
+    marginBottom: 10,
+  },
+  rowContainer: {
+    flexDirection: 'row', // Align children components horizontally
+    alignItems: 'center', // Center align vertically within the container
+  },
+  buttonContainer: {
+    backgroundColor: 'transparent',
+    padding: 1,
+    borderRadius: 5,
+    marginLeft: 30,
+  },
+  keepsignin:{
+    color: 'black',
+    fontSize: 14,
+    fontWeight: '300',
+    letterSpacing: 0.1,
+  },
+  logIn: {
     color: 'black',
     fontSize: 40,
     fontWeight: '400',
     letterSpacing: 0.2,
-    marginTop: 50,
+    marginTop: 80,
     alignSelf: 'center'
   },
   signInBackground: {
@@ -160,5 +183,9 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: 'bold',
     letterSpacing: 0.1,
+  },
+  buttonText: {
+    fontWeight: 'bold',
+    fontSize: 30,
   },
 });
