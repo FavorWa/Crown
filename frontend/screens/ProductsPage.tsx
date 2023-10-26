@@ -3,7 +3,6 @@ import { Style } from "react-native-paper/lib/typescript/components/List/utils"
 import { Text, TouchableRipple, List, ActivityIndicator, SegmentedButtons} from "react-native-paper"
 import { useState, useEffect } from "react"
 import openWebPage from "../functions/openWebPage"
-import { BACKEND_BASE_URL } from "../secrets"
 import { Platform } from "react-native"
 
 interface Product {
