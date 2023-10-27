@@ -19,9 +19,11 @@ export default function Homepage({ navigation }) {
         </Text>
       </TouchableOpacity>
 
-      <Text style={styles.blogs}>
-        Blogs
-      </Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Blogs')}>
+        <Text style={styles.blogs}>
+          Blogs
+        </Text>
+      </TouchableOpacity>
       <Image
           source={require('../assets/Rectangle4.png')}
           style={styles.rectangle5}

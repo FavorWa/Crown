@@ -2,10 +2,6 @@ from fastapi import APIRouter
 from secret_values import rainforest_api_key
 from database import get_database
 import requests
-import json
-import asyncio
-import sys
-import os
 
 productsRouter = APIRouter()
 db = get_database()
@@ -57,7 +53,11 @@ def get_products(hair_type):
         return transform_products(transformed_products)
     else:
         print('products from database')
-        return [item for item in db[hair_type].find()]
+        products = [item for item in db[hair_type].find()]
+        for product in products:
+            product["id"] = str(product["_id"])
+            del product["_id"]
+        return products
 
 USE_DATABASE = True
 def update_database():
@@ -76,39 +76,39 @@ def update_database():
 
 @productsRouter.get('/2A')
 def get_2a_hair_products():
-    return json.dumps(get_products("2A"))
+    return get_products("2A")
 
 @productsRouter.get('/2B')
 def get_2b_hair_products():
-    return json.dumps(get_products("2B"))
+    return get_products("2B")
     
 @productsRouter.get('/2C')
 def get_2b_hair_products():
-    return json.dumps(get_products("2C"))
+    return get_products("2C")
 
 @productsRouter.get('/3A')
 def get_2b_hair_products():
-    return json.dumps(get_products("3A"))
+    return get_products("3A")
 
 @productsRouter.get('/3B')
 def get_2b_hair_products():
-    return json.dumps(get_products("3B"))
+    return get_products("3B")
 
 @productsRouter.get('/3C')
 def get_2b_hair_products():
-    return json.dumps(get_products("3C"))
+    return get_products("3C")
 
 @productsRouter.get('/4A')
 def get_2b_hair_products():
-    return json.dumps(get_products("4A"))
+    return get_products("4A")
 
 @productsRouter.get('/4B')
 def get_2b_hair_products():
-    return json.dumps(get_products("4B"))
+    return get_products("4B")
 
 @productsRouter.get('/4C')
 def get_2b_hair_products():
-    return json.dumps(get_products("4C"))
+    return get_products("4C")
 
 if __name__ == '__main__':
     update_database()
