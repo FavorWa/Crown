@@ -2,10 +2,6 @@ from fastapi import APIRouter
 from secret_values import rainforest_api_key
 from database import get_database
 import requests
-import json
-import asyncio
-import sys
-import os
 
 productsRouter = APIRouter()
 db = get_database()

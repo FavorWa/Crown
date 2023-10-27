@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Card, Surface, Text, Divider } from 'react-native-paper';
+import { useState, useEffect } from "react";
+import { Card, Surface, Text, Divider, ActivityIndicator } from 'react-native-paper';
 import { StyleSheet, Image, View, ScrollView, GestureResponderEvent, Platform} from 'react-native';
 import openWebPage from "../functions/openWebPage"
 
@@ -40,6 +40,71 @@ const Thumbnail = ({image, title, link, lede, minutes, styles, isArticle} : Thum
 
 const Blogs = () => {
 
+    interface digest {
+        general: ThumbnailInfo[];
+        forYou: ThumbnailInfo[];
+    }
+    const [isLoading, setLoading] = useState(true);
+    const [digest, setDigest] = useState<digest>({general: [], forYou: []});
+
+    const getDigest = async () => {
+        try {
+            const generalUrl = `${backend_base_url}/digest/general`;
+            const generalResponse = await fetch(generalUrl);
+            const generalData = await generalResponse.json();
+
+            const forYouUrl = `${backend_base_url}/digest/forYou`;
+            const forYouResponse = await fetch(forYouUrl);
+            const forYouData = await forYouResponse.json()
+
+            setDigest({
+                general: generalData,
+                forYou: forYouData
+            })
+
+            setLoading(false);
+        } 
+            
+        catch (error) {
+            console.error(error);
+        }
+    
+    };
+
+    const createThumbnails = (thumbnailInfos : ThumbnailInfo[]) => {
+        return thumbnailInfos.map((info) => {
+            return (
+                <Thumbnail 
+                image={info.image}
+                title={info.title}
+                link={info.link}
+                lede={info.lede}
+                minutes={info.minutes}
+                styles={styles.smallCard} 
+                isArticle={info.isArticle}
+            />
+            )
+        });
+    }
+
+    useEffect(() => {
+        getDigest();
+    }, []);
+
+    return (
+        isLoading ? <ActivityIndicator /> : (
+            <ScrollView style={styles.container}>
+                <Text variant="headlineLarge" style={{textAlign: "center"}}>Today's Digest</Text>
+                <Text variant="headlineSmall" style={{textAlign: "center"}}>General</Text>
+                {createThumbnails(digest["general"])}
+                <Text variant="headlineSmall" style={{textAlign: "center"}}>Just for You</Text>
+                {createThumbnails(digest["forYou"])}
+            </ScrollView>
+        )
+
+    )
+
+    /*
     return (
 
         <ScrollView style={styles.container}>
@@ -73,6 +138,7 @@ const Blogs = () => {
 
         </ScrollView>
     )
+    */
 }
 
 export default Blogs;
