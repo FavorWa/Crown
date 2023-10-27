@@ -10,7 +10,7 @@ import HairQuizQuestion from './screens/HairQuizQuestion';
 import SignUp from './screens/Signup';
 import Login from './screens/Login';
 import ProductsPage from './screens/ProductsPage';
-
+import Blogs from './screens/Blogs';
 const Stack = createStackNavigator();
 
 export default function App() {
