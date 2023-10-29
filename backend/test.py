@@ -1,4 +1,4 @@
-from database import get_database
+from db import get_database
 from productsRouter import get_products
 
 if __name__ == '__main__':
