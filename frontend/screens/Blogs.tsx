@@ -1,37 +1,39 @@
 import { useState, useEffect } from "react";
 import { Card, Surface, Text, Divider, ActivityIndicator } from 'react-native-paper';
 import { StyleSheet, Image, View, ScrollView, GestureResponderEvent, Platform} from 'react-native';
-import openWebPage from "../functions/openWebPage"
+import openWebPage from "../functions/openWebPage";
 
 const backend_base_url = Platform.OS === 'android' ? 'http://10.0.2.2:8000' : 'http://localhost:8000';
 
 
 interface ThumbnailInfo {
-    image: string;
+    image: string | null;
     title: string;
     link: string;
-    lede: string;
-    minutes: string;
+    snippet: string;
+    minutes: number | null;
     styles?: object;
     isArticle?: boolean;
 }
 
-const Thumbnail = ({image, title, link, lede, minutes, styles, isArticle} : ThumbnailInfo) => {
+const Thumbnail = ({image, title, link, snippet, minutes, styles, isArticle} : ThumbnailInfo) => {
+
+    const minutes_line = minutes == -1 ? "" : minutes + " minute read"
     return (
         isArticle ? (
             <Card style={styles} onPress={(e: GestureResponderEvent) => openWebPage(link)}>
-                <Card.Title title={title} titleNumberOfLines={2} subtitle={minutes + " minute read"} left={() => <Image style={{width: 50, height: 50}}source={{uri: image}} />}/>
+                <Card.Title title={title} titleNumberOfLines={2} subtitle={minutes_line} left={() => <Image style={{width: 50, height: 50}}source={{uri: image}} />}/>
                     <Card.Content>
-                        <Text variant="bodyMedium">{lede}</Text>
+                        <Text variant="bodyMedium">{snippet}</Text>
                     </Card.Content>
             </Card>
         ) : 
         (
             <Card style={styles} onPress={(e: GestureResponderEvent) => openWebPage(link)}>
                     <Card.Cover source={{ uri: image }} style={{width: undefined}}/>
-                    <Card.Title title={title} subtitle={minutes + " minute read"} titleNumberOfLines={2}/>
+                    <Card.Title title={title} subtitle={minutes_line} titleNumberOfLines={2}/>
                     <Card.Content>
-                        <Text variant="bodyMedium">{lede}</Text>
+                        <Text variant="bodyMedium">{snippet}</Text>
                     </Card.Content>
             </Card>
         )
@@ -40,6 +42,7 @@ const Thumbnail = ({image, title, link, lede, minutes, styles, isArticle} : Thum
 
 const Blogs = () => {
 
+    
     interface digest {
         general: ThumbnailInfo[];
         forYou: ThumbnailInfo[];
@@ -53,7 +56,7 @@ const Blogs = () => {
             const generalResponse = await fetch(generalUrl);
             const generalData = await generalResponse.json();
 
-            const forYouUrl = `${backend_base_url}/digest/forYou`;
+            const forYouUrl = `${backend_base_url}/digest/personal`;
             const forYouResponse = await fetch(forYouUrl);
             const forYouData = await forYouResponse.json()
 
@@ -72,14 +75,18 @@ const Blogs = () => {
     };
 
     const createThumbnails = (thumbnailInfos : ThumbnailInfo[]) => {
+
         return thumbnailInfos.map((info) => {
+
+            const image = info.image ? info.image : "https://cdn3.vectorstock.com/i/1000x1000/51/27/gold-crown-logo-icon-element-vector-21245127.jpg"
+            const minutes = info.minutes ? Math.ceil(info.minutes) : -1
             return (
                 <Thumbnail 
-                image={info.image}
+                image={image}
                 title={info.title}
                 link={info.link}
-                lede={info.lede}
-                minutes={info.minutes}
+                snippet={info.snippet}
+                minutes={minutes}
                 styles={styles.smallCard} 
                 isArticle={info.isArticle}
             />
@@ -139,6 +146,7 @@ const Blogs = () => {
         </ScrollView>
     )
     */
+    
 }
 
 export default Blogs;
