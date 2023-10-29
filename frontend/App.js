@@ -11,6 +11,7 @@ import SignUp from './screens/Signup';
 import Login from './screens/Login';
 import ProductsPage from './screens/ProductsPage';
 import Blogs from './screens/Blogs';
+import User from './screens/User';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -50,6 +51,11 @@ export default function App() {
         <Stack.Screen
           name="Blogs"
           component={Blogs} 
+        />
+
+        <Stack.Screen
+          name="User"
+          component={User} 
         />
       </Stack.Navigator>
     </NavigationContainer>

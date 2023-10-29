@@ -16,6 +16,7 @@ users_collection = db['UserInfo']  # Replace 'UserInfo' with your collection nam
 class User(BaseModel):
     email: str
     password: str
+    keepLoggedIn: bool
 
 
 @router.post('/log_in')
@@ -25,6 +26,11 @@ async def log_in(user: User):
 
     stored_user = users_collection.find_one({"email": user.email, "password": user.password})
     if stored_user:
-        return {"message": "Login successful."}
+        users_collection.update_one(
+            {"email": user.email, "password": user.password},
+            {"$set": {"keepLoggedIn": user.keepLoggedIn}}
+        )
+        return JSONResponse(content={"message": "Login successful.", "keepLoggedIn": user.keepLoggedIn})
+
     else:
-        raise HTTPException(status_code=401, detail="Invalid credentials.")
+        raise HTTPException(status_code=401, detail="email or password incorrect!")

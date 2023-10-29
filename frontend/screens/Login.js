@@ -23,7 +23,8 @@ export default function Login({ navigation }) {
       },
       body: JSON.stringify({
         email: email,
-        password: password
+        password: password,
+        keepLoggedIn: keepLoggedIn, // Add keep_log_in field to the request body
       })
     })
       .then(response => response.json())
