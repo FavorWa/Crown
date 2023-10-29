@@ -1,9 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from database import get_database
-from productsRouter import productsRouter
-from signUp import router as sign_up_router
-from login import router as log_in_router
+from routers.productsRouter import productsRouter
+from routers.signUp import router as sign_up_router
+from routers.login import router as log_in_router
 
 db = get_database()
 app = FastAPI()
