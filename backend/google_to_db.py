@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from secret_values import rainforest_api_key, google_search_api_key, google_search_engine_id
-from database import get_database
+from db import get_database
 import requests
 import random
 from bs4 import BeautifulSoup

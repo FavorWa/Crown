@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 from secret_values import rainforest_api_key, google_search_api_key, google_search_engine_id
-from database import get_database
-from google_to_db import pipeline
+from db import get_database
 import requests
 import random
 from bs4 import BeautifulSoup
@@ -18,7 +17,7 @@ def ids_to_strings(items):
         del item["_id"]
     return items
 
-def get_user_tags(userId):
+def get_user_tags(userId=None):
     return []
 
 ################################
@@ -26,7 +25,7 @@ def get_user_tags(userId):
 ################################
 @digestRouter.get('/general')
 def getGeneralDigest():
-    thumbnail_infos = [info for info in db["generalDigest"]]
+    thumbnail_infos = [info for info in db["generalDigest"].find()]
     ids_to_strings(thumbnail_infos)
     return thumbnail_infos
 

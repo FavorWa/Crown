@@ -1,7 +1,9 @@
+from fastapi import APIRouter
 from secret_values import rainforest_api_key
-from database import get_database
+from db import get_database
 import requests
 
+productsRouter = APIRouter()
 db = get_database()
 
 def make_search_string(hair_type: str):
@@ -70,6 +72,40 @@ def update_database():
 
         # re initialize it
         db[hair_type].insert_many(transformed_products)
+        
 
-if __name__ == '__main__':
-    update_database()
+@productsRouter.get('/2A')
+def get_2a_hair_products():
+    return get_products("2A")
+
+@productsRouter.get('/2B')
+def get_2b_hair_products():
+    return get_products("2B")
+    
+@productsRouter.get('/2C')
+def get_2b_hair_products():
+    return get_products("2C")
+
+@productsRouter.get('/3A')
+def get_2b_hair_products():
+    return get_products("3A")
+
+@productsRouter.get('/3B')
+def get_2b_hair_products():
+    return get_products("3B")
+
+@productsRouter.get('/3C')
+def get_2b_hair_products():
+    return get_products("3C")
+
+@productsRouter.get('/4A')
+def get_2b_hair_products():
+    return get_products("4A")
+
+@productsRouter.get('/4B')
+def get_2b_hair_products():
+    return get_products("4B")
+
+@productsRouter.get('/4C')
+def get_2b_hair_products():
+    return get_products("4C")
