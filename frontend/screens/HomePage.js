@@ -56,22 +56,47 @@ export default function Homepage({ navigation }) {
       <Text style={styles.inspiration}>
         Inspiration
       </Text>
-      <Image
-          source={require('../assets/Rectangle4.png')}
-          style={styles.rectangle8}
-      ></Image>
-      <Image
-          source={require('../assets/Rectangle4.png')}
-          style={styles.rectangle9}
-      ></Image>
-      <Image
-          source={require('../assets/Rectangle4.png')}
-          style={styles.rectangle10}
-      ></Image>
+      
 
       <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
         <Text style={styles.productPage}> Products </Text>
       </TouchableOpacity>
+      
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={styles.Bottonline}> 
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Image
+              source={require('../assets/Compass.png')}
+              style={styles.Compass}
+            ></Image>
+            <Text style={styles.Compassword}>Discover</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Image
+              source={require('../assets/Barbershop.png')}
+              style={styles.Barbershop}
+            ></Image>
+            <Text style={styles.Barbershopword}>Stylist</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Image
+              source={require('../assets/Community.png')}
+              style={styles.Community}
+            ></Image>
+            <Text style={styles.Communityword}>Community</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate('User')}>
+            <Image
+              source={require('../assets/User.png')}
+              style={styles.User}
+            ></Image>
+            <Text style={styles.Userword}>User</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
 
     </SafeAreaView>
   )
@@ -235,5 +260,50 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginLeft: 33,
     marginTop: 200,
+  },
+  Compass: {
+    aspectRatio: 1.2,
+    marginLeft: 35,
+    marginTop: 15,
+  },
+  Compassword: {
+    marginLeft: 30,
+  },
+  Barbershop: {
+    aspectRatio: 1.2,
+    marginLeft: 135,
+    marginTop: -55,
+  },
+  Barbershopword: {
+    marginLeft: 135,
+    marginBottom: -40,
+  },
+  Community: {
+    aspectRatio: 1.2,
+    marginLeft: 235,
+    marginTop: -55,
+  },
+  Communityword: {
+    marginLeft: 225,
+    marginBottom: -40,
+  },
+  User: {
+    marginLeft: 335,
+    marginTop: -55,
+    aspectRatio: 1.2,
+  },
+  Userword: {
+    marginLeft: 342,
+    marginBottom: -40,
+  },
+  Bottonline: {
+    width: 430,
+    height: 149,
+    flexShrink: 0,
+    borderRadius: 39,
+    borderWidth: 1,
+    borderColor: '#472415',
+    marginHorizontal: 30,
+    marginBottom: -210,
   },
 });

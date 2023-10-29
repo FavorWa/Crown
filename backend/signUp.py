@@ -32,7 +32,7 @@ async def sign_up(user: User):
         user_data = {
             "name": user.name,
             "email": user.email,
-            "password": user.password
+            "password": user.password,
         }
         if not user.name or not user.email or not user.password:
             raise HTTPException(status_code=400, detail="Email, name or password cannot be empty.")
@@ -43,22 +43,3 @@ async def sign_up(user: User):
             return {"message": "Sign up successful."}
     except DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Email already exists in the database.")
-
-
-# def sign_up(name, email, password):
-#     user_data = {
-#         "name": name,
-#         "email": email,
-#         "password": password
-#     }
-#     result = users_collection.insert_one(user_data)
-#     return result.inserted_id
-
-
-# Example usage
-# if __name__ == "__main__":
-#     name = "John Doe"
-#     email = "johndoe@1222223.com"
-#     password = "examplepassword"
-#     result_id = sign_up(name, email, password)
-#     print(f"User signed up successfully with id: {result_id}")
