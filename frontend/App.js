@@ -1,5 +1,4 @@
-import React from 'react';
-import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -8,14 +7,19 @@ import Homepage from './screens/HomePage';
 import HairQuiz from './screens/HairQuiz';
 import HairQuizQuestion from './screens/HairQuizQuestion'; 
 import SignUp from './screens/Signup';
+import Login from './screens/Login';
 import ProductsPage from './screens/ProductsPage';
+import Blogs from './screens/Blogs';
+import User from './screens/User';
 
 const Stack = createStackNavigator();
 
 export default function App() {
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
+
       <Stack.Screen 
           name="Cover" 
           component={Cover}
@@ -35,11 +39,25 @@ export default function App() {
         <Stack.Screen
           name="SignUp" 
           component={SignUp}>
-        
         </Stack.Screen>
+        <Stack.Screen
+          name="Login" 
+          component={Login}>
+        </Stack.Screen>
+
         <Stack.Screen 
           name="ProductsPage"
           component={ProductsPage}
+        />
+
+        <Stack.Screen
+          name="Blogs"
+          component={Blogs} 
+        />
+
+        <Stack.Screen
+          name="User"
+          component={User} 
         />
       </Stack.Navigator>
     </NavigationContainer>

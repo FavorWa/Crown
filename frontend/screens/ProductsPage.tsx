@@ -1,9 +1,9 @@
-import { View, Image } from "react-native"
+import { View, Image, SafeAreaView, ScrollView } from "react-native"
 import { Style } from "react-native-paper/lib/typescript/components/List/utils"
-import { Text, TouchableRipple, List, Searchbar, RadioButton, ActivityIndicator } from "react-native-paper"
+import { Text, TouchableRipple, List, ActivityIndicator, SegmentedButtons} from "react-native-paper"
 import { useState, useEffect } from "react"
 import openWebPage from "../functions/openWebPage"
-import { FRONTEND_BASE_URL } from "../secrets"
+import { Platform } from "react-native"
 
 interface Product {
     title: string,
@@ -12,6 +12,19 @@ interface Product {
     price: string,
 }
 
+/*
+// Tried to connect to local api through expo go, didn't work
+
+import Constants from "expo-constants";
+
+console.log(Constants?.expoConfig?.hostUri);
+const backend_base_url = Constants?.expoConfig?.hostUri
+  ? "http://" + Constants.expoConfig.hostUri.split(`:`).shift()?.concat(`:8000`)
+  : BACKEND_BASE_URL;
+
+*/
+
+const backend_base_url = Platform.OS === 'android' ? 'http://10.0.2.2:8000' : 'http://localhost:8000';
 
 const Product = ({title, link, image, price}: Product) => {
 
@@ -66,9 +79,10 @@ let ProductsPage = () => {
 
     const getProducts = async () => {
         try {
-            const url = `${FRONTEND_BASE_URL}/products/${hairType}`
+            const url = `${backend_base_url}/products/${hairType}`
             console.log(url);
             const response = await fetch(url);
+            console.log(response);
             const data = await response.json();
             setProducts(data);
         } 
@@ -103,6 +117,11 @@ let ProductsPage = () => {
         setHairType(value);
     }
 
+    const hair_type_values = ["2A", "2B", "2C", "3A", "3B", "3C", "4A", "4B", "4C"]
+    const buttons = hair_type_values.map((hair_type) => {
+        return {value: hair_type, label: hair_type}
+    })
+
     if (isLoading) {
         return <ActivityIndicator />
     }
@@ -111,27 +130,28 @@ let ProductsPage = () => {
         const productComponents = productsToComponents(products)
         return (
             <>
-                <RadioButton.Group onValueChange={handleValueChange} value={hairType}>
-                    <RadioButton.Item label="2A" value="2A" />
-                    <RadioButton.Item label="2B" value="2B" />
-                    <RadioButton.Item label="2C" value="2C" />
-                    <RadioButton.Item label="3A" value="3A" />
-                    <RadioButton.Item label="3B" value="3B" />
-                    <RadioButton.Item label="3C" value="3C" />
-                    <RadioButton.Item label="4A" value="4A" />
-                    <RadioButton.Item label="4B" value="4B" />
-                    <RadioButton.Item label="4C" value="4C" />
-                </RadioButton.Group>
-                <List.Section>
-                    <List.Subheader>Products for hair type {hairType}</List.Subheader>
-                    {productComponents}
-                </List.Section>
+                <SafeAreaView>
+                    <ScrollView horizontal>
+                        <SegmentedButtons
+                            value={hairType}
+                            onValueChange={handleValueChange}
+                            buttons={buttons}
+                        />
+                    </ScrollView>
+                </SafeAreaView>
+
+                <ScrollView>
+                    <List.Section>
+                        <List.Subheader>Products for hair type {hairType}</List.Subheader>
+                        {productComponents}
+                    </List.Section>
+                </ScrollView>
             </>
         )
     }
 }
 
-
+/*
 ProductsPage = () => {
 
     const productsToComponents = (products: Product[]) => {
@@ -157,4 +177,5 @@ ProductsPage = () => {
         </>
     )
 }
+*/
 export default ProductsPage;

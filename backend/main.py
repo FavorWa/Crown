@@ -1,12 +1,19 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from database import get_database
-from productsRouter import productsRouter
+from db import get_database
+# from productsRouter import productsRouter
+from signUp import router as sign_up_router
+from login import router as log_in_router
+# from digestRouter import digestRouter
+from user import router as user
 
 db = get_database()
 app = FastAPI()
-app.include_router(productsRouter, prefix="/products")
-
+# app.include_router(productsRouter, prefix="/products")
+app.include_router(sign_up_router)
+app.include_router(log_in_router)
+# app.include_router(digestRouter, prefix="/digest")
+app.include_router(user)
 
 @app.get("/")
 async def root():

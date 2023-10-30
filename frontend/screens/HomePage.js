@@ -12,28 +12,30 @@ export default function Homepage({ navigation }) {
         source={require('../assets/Rectangle4.png')}
         style={styles.rectangle4}
       ></Image>
-      
+
       <TouchableOpacity onPress={() => navigation.navigate('HairQuiz')}>
         <Text style={styles.takeTheQuiz}>
           Take the Quiz
         </Text>
       </TouchableOpacity>
 
-      <Text style={styles.blogs}>
-        Blogs
-      </Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Blogs')}>
+        <Text style={styles.blogs}>
+          Blogs
+        </Text>
+      </TouchableOpacity>
+      <Image
+          source={require('../assets/Rectangle4.png')}
+          style={styles.rectangle5}
+      ></Image>
       <Image
           source={require('../assets/Rectangle4.png')}
           style={styles.rectangle6}
       ></Image>
-      <Pressable
-        onPress={() => navigation.navigate("ProductsPage")}>
-          <Text style={styles.hairquiz}>Products</Text>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.rectangle5} 
-          />
-      </Pressable>
+      <Image
+          source={require('../assets/Rectangle4.png')}
+          style={styles.rectangle7}
+      ></Image>
       <Text style={styles.blogTitle1}>
         Fall 2023 hairStyles
       </Text>
@@ -54,18 +56,47 @@ export default function Homepage({ navigation }) {
       <Text style={styles.inspiration}>
         Inspiration
       </Text>
-      <Image
-          source={require('../assets/Rectangle4.png')}
-          style={styles.rectangle8}
-      ></Image>
-      <Image
-          source={require('../assets/Rectangle4.png')}
-          style={styles.rectangle9}
-      ></Image>
-      <Image
-          source={require('../assets/Rectangle4.png')}
-          style={styles.rectangle10}
-      ></Image>
+      
+
+      <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
+        <Text style={styles.productPage}> Products </Text>
+      </TouchableOpacity>
+      
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={styles.Bottonline}> 
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Image
+              source={require('../assets/Compass.png')}
+              style={styles.Compass}
+            ></Image>
+            <Text style={styles.Compassword}>Discover</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Image
+              source={require('../assets/Barbershop.png')}
+              style={styles.Barbershop}
+            ></Image>
+            <Text style={styles.Barbershopword}>Stylist</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Image
+              source={require('../assets/Community.png')}
+              style={styles.Community}
+            ></Image>
+            <Text style={styles.Communityword}>Community</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate('User')}>
+            <Image
+              source={require('../assets/User.png')}
+              style={styles.User}
+            ></Image>
+            <Text style={styles.Userword}>User</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
 
     </SafeAreaView>
   )
@@ -92,9 +123,8 @@ const styles = StyleSheet.create({
     width: 110,
     height: 24,
     borderRadius: 12, // Set half of the height to achieve a circular shape
-    position: 'absolute',
-    left: 267,
-    top: 200,
+    marginLeft: 270,
+    marginTop: 200,
   },
   rectangle36: {
     backgroundColor: 'rgba(201, 162, 39, 1)',
@@ -118,7 +148,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     left: 33,
-    top: 233,
+    top: 10,
   },
   rectangle5: {
     tintColor: 'rgba(237, 224, 212, 1)',
@@ -135,7 +165,7 @@ const styles = StyleSheet.create({
     fontSize: 15, 
     letterSpacing: 0,
     left: 34,
-    top: 330,
+    top: 97,
   },
   BlogContainer: {
     width: 143, // Set a specific width for the container
@@ -149,7 +179,7 @@ const styles = StyleSheet.create({
     fontSize: 8,
     letterSpacing: 0,
     left: 35,
-    top: 330,
+    top: 100,
   },
   blogTitle2: {
     color: 'black',
@@ -158,7 +188,7 @@ const styles = StyleSheet.create({
     fontSize: 15, 
     letterSpacing: 0,
     left: 238,
-    top: 312,
+    top: 80,
   },
   BlogContainer2: {
     width: 143, // Set a specific width for the container
@@ -172,7 +202,7 @@ const styles = StyleSheet.create({
     fontSize: 8,
     letterSpacing: 0,
     left: 238,
-    top: 312,
+    top: 85,
   },
   rectangle6: {
     tintColor: 'rgba(237, 224, 212, 1)',
@@ -222,4 +252,58 @@ const styles = StyleSheet.create({
     right: 33,
     top: 650,
   }, 
+  productPage: {
+    backgroundColor: 'orange',
+    top: 60,
+    width: 100,
+    height: 30,
+    fontSize: 24,
+    marginLeft: 33,
+    marginTop: 200,
+  },
+  Compass: {
+    aspectRatio: 1.2,
+    marginLeft: 35,
+    marginTop: 15,
+  },
+  Compassword: {
+    marginLeft: 30,
+  },
+  Barbershop: {
+    aspectRatio: 1.2,
+    marginLeft: 135,
+    marginTop: -55,
+  },
+  Barbershopword: {
+    marginLeft: 135,
+    marginBottom: -40,
+  },
+  Community: {
+    aspectRatio: 1.2,
+    marginLeft: 235,
+    marginTop: -55,
+  },
+  Communityword: {
+    marginLeft: 225,
+    marginBottom: -40,
+  },
+  User: {
+    marginLeft: 335,
+    marginTop: -55,
+    aspectRatio: 1.2,
+  },
+  Userword: {
+    marginLeft: 342,
+    marginBottom: -40,
+  },
+  Bottonline: {
+    width: 430,
+    height: 149,
+    flexShrink: 0,
+    borderRadius: 39,
+    borderWidth: 1,
+    borderColor: '#472415',
+    marginHorizontal: 30,
+    marginBottom: -210,
+  },
 });
