@@ -12,10 +12,12 @@ app.include_router(productsRouter, prefix="/products")
 async def root():
     return {"message": "Hello World"}
 
+
 class Hair_Attributes(BaseModel):
     curlPattern: str
     curlDegree: str
     thickness: str
+
 
 hair_descriptions = {
     "2A": "Type 2A hair is characterized by loose, S-shaped waves that are relatively fine and flat against the head. It tends to be prone to frizz.",
@@ -28,6 +30,7 @@ hair_descriptions = {
     "4B": "Type 4B hair features a more zig-zag pattern with sharp angles. It's highly coiled and can appear fragile, requiring intense moisture and gentle handling.",
     "4C": "Type 4C hair is the most tightly coiled with minimal definition. It may appear as if there are no distinct curls, making it highly prone to shrinkage and requiring meticulous care and moisture."
 }
+
 
 @app.post("/getHairType")
 async def getHairType(hair_attributes: Hair_Attributes):
@@ -51,5 +54,31 @@ async def getHairType(hair_attributes: Hair_Attributes):
         hair_type += "C"
     else:
         raise HTTPException(status_code=400, detail="Invalid curl degree")
-    
+
     return {"hairType": hair_type, "description": hair_descriptions[hair_type]}
+
+hairQuizQuestionCollection = db["hairQuestions"]
+
+
+@app.get("/questions")
+async def get_hair_questions():
+    questions = list(hairQuizQuestionCollection.find({}, {"_id": 0}))
+    return questions
+
+
+class Response(BaseModel):
+    answers: list
+
+
+userCollection = db["Userinfo"]
+responsesCollection = db["user_responses"]
+
+
+@app.post("/submit_response")
+async def submit_responses(responses: Response):
+    try:
+        # Store the submitted responses in MongoDB
+        response_id = await responsesCollection.insert_one(responses.dict())
+        return {"message": "Responses submitted successfully", "response_id": str(response_id.inserted_id)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

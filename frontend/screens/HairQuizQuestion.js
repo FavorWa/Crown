@@ -1,58 +1,57 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, SectionList, TouchableOpacity, Pressable, Input } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import axios from 'axios';
 
 
 
 export default function HairQuizQuestion({ navigation }) {
   
+  const[questions, setQuestions] = useState([]);
+  const [responses, setResponses] = useState({});
+  const [selectedAnswers, setSelectedAnswers] = useState({}); // To track selected answers for all questions
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
   const onPressHandler = () => {
       // navigation.navigate('HomePage');
       navigation.goBack();
   }
+  const handleResponse = (question, answer) => {
+    setSelectedAnswers({ ...selectedAnswers, [question]: answer });
+    setCurrentQuestionIndex(currentQuestionIndex + 1);
+  };
   
 
-  const data = [
-    {
-      key: '1',
-      data: [
-        {
-          question: "Which most closely resembles your hair type?",
-          description: "It's OK if it's not an exact match!",
-          notSureText: 'NOT SURE?',
-          images: [require('../assets/Rectangle4.png'), require('../assets/Rectangle4.png'), require('../assets/Rectangle4.png')],
-          answers: ['Coily', 'Curly', 'Wavy']
-        },
-      ],
-    },
-    {
-      key: '2',
-      data: [
-        {
-          question: "How tightly wounded are your curls naturally?",
-          description: "Ex.: Would you say you are on the tighter or wider side of wavy?",
-          notSureText: 'NOT SURE?',
-          images: [require('../assets/Rectangle4.png'), require('../assets/Rectangle4.png'), require('../assets/Rectangle4.png')],
-          answers: ['Wide', 'Medium', 'Tight']
-        },
-      ],
-    },
-    {
-      key: '3',
-      data: [
-        {
-          question: "What's the thickness of your hair?",
-          description: "Just the thickness of a single strand.",
-          notSureText: 'NOT SURE?',
-          images: [require('../assets/Rectangle4.png'), require('../assets/Rectangle4.png'), require('../assets/Rectangle4.png')],
-          answers: ['Fine', 'Medium', 'Thick']
-        },
-      ],
-    },
-  ];
-  
-  
+  const submitResponses = () => {
+    // Check if all questions have been answered
+    if (Object.keys(selectedAnswers).length === questions.length) {
+      // All questions have been answered
+      const selectedAnswersArray = Object.values(selectedAnswers);
+      axios
+        .post('http://127.0.0.1:8000/submit_response', {
+          answers: selectedAnswersArray,
+          // You may include user identifier (email, username) here
+        })
+        .then(() => {
+          // Handle successful response submission (e.g., show a confirmation message)
+        })
+        .catch((error) => console.error('Error submitting responses:', error));
+    } else {
+      // Not all questions have been answered, you can show an error message
+      alert('Please answer all questions before proceeding.');
+    }
+  };
+
+  useEffect(() => {
+    // Fetch questions from your backend API
+    axios
+      .get('http://127.0.0.1:8000/questions')
+      .then((response) => {
+        setQuestions(response.data); // Assuming your API returns an array of questions
+      })
+      .catch((error) => console.error('Error fetching questions:', error));
+  }, []);
   
   return(
     <ScrollView>
@@ -75,38 +74,35 @@ export default function HairQuizQuestion({ navigation }) {
         </View>
       </View>
 
-      <SectionList
-        keyExtractor={(item) => item.key}
-        sections={data}
-        renderItem={({ item }) => {
-          return(
-            <View style={styles.QuestionBox}>
-              <Text style={styles.text}>{item.question}</Text>
-              <Text style={styles.miniText}>{item.description}</Text>
-              <Text style={styles.Notsure}>{item.notSureText}</Text>
-              <View style={styles.imageRow}>
-                {item.images.map((image, index) => (
-                  <Image key={index} source={image} style={styles.rectangle1} />
-                ))}
-              </View>
-              <View style={{...styles.imageRow, marginTop: 25}}>
-                {item.answers.map((answer, index) => (
-                    <View key={index} style={styles.rectangleContainer}>
-                      <Image source={require('../assets/Rectangle4.png')} style={styles.rectangle2} />
-                      <Text style={styles.rectangleText}>{answer}</Text>
-                    </View>
-                ))}
-              </View>
-            </View>
-          )
-        }}
-      />
+      {questions.map((item, index) => (
+        <View key={index} style={styles.QuestionBox}>
+          <Text style={styles.text}>{item.question}</Text>
+          <Text style={styles.miniText}>{item.description}</Text>
+          <View style={{ ...styles.imageRow, marginTop: 25 }}>
+  {item.answers.map((answer, answerIndex) => (
+    <TouchableOpacity
+      key={answerIndex}
+      style={{
+        ...styles.rectangleContainer,
+      }}
+      onPress={() => handleResponse(item.question, answer)}
+    >
+      <Image source={require('../assets/Rectangle4.png')} style={styles.rectangle2} />
+      <Text style={styles.rectangleText}>{answer}</Text>
+    </TouchableOpacity>
+  ))}
+</View>
+        </View>
+      ))}
 
-      <TouchableOpacity style={styles.nextContainer}>
-        <Text style={styles.next}>
-          Next
-        </Text>
-      </TouchableOpacity>
+<TouchableOpacity
+  style={styles.nextContainer}
+  onPress={submitResponses}
+>
+  <Text style={styles.next}>
+    Next
+  </Text>
+</TouchableOpacity>
     </ScrollView>
   )
 }
@@ -176,7 +172,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center', // Center the text vertically
     alignSelf: 'flex-start', // Align the text to the start (left) horizontally
   },
-  Notsure: {
+  answers: {
     color: 'black',
     fontSize: 25,
     textAlignVertical: 'center', // Center the text vertically
@@ -197,16 +193,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 400, // Set a specific width for the container
+    maxWidth:'100%',
   },
   rectangle2: {
     tintColor: `rgba(237, 224, 212, 1)`,
     width: 91,
     height: 95,
     marginHorizontal: 15,
+    alignItems: 'left',
   },
   imageRow: {
-    flexDirection: 'row', // Arrange images in a row horizontally
-    alignItems: 'center', // Center items vertically within the row
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap', // Allow items to wrap to the next row
+    justifyContent: 'center',
   },
   rectangleContainer: {
     alignItems: 'center', // Center items horizontally
@@ -214,7 +214,12 @@ const styles = StyleSheet.create({
   },
   rectangleText: {
     textAlign: 'center',
-    top: -55, // Adjust the margin-top as needed for additional spacing
+    top: -55,
+    fontSize: 14, // Adjust the font size as needed
+    maxWidth: 80, // Set a maximum width for the text
+    overflow: 'hidden', // Hide overflow text
+    whiteSpace: 'nowrap', // Prevent text from wrapping to the next line
+    textOverflow: 'ellipsis', // Show an ellipsis (...) for overflow text
   },
   next: {
     color: 'black',
