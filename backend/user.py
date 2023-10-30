@@ -36,26 +36,26 @@ async def get_user_info(user: User):
     
     
 
-# @router.post('/change_avatar')
-# async def change_avatar(user_email: str, avatar_file: UploadFile = File(...)):
-#     contents = await avatar_file.read()
-#     # Here you can process the avatar image file.
-#     # You can save the image to a specific location or database.
-#     # You can update the user's avatar in your database using the user's email (user_email).
+@router.post('/change_avatar')
+async def change_avatar(user_email: str, avatar_file: UploadFile = File(...)):
+    contents = await avatar_file.read()
+    # Here you can process the avatar image file.
+    # You can save the image to a specific location or database.
+    # You can update the user's avatar in your database using the user's email (user_email).
 
-#     # Example of updating the user's avatar in the database
-#     user_info = users_collection.find_one_and_update(
-#         {"email": user_email},
-#         {"$set": {"avatar": contents}},
-#         return_document=True
-#     )
+    # Example of updating the user's avatar in the database
+    user_info = users_collection.find_one_and_update(
+        {"email": user_email},
+        {"$set": {"avatar": contents}},
+        return_document=True
+    )
 
-#     if user_info:
-#         return {"message": "Avatar updated successfully"}
-#     else:
-#         return {"message": "User not found"}
+    if user_info:
+        return {"message": "Avatar updated successfully"}
+    else:
+        return {"message": "User not found"}
 
-# # Your other code here...
+# Your other code here...
 
 
 

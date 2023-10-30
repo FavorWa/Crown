@@ -96,7 +96,7 @@ export default function DrawerExample({ navigation }) {
 
             <TouchableOpacity onPress={toggleModal}>
               <Image
-                  source={require('../assets/default_avatar.png')}
+                  source={require('../assets/avatar2.avif')}
                   style={styles.avatar}
               ></Image>
             </TouchableOpacity>
@@ -104,10 +104,10 @@ export default function DrawerExample({ navigation }) {
             <Modal isVisible={isModalVisible}>
               <View style={styles.modalContent}>
                 <Image
-                  source={require('../assets/default_avatar.png')}
+                  source={require('../assets/avatar2.avif')}
                   style={styles.enlargedAvatar}
                 />
-                <TouchableOpacity onPress={changeAvatar}>
+                <TouchableOpacity onPress={fetchUserInfo}>
                   <Text style={styles.changeAvatarButton}>Change Avatar</Text>
                 </TouchableOpacity>
                 <Button title="Close" onPress={toggleModal} />
