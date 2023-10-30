@@ -1,5 +1,4 @@
-import React from 'react';
-import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -12,12 +11,15 @@ import Login from './screens/Login';
 import ProductsPage from './screens/ProductsPage';
 import Blogs from './screens/Blogs';
 import User from './screens/User';
+
 const Stack = createStackNavigator();
 
 export default function App() {
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
+
       <Stack.Screen 
           name="Cover" 
           component={Cover}

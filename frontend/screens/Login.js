@@ -2,6 +2,30 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+// this auth method is temporary, TODO!
+export let loginStatus = false;
+export const changeStatus = (bol) => {
+  loginStatus = bol;
+};
+export const getStatus = () => {
+  return loginStatus;
+};
+export let useremail = '';
+export const changeEmail = (email) => {
+  useremail = email;
+} 
+export const getEmail = () => {
+  return useremail;
+};
+export let userpassword = '';
+export const changePassword = (password) => {
+  userpassword = password;
+}
+export const getPassword = () => {
+  return userpassword;
+};
+
+
 export default function Login({ navigation }) {
 
   const [email, setEmail] = useState('');
@@ -12,7 +36,6 @@ export default function Login({ navigation }) {
   const toggleKeepSignIn = () => {
     setKeepLoggedIn(!keepLoggedIn);
   };
-
 
   const userLogin = () => {
 
@@ -34,8 +57,12 @@ export default function Login({ navigation }) {
         if (data.detail) {
           console.error('Error:', data.detail); // Log the error if there is one
         } else {
+          changeStatus(true);
+          changeEmail(email);
+          changePassword(password);
           navigation.navigate('Homepage'); // Navigate to the login screen
           console.clear();
+          // console.log(loginStatus);
         }
       })
       .catch(error => {
