@@ -1,8 +1,23 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Pressable, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function Homepage({ navigation }) {
+
+  const isLoggedIn = async (web) => {
+    try {
+      const login = await AsyncStorage.getItem('LoginStatus');
+      if (login !== 'true') {
+        navigation.navigate('Login');
+      } else {
+        navigation.navigate(web);
+      }
+    } catch (error) {
+      console.log('Error checking login status:', error);
+    }
+  };
+
   return(
     <SafeAreaView style={styles.container}>
       <Text style={styles.hairquiz}>
@@ -88,7 +103,7 @@ export default function Homepage({ navigation }) {
             <Text style={styles.Communityword}>Community</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate('User')}>
+          <TouchableOpacity onPress={() => isLoggedIn('User')}>
             <Image
               source={require('../assets/User.png')}
               style={styles.User}

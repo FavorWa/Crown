@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { AppState } from 'react-native';
 import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Cover from './screens/Cover.js';
 import Homepage from './screens/HomePage';
 import HairQuiz from './screens/HairQuiz';
@@ -15,6 +17,44 @@ import User from './screens/User';
 const Stack = createStackNavigator();
 
 export default function App() {
+
+  const _retriveData = async() => {
+    try{
+      const data = await AsyncStorage.getItem("keepLogIn");
+      if (data === 'true'){
+        await AsyncStorage.setItem('isLoggedIn', 'true');
+      }else{
+        await AsyncStorage.setItem('userEmail', '');
+        await AsyncStorage.setItem('userPassword', '');
+        await AsyncStorage.setItem('isLoggedIn', 'false');
+      }
+      // console.log(data);
+    }catch (errer) {
+      console.log('error', error);
+    }
+  };
+
+  useEffect(() => {
+    _retriveData();
+
+    const handleAppStateChange = async (nextAppState) => {
+      if (nextAppState === 'background') {
+        try {
+          await AsyncStorage.removeItem('userEmail');
+          await AsyncStorage.removeItem('userPassword');
+          await AsyncStorage.setItem('isLoggedIn', 'false');
+        } catch (error) {
+          console.error('Error clearing login information:', error);
+        }
+      }
+    };
+
+    AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
+  }, []);
 
   return (
     <NavigationContainer>

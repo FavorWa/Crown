@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Drawer } from 'react-native-drawer-layout';
-import { getStatus, getEmail, getPassword } from './Login';
 import Modal from 'react-native-modal';
 import ImagePicker from 'react-native-image-picker';
 
-
-// console.log(getStatus());
-// console.log(getEmail());
-// console.log(getPassword());
 
 export default function DrawerExample({ navigation }) {
     const [open, setOpen] = React.useState(false);
@@ -19,16 +14,10 @@ export default function DrawerExample({ navigation }) {
     const toggleModal = () => {
       setModalVisible(!isModalVisible);
     };
-  
-    useEffect(() => {
-      if (!getStatus()) {
-          navigation.navigate('Login'); // Replace 'Login' with the actual screen name for the login screen
-      }
-    }, []);
 
-    const fetchUserInfo = () => {
-      const emailValue = getEmail().toString();
-      const passwordValue = getPassword().toString();
+    const fetchUserInfo = async () => {
+      const emailValue = AsyncStorage.getItem("userEmail");
+      const passwordValue = AsyncStorage.getItem("userPassword");
 
       fetch('http://localhost:8000/get_user_info', {
         method: 'POST',
@@ -52,12 +41,12 @@ export default function DrawerExample({ navigation }) {
       })
       .catch(error => {
           console.error('Error:', error);
-          console.log("email", getEmail(), "password", getPassword());
+          console.log("email", emailValue, "password", passwordValue);
       });
     };
 
     const changeAvatar = async () => {
-      const emailValue = getEmail(); // Replace with the user's email
+      const emailValue = AsyncStorage.getItem("userEmail");
     
       ImagePicker.launchImageLibrary({ mediaType: 'photo' }, (response) => {
         if (!response.didCancel) {
@@ -77,14 +66,35 @@ export default function DrawerExample({ navigation }) {
       });
     };
 
+    const logout = async () => {
+      await AsyncStorage.setItem('userEmail', '');
+      await AsyncStorage.setItem('userPassword', '');
+      await AsyncStorage.setItem('keepLogIn', 'false');
+      await AsyncStorage.setItem('LoginStatus', 'false'); 
+      console.log('log out');
+      setOpen(false);
+      navigation.navigate('Cover');
+    }
+
     return (
       <Drawer
         open={open}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
-        renderDrawerContent={() => {
-          return <Text>Drawer content</Text>;
-        }}
+        renderDrawerContent={() => (
+          <View>
+            <TouchableOpacity>
+              <Text style={styles.Discover}>Discover People</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={logout}>
+              <Image
+                    source={require('../assets/logout.png')}
+                    style={styles.LogoutIcon}
+              ></Image>
+              <Text style={styles.Logout}>Log Out</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       >
         <View style={styles.container}>
             <TouchableOpacity onPress={() => setOpen((prevOpen) => !prevOpen) }>
@@ -107,7 +117,7 @@ export default function DrawerExample({ navigation }) {
                   source={require('../assets/avatar2.avif')}
                   style={styles.enlargedAvatar}
                 />
-                <TouchableOpacity onPress={fetchUserInfo}>
+                <TouchableOpacity>
                   <Text style={styles.changeAvatarButton}>Change Avatar</Text>
                 </TouchableOpacity>
                 <Button title="Close" onPress={toggleModal} />
@@ -173,5 +183,19 @@ const styles = StyleSheet.create({
   changeAvatarButton: {
     marginTop: 20,
     color: 'blue',
+  },
+  LogoutIcon: {
+    marginTop: 20,
+    width: 40,
+    height: 40,
+    alignSelf: 'center',
+  },
+  Logout: {
+    alignSelf: 'center',
+  },
+  Discover: {
+    alignSelf: 'center',
+    fontSize: 20,
+    marginTop: 20,
   },
 });

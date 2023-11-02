@@ -1,29 +1,31 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage from the correct package
+
 
 // this auth method is temporary, TODO!
-export let loginStatus = false;
-export const changeStatus = (bol) => {
-  loginStatus = bol;
-};
-export const getStatus = () => {
-  return loginStatus;
-};
-export let useremail = '';
-export const changeEmail = (email) => {
-  useremail = email;
-} 
-export const getEmail = () => {
-  return useremail;
-};
-export let userpassword = '';
-export const changePassword = (password) => {
-  userpassword = password;
-}
-export const getPassword = () => {
-  return userpassword;
-};
+// export let loginStatus = false;
+// export const changeStatus = (bol) => {
+//   loginStatus = bol;
+// };
+// export const getStatus = () => {
+//   return loginStatus;
+// };
+// export let useremail = '';
+// export const changeEmail = (email) => {
+//   useremail = email;
+// } 
+// export const getEmail = () => {
+//   return useremail;
+// };
+// export let userpassword = '';
+// export const changePassword = (password) => {
+//   userpassword = password;
+// }
+// export const getPassword = () => {
+//   return userpassword;
+// };
 
 
 export default function Login({ navigation }) {
@@ -51,18 +53,22 @@ export default function Login({ navigation }) {
       })
     })
       .then(response => response.json())
-      .then(data => {
+      .then(async data => {
         console.log(data);
         // Handle the response data here
         if (data.detail) {
           console.error('Error:', data.detail); // Log the error if there is one
         } else {
-          changeStatus(true);
-          changeEmail(email);
-          changePassword(password);
+          await AsyncStorage.setItem('userEmail', email);
+          await AsyncStorage.setItem('userPassword', password);
+          await AsyncStorage.setItem('LoginStatus', 'true');
+          if (keepLoggedIn == true){
+              await AsyncStorage.setItem('keepLogIn', 'true');
+          }else{
+            await AsyncStorage.setItem('keepLogIn', 'false');
+          }
           navigation.navigate('Homepage'); // Navigate to the login screen
           console.clear();
-          // console.log(loginStatus);
         }
       })
       .catch(error => {
