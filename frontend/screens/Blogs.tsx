@@ -1,27 +1,18 @@
 import { useState, useEffect } from "react";
 import { Card, Surface, Text, Divider, ActivityIndicator } from 'react-native-paper';
 import { StyleSheet, Image, View, ScrollView, GestureResponderEvent, Platform} from 'react-native';
+import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 import openWebPage from "../functions/openWebPage";
 
-const backend_base_url = Platform.OS === 'android' ? 'http://10.0.2.2:8000' : 'http://localhost:8000';
 
+const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
 
-interface ThumbnailInfo {
-    image: string | null;
-    title: string;
-    link: string;
-    snippet: string;
-    minutes: number | null;
-    styles?: object;
-    isArticle?: boolean;
-}
-
-const Thumbnail = ({image, title, link, snippet, minutes, styles, isArticle} : ThumbnailInfo) => {
+const Thumbnail = ({image, title, link, snippet, minutes, styles, isArticle, _id, navigation}) => {
 
     const minutes_line = minutes == -1 ? "" : minutes + " minute read"
     return (
         isArticle ? (
-            <Card style={styles} onPress={(e: GestureResponderEvent) => openWebPage(link)}>
+            <Card style={styles} onPress={() => navigation.navigate('Article', {_id, link})}>
                 <Card.Title title={title} titleNumberOfLines={2} subtitle={minutes_line} left={() => <Image style={{width: 50, height: 50}}source={{uri: image}} />}/>
                     <Card.Content>
                         <Text variant="bodyMedium">{snippet}</Text>
@@ -29,7 +20,7 @@ const Thumbnail = ({image, title, link, snippet, minutes, styles, isArticle} : T
             </Card>
         ) : 
         (
-            <Card style={styles} onPress={(e: GestureResponderEvent) => openWebPage(link)}>
+            <Card style={styles} onPress={() => navigation.navigate('Article', {_id, link})}>
                     <Card.Cover source={{ uri: image }} style={{width: undefined}}/>
                     <Card.Title title={title} subtitle={minutes_line} titleNumberOfLines={2}/>
                     <Card.Content>
@@ -40,23 +31,21 @@ const Thumbnail = ({image, title, link, snippet, minutes, styles, isArticle} : T
     )
 }
 
-const Blogs = () => {
+const Blogs = ({navigation}) => {
 
     
-    interface digest {
-        general: ThumbnailInfo[];
-        forYou: ThumbnailInfo[];
-    }
     const [isLoading, setLoading] = useState(true);
-    const [digest, setDigest] = useState<digest>({general: [], forYou: []});
+    const [digest, setDigest] = useState({general: [], forYou: []});
 
     const getDigest = async () => {
         try {
             const generalUrl = `${backend_base_url}/digest/general`;
+            console.log(generalUrl);
             const generalResponse = await fetch(generalUrl);
             const generalData = await generalResponse.json();
 
             const forYouUrl = `${backend_base_url}/digest/personal`;
+            console.log(forYouUrl);
             const forYouResponse = await fetch(forYouUrl);
             const forYouData = await forYouResponse.json()
 
@@ -74,7 +63,7 @@ const Blogs = () => {
     
     };
 
-    const createThumbnails = (thumbnailInfos : ThumbnailInfo[]) => {
+    const createThumbnails = (thumbnailInfos) => {
 
         return thumbnailInfos.map((info) => {
 
@@ -82,6 +71,8 @@ const Blogs = () => {
             const minutes = info.minutes ? Math.ceil(info.minutes) : -1
             return (
                 <Thumbnail 
+                key={info._id}
+                _id={info._id}
                 image={image}
                 title={info.title}
                 link={info.link}
@@ -89,6 +80,7 @@ const Blogs = () => {
                 minutes={minutes}
                 styles={styles.smallCard} 
                 isArticle={info.isArticle}
+                navigation={navigation}
             />
             )
         });
@@ -110,42 +102,6 @@ const Blogs = () => {
         )
 
     )
-
-    /*
-    return (
-
-        <ScrollView style={styles.container}>
-            <Text variant="headlineLarge" style={{textAlign: "center"}}>Today's Digest</Text>
-            <Text variant="headlineSmall" style={{textAlign: "center"}}>General</Text>
-            <Thumbnail 
-                image="https://www.melissaerial.com/wp-content/uploads/2020/07/fall-hairstyles-for-black-women-1.jpg"
-                title="Short Fall Hairstyles for Curly Hair"
-                link="https://www.ouidad.com/blogs/curl-talk/short-hairstyles-for-fall"
-                lede="Turn a new leaf with these looks"
-                minutes="5" 
-                styles={styles.smallCard} 
-                isArticle/>
-            <Thumbnail 
-                image="https://hips.hearstapps.com/hmg-prod/images/gym-hairstyles-1543952708.jpg"
-                title="Don't know how to wear your hair at the gym? We got you"
-                link="https://www.thecurlstory.com/workout-hairstyles-for-curly-hair/"
-                lede="Work out without worrying about your hair getting in the way"
-                minutes="7"
-                styles={styles.smallCard} 
-                isArticle/>
-            <Thumbnail
-                image="https://i.pinimg.com/564x/77/49/4e/77494e645e79d8d974f16296b9c6dd61.jpg"
-                title="Natural Hair: Starter's Guide"
-                link="https://naturalhair.org/blogs/news/your-complete-guide-to-transitioning-to-natural-hair"
-                lede="Want to transition to natural hair but don't know where to start? This article offers tips and tricks on how to take care of your hair and build a healthy daily routine"
-                minutes="10"
-                styles={styles.smallCard} 
-                isArticle/>
-            <Text variant="headlineSmall" style={{textAlign: "center"}}>Just for You</Text>
-
-        </ScrollView>
-    )
-    */
     
 }
 
