@@ -4,7 +4,7 @@ from db import get_database
 import random
 from pydantic import BaseModel
 
-digestRouter = APIRouter()
+digest_router = APIRouter()
 db = get_database()
 
 
@@ -43,13 +43,13 @@ def get_comments(article_id):
 ########## ROUTES ##############
 ################################
 
-@digestRouter.get('/general')
+@digest_router.get('/general')
 def getGeneralDigest():
     thumbnail_infos = [info for info in db["generalDigest"].find()]
     ids_to_strings(thumbnail_infos)
     return thumbnail_infos
 
-@digestRouter.get('/personal')
+@digest_router.get('/personal')
 def getPersonalDigest():
 
     user_tags = get_user_tags()
@@ -92,20 +92,20 @@ def getPersonalDigest():
 
     return three_articles
 
-@digestRouter.get('/{article_id}/likes')
+@digest_router.get('/{article_id}/likes')
 def get_article_likes(article_id):
     likes = get_likes(article_id)
     ids_to_strings(likes)
     return likes 
 
-@digestRouter.get('/{article_id}/comments')
+@digest_router.get('/{article_id}/comments')
 def get_article_likes(article_id):
     comments = get_comments(article_id)
     ids_to_strings(comments)
     print(comments)
     return comments
 
-@digestRouter.post('/{article_id}/add_like')
+@digest_router.post('/{article_id}/add_like')
 def add_like(article_id, user: User):
     doc_to_insert = {"articleId": article_id, "email": user.email}
     existing_doc = db["articleLikes"].find_one(doc_to_insert)
@@ -115,7 +115,7 @@ def add_like(article_id, user: User):
     else:
         return {"message": f'{user.email} has already liked article {article_id}'}
     
-@digestRouter.post('/{article_id}/delete_like')
+@digest_router.post('/{article_id}/delete_like')
 def delete_like(article_id, user: User):
     doc_to_delete = {"articleId": article_id, "email": user.email}
     existing_doc = db["articleLikes"].find_one(doc_to_delete)
@@ -125,7 +125,7 @@ def delete_like(article_id, user: User):
         db["articleLikes"].delete_one(doc_to_delete)
         return {"message": f'{user.email} has unliked article {article_id}'}
     
-@digestRouter.post('/{article_id}/toggle_like')
+@digest_router.post('/{article_id}/toggle_like')
 def toggle_like(article_id, user: User):
     doc = {"articleId": article_id, "email": user.email}
     existing_doc = db["articleLikes"].find_one(doc)
@@ -135,7 +135,7 @@ def toggle_like(article_id, user: User):
     else:
         delete_like(article_id, user)
 
-@digestRouter.post('/{article_id}/comment')
+@digest_router.post('/{article_id}/comment')
 def add_comment(article_id, comment: Comment):
     print(comment)
     doc_to_insert = {"articleId": article_id, "email": comment.email, "text": comment.text}

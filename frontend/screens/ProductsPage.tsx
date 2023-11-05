@@ -1,9 +1,11 @@
 import { View, Image, SafeAreaView, ScrollView } from "react-native"
 import { Style } from "react-native-paper/lib/typescript/components/List/utils"
 import { Text, TouchableRipple, List, ActivityIndicator, SegmentedButtons} from "react-native-paper"
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage from the correct package
 import { useState, useEffect } from "react"
 import openWebPage from "../functions/openWebPage"
 import { Platform } from "react-native"
+import callApi from "../functions/callApi";
 
 interface Product {
     title: string,
@@ -80,9 +82,7 @@ let ProductsPage = () => {
     const getProducts = async () => {
         try {
             const url = `${backend_base_url}/products/${hairType}`
-            console.log(url);
             const response = await fetch(url);
-            console.log(response);
             const data = await response.json();
             setProducts(data);
         } 
@@ -95,6 +95,40 @@ let ProductsPage = () => {
             setLoading(false);
         }
     };
+
+    const getHairType = async () => {
+        const email = await AsyncStorage.getItem('userEmail');
+        const password = await AsyncStorage.getItem('userPassword');
+
+        console.log(`Email: ${email}, Password: ${password}`)
+        const reqBody = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email, password
+            }),
+        }
+
+        const userInfo = await callApi(`/get_hair_info`, reqBody);
+        const type = userInfo["hairType"];
+        console.log(`hair type: ${type}`);
+        setHairType(type);
+    }
+
+
+
+    useEffect(() => {
+        (async () => {
+            const email = await AsyncStorage.getItem('userEmail');
+            const password = await AsyncStorage.getItem('userPassword');
+
+            if (email && password) {
+                await getHairType();
+            }
+        })();
+    }, []);
 
     useEffect(() => {
         getProducts()

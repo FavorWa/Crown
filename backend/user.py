@@ -22,19 +22,28 @@ class User(BaseModel):
 
 @router.post('/get_user_info')
 async def get_user_info(user: User):
+    print(user.email, user.password)
     # return 0
     user_info = users_collection.find_one({"email": user.email, "password": user.password})
     if user_info:
-        print(f"User found: {user_info}")
-
         # Convert ObjectId to string
         user_info['_id'] = str(user_info['_id'])
 
-        return JSONResponse(content=user_info, status_code=200)
+        print(user_info["hairType"])
+        return user_info
+    
     else:
         raise HTTPException(status_code=404, detail="User not found")
     
     
+@router.post('/get_hair_info')
+def get_hair_info(user: User):
+    user_info = users_collection.find_one({"email": user.email, "password": user.password})
+    if user_info:
+        user_info['_id'] = str(user_info['_id'])
+
+        print(user_info["hairType"])
+        return {"hairType": user_info["hairType"]}
 
 @router.post('/change_avatar')
 async def change_avatar(user_email: str, avatar_file: UploadFile = File(...)):

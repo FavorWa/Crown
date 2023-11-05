@@ -3,7 +3,7 @@ from secret_values import rainforest_api_key
 from db import get_database
 import requests
 
-productsRouter = APIRouter()
+products_router = APIRouter()
 db = get_database()
 
 def make_search_string(hair_type: str):
@@ -74,38 +74,38 @@ def update_database():
         db[hair_type].insert_many(transformed_products)
         
 
-@productsRouter.get('/2A')
+@products_router.get('/2A')
 def get_2a_hair_products():
     return get_products("2A")
 
-@productsRouter.get('/2B')
+@products_router.get('/2B')
 def get_2b_hair_products():
     return get_products("2B")
     
-@productsRouter.get('/2C')
+@products_router.get('/2C')
 def get_2b_hair_products():
     return get_products("2C")
 
-@productsRouter.get('/3A')
+@products_router.get('/3A')
 def get_2b_hair_products():
     return get_products("3A")
 
-@productsRouter.get('/3B')
+@products_router.get('/3B')
 def get_2b_hair_products():
     return get_products("3B")
 
-@productsRouter.get('/3C')
+@products_router.get('/3C')
 def get_2b_hair_products():
     return get_products("3C")
 
-@productsRouter.get('/4A')
+@products_router.get('/4A')
 def get_2b_hair_products():
     return get_products("4A")
 
-@productsRouter.get('/4B')
+@products_router.get('/4B')
 def get_2b_hair_products():
     return get_products("4B")
 
-@productsRouter.get('/4C')
+@products_router.get('/4C')
 def get_2b_hair_products():
     return get_products("4C")
