@@ -28,6 +28,10 @@ export default function App() {
         await AsyncStorage.setItem('userPassword', '');
         await AsyncStorage.setItem('isLoggedIn', 'false');
         await AsyncStorage.setItem('LoginStatus', 'false');
+        await AsyncStorage.setItem('userId', '');
+        await AsyncStorage.setItem('userName', '');
+        await AsyncStorage.setItem('userAvatar', '');
+        await AsyncStorage.setItem('userHairType', '');
       }
     }catch (errer) {
       console.log('error', error);
