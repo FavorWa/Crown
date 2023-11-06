@@ -3,6 +3,7 @@ import { Card, Surface, Text, Divider, ActivityIndicator } from 'react-native-pa
 import { StyleSheet, Image, View, ScrollView, GestureResponderEvent, Platform} from 'react-native';
 import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 import openWebPage from "../functions/openWebPage";
+import Homepage from "./HomePage";
 
 
 const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
@@ -90,6 +91,21 @@ const Blogs = ({navigation}) => {
         getDigest();
     }, []);
 
+    const makeThumbnails = (thumbnailInfos : ThumbnailInfo[]) => {
+        return thumbnailInfos.map((info) => {
+            const image = info.image ? info.image : "https://cdn3.vectorstock.com/i/1000x1000/51/27/gold-crown-logo-icon-element-vector-21245127.jpg";
+            return {
+                image, // Add image URL to the object
+                title: info.title,
+                link: info.link,
+                snippet: info.snippet,
+                minutes: info.minutes ? Math.ceil(info.minutes) : -1,
+                isArticle: info.isArticle
+            };
+        });
+    };
+    
+
     return (
         isLoading ? <ActivityIndicator /> : (
             <ScrollView style={styles.container}>
@@ -98,6 +114,7 @@ const Blogs = ({navigation}) => {
                 {createThumbnails(digest["general"])}
                 <Text variant="headlineSmall" style={{textAlign: "center"}}>Just for You</Text>
                 {createThumbnails(digest["forYou"])}
+
             </ScrollView>
         )
 

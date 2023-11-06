@@ -30,7 +30,8 @@ async def log_in(user: User):
             {"email": user.email, "password": user.password},
             {"$set": {"keepLoggedIn": user.keepLoggedIn}}
         )
-        return JSONResponse(content={"message": "Login successful.", "keepLoggedIn": user.keepLoggedIn})
-
+        stored_user['_id'] = str(stored_user['_id'])
+        # return JSONResponse(content={"message": "Login successful.", "keepLoggedIn": user.keepLoggedIn})
+        return JSONResponse(content={"message": "Login successful.", "user": stored_user})
     else:
         raise HTTPException(status_code=401, detail="email or password incorrect!")
