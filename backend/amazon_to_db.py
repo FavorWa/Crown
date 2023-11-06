@@ -1,5 +1,5 @@
-from secrets.secret_values import rainforest_api_key
-from database.database import get_database
+from secret_values import rainforest_api_key
+from db import get_database
 import requests
 
 db = get_database()

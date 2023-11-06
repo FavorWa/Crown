@@ -1,2 +1,3 @@
-const FRONTEND_BASE_URL = "http://127.0.0.1:8000";
-export {FRONTEND_BASE_URL};
+const BACKEND_BASE_IOS = "http://localhost:8000";
+const BACKEND_BASE_ANDROID = "http://10.0.2.2:8000";
+export {BACKEND_BASE_IOS, BACKEND_BASE_ANDROID};
