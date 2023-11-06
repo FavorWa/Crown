@@ -30,6 +30,9 @@ const Nums = [
 ];
 
 export default function DrawerExample({ navigation }) {
+    const [userName, setuserName] = useState('');
+    const [userId, setuserId] = useState('');
+
     const [open, setOpen] = React.useState(false);
 
     const [isModalVisible, setModalVisible] = useState(false);
@@ -46,28 +49,31 @@ export default function DrawerExample({ navigation }) {
         });
         if (avatarUrl) {
           setUserAvatar(await AsyncStorage.getItem('userAvatar'));
+          setuserName(await AsyncStorage.getItem('userName'));
+          setuserId(await AsyncStorage.getItem('userId'));
         }
       };
   
       fetchUserAvatar();
     }, []);
-    // const [location, setLocation] = useState(null);
-    // const [errorMsg, setErrorMsg] = useState(null);
-    // useEffect(() => {
-    //     (async () => {
+
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    useEffect(() => {
+        (async () => {
           
-    //       let { status } = await Location.requestForegroundPermissionsAsync();
-    //       if (status !== 'granted') {
-    //         setErrorMsg('Permission to access location was denied');
-    //         return;
-    //       }
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+          }
 
-    //       let location = await Location.getCurrentPositionAsync({});
-    //       setLocation(location);
-    //     })();
-    //   }, []);
+          let location = await Location.getCurrentPositionAsync({});
+          setLocation(location);
+        })();
+      }, []);
 
-    // if(location){console.log(location)}
+    if(location){console.log(location)}
 
 
     const changeAvatar = async () => {
@@ -157,9 +163,9 @@ export default function DrawerExample({ navigation }) {
               </View>
             </Modal>
 
-            <Text style={styles.username}> username </Text>
+            <Text style={styles.username}> {userName} </Text>
 
-            <Text style={styles.userId}> userId </Text>
+            <Text style={styles.userId}> {userId} </Text>
         </View>
       </Drawer>
     );

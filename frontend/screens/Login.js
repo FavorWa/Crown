@@ -30,8 +30,6 @@ export default function Login({ navigation }) {
     })
       .then(response => response.json())
       .then(async data => {
-        console.log(data);
-        // Handle the response data here
         if (data.detail) {
           console.error('Error:', data.detail); // Log the error if there is one
         } else {
@@ -43,6 +41,12 @@ export default function Login({ navigation }) {
           }else{
             await AsyncStorage.setItem('keepLogIn', 'false');
           }
+          const userString = JSON.stringify(data.user);
+          const userObject = JSON.parse(userString);
+          await AsyncStorage.setItem('userId', userObject._id);
+          await AsyncStorage.setItem('userName', userObject.name);
+          await AsyncStorage.setItem('userAvatar', userObject.avatarNumber);
+          await AsyncStorage.setItem('userHairType', userObject.hairType);
           navigation.navigate('Homepage'); // Navigate to the login screen
           console.clear();
         }
