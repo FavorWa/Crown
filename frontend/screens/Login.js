@@ -47,7 +47,7 @@ export default function Login({ navigation }) {
           await AsyncStorage.setItem('userName', userObject.name);
           await AsyncStorage.setItem('userAvatar', userObject.avatarNumber);
           await AsyncStorage.setItem('userHairType', userObject.hairType);
-          navigation.navigate('Homepage'); // Navigate to the login screen
+          navigation.replace('Homepage'); // Navigate to the login screen
           console.clear();
         }
       })
