@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Pressable, Image } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from './User';
 
@@ -42,6 +42,10 @@ export default function Homepage({ navigation }) {
       ></Image>
 
       <TouchableOpacity onPress={() => navigation.navigate('HairQuiz')}>
+        <Image
+          source={require('../assets/Rectangle4.png')}
+          style={styles.hairQuizRectangle}
+        ></Image>
         <Text style={styles.takeTheQuiz}>
           Take the Quiz
         </Text>
@@ -52,44 +56,75 @@ export default function Homepage({ navigation }) {
           Blogs
         </Text>
       </TouchableOpacity>
-      <Image
-          source={require('../assets/Rectangle4.png')}
-          style={styles.rectangle5}
-      ></Image>
-      <Image
-          source={require('../assets/Rectangle4.png')}
-          style={styles.rectangle6}
-      ></Image>
-      <Image
-          source={require('../assets/Rectangle4.png')}
-          style={styles.rectangle7}
-      ></Image>
-      <Text style={styles.blogTitle1}>
-        Fall 2023 hairStyles
-      </Text>
-      <View style={styles.BlogContainer}>
-        <Text style={styles.blogText1}>
-          good, bad, good, bad, good, bad, ugly, cool, bold, ughnot long enoughnot long enough
-        </Text>
-      </View>
-      <Text style={styles.blogTitle2}>
-        Winter 2023 hairStyles
-      </Text>
-      <View style={styles.BlogContainer2}>
-        <Text style={styles.blogText2}>
-          good, bad, good, bad, good, bad, ugly, cool, bold, ughnot long enoughnot long enough
-        </Text>
-      </View>
-
-      <Text style={styles.inspiration}>
-        Inspiration
-      </Text>
       
+      <View style={styles.blogScrollContainer}>
+        <ScrollView horizontal={true} >
+          <Image
+            source={require('../assets/blogM1.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/blogM2.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/blogM3.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          ></Image>
+        </ScrollView>
+      </View>
 
       <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
         <Text style={styles.productPage}> Products </Text>
       </TouchableOpacity>
       
+      <TouchableOpacity>
+        <Text style={styles.Inspiration}>
+          Inspiration
+        </Text>
+      </TouchableOpacity>
+
+      <View style={styles.InspirationScrollContainer}>
+        <ScrollView horizontal={true} >
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          ></Image>
+        </ScrollView>
+      </View>
+
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <View style={styles.Bottonline}> 
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -128,7 +163,6 @@ export default function Homepage({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-
     </SafeAreaView>
   )
 }
@@ -143,35 +177,34 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     left: 28,
-    top: 20,
+    top: 5,
   },
   takeTheQuiz: {
     textAlign: 'center', // Center the text horizontally within the container
     lineHeight: 24, // Set the line height to match the height of the container
-    backgroundColor: 'rgba(201, 162, 39, 1)',
     fontWeight: '400', // Use 'bold' instead of 400 for a bolder font weight
     fontSize: 18,
     width: 110,
     height: 24,
-    borderRadius: 12, // Set half of the height to achieve a circular shape
-    marginLeft: 270,
-    marginTop: 200,
+    marginLeft: 260,
+    marginTop: 150,
   },
-  rectangle36: {
-    backgroundColor: 'rgba(201, 162, 39, 1)',
-    width: 103.5,
+  hairQuizRectangle: {
+    tintColor: '#C9A227',
+    width: 130,
     height: 24,
-    position: 'absolute',
-    left: 249,
-    top: 228,
-  }, 
+    borderRadius: 12, 
+    left: 250,
+    top: 175,
+  },
   rectangle4: {
     backgroundColor: 'rgba(217, 217, 217, 1)',
     width: 355,
     height: 150,
+    borderRadius: 20,
     position: 'absolute',
     left: 28,
-    top: 60,
+    top: 40,
   },
   blogs: {
     textAlign: 'left',
@@ -179,118 +212,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     left: 33,
-    top: 10,
   },
-  rectangle5: {
-    tintColor: 'rgba(237, 224, 212, 1)',
-    width: 145,
-    height: 139,
-    position: 'absolute',
-    left: 33,
-    top: 287,
-  },
-  blogTitle1: {
-    color: 'black',
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 15, 
-    letterSpacing: 0,
-    left: 34,
-    top: 97,
-  },
-  BlogContainer: {
-    width: 143, // Set a specific width for the container
-    flexWrap: 'wrap', // Enable text wrapping
-  },
-  blogText1: {
-    color: 'black',
-    fontStyle: 'normal',
-    fontWeight: '400',
-    position: 'absolute',
-    fontSize: 8,
-    letterSpacing: 0,
-    left: 35,
-    top: 100,
-  },
-  blogTitle2: {
-    color: 'black',
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 15, 
-    letterSpacing: 0,
-    left: 238,
-    top: 80,
-  },
-  BlogContainer2: {
-    width: 143, // Set a specific width for the container
-    flexWrap: 'wrap', // Enable text wrapping
-  },
-  blogText2: {
-    color: 'black',
-    fontStyle: 'normal',
-    fontWeight: '400',
-    position: 'absolute',
-    fontSize: 8,
-    letterSpacing: 0,
-    left: 238,
-    top: 85,
-  },
-  rectangle6: {
-    tintColor: 'rgba(237, 224, 212, 1)',
-    width: 145,
-    height: 139,
-    position: 'absolute',
-    right: 33,
-    top: 287,
-  },
-  rectangle7: {
-    tintColor: 'rgba(237, 224, 212, 1)',
-    width: 348,
-    height: 120,
-    position: 'absolute',
-    left: 33,
-    top: 461,
-  },
-  inspiration: {
-    textAlign: 'left',
-    fontWeight: '400',
-    fontSize: 20,
-    color: 'black',
-    left: 33,
-    top: 535,
-  },
-  rectangle8: {
-    backgroundColor: `rgba(217, 217, 217, 1)`,
-    width: 91,
-    height: 84,
-    position: 'absolute',
-    left: 33,
-    top: 650,
-  },
-  rectangle9: {
-    backgroundColor: `rgba(217, 217, 217, 1)`,
-    width: 91,
-    height: 84,
-    position: 'absolute',
-    left: 162,
-    top: 650,
-  },
-  rectangle10: {
-    backgroundColor: `rgba(217, 217, 217, 1)`,
-    width: 91,
-    height: 84,
-    position: 'absolute',
-    right: 33,
-    top: 650,
-  }, 
   productPage: {
-    backgroundColor: 'orange',
-    top: 60,
+    backgroundColor: '#add8e6',
     width: 100,
     height: 30,
     fontSize: 24,
-    marginLeft: 33,
-    marginTop: 200,
+    left: 280,
+    marginTop: 30,
   },
   Compass: {
     aspectRatio: 1.2,
@@ -329,7 +258,7 @@ const styles = StyleSheet.create({
   },
   Bottonline: {
     width: 430,
-    height: 149,
+    height: 210,
     flexShrink: 0,
     borderRadius: 39,
     borderWidth: 1,
@@ -343,5 +272,28 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginLeft: 330,
     marginVertical: -55,
+  },
+  blogScrollContainer:{
+    top: 15,
+    height: 160,
+    marginHorizontal: 28,
+  },
+  scrollObject: {
+    height: 160,
+    width: 120,
+    borderRadius: 15,
+    marginRight: 10,
+  },
+  Inspiration: {
+    textAlign: 'left',
+    fontWeight: '400',
+    fontSize: 20,
+    color: 'black',
+    left: 33,
+  },
+  InspirationScrollContainer:{
+    top: 15,
+    height: 160,
+    marginHorizontal: 28,
   },
 });
