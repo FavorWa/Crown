@@ -7,6 +7,7 @@ from login import router as log_in_router
 from digestRouter import digestRouter
 from user import router as user
 
+
 db = get_database()
 app = FastAPI()
 app.include_router(productsRouter, prefix="/products")

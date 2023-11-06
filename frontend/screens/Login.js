@@ -4,30 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage from the correct package
 
 
-// this auth method is temporary, TODO!
-// export let loginStatus = false;
-// export const changeStatus = (bol) => {
-//   loginStatus = bol;
-// };
-// export const getStatus = () => {
-//   return loginStatus;
-// };
-// export let useremail = '';
-// export const changeEmail = (email) => {
-//   useremail = email;
-// } 
-// export const getEmail = () => {
-//   return useremail;
-// };
-// export let userpassword = '';
-// export const changePassword = (password) => {
-//   userpassword = password;
-// }
-// export const getPassword = () => {
-//   return userpassword;
-// };
-
-
 export default function Login({ navigation }) {
 
   const [email, setEmail] = useState('');

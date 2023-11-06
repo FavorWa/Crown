@@ -1,10 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button, ScrollView, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Drawer } from 'react-native-drawer-layout';
 import Modal from 'react-native-modal';
-import ImagePicker from 'react-native-image-picker';
+import * as Location from 'expo-location';
 
+
+export const selectableImages = {
+  'avatar1': require('../assets/avatar1.avif'),
+  'avatar2': require('../assets/avatar2.jpeg'),
+  'avatar3': require('../assets/avatar3.jpeg'),
+  'avatar4': require('../assets/avatar4.jpeg'),
+  'avatar5': require('../assets/avatar5.jpeg'),
+  'avatar6': require('../assets/avatar6.jpeg'),
+  'avatar7': require('../assets/avatar7.jpeg'),
+  'avatar8': require('../assets/avatar8.avif'),
+  'avatar9': require('../assets/avatar9.webp')
+};
+const Nums = [
+  'avatar1',
+  'avatar2',
+  'avatar3',
+  'avatar4',
+  'avatar5',
+  'avatar6',
+  'avatar7',
+  'avatar8',
+  'avatar9'
+];
 
 export default function DrawerExample({ navigation }) {
     const [open, setOpen] = React.useState(false);
@@ -14,55 +37,65 @@ export default function DrawerExample({ navigation }) {
     const toggleModal = () => {
       setModalVisible(!isModalVisible);
     };
+    
+    const [userAvatar, setUserAvatar] = useState(null);
+    useEffect(() => {
+      const fetchUserAvatar = async () => {
+        const avatarUrl = await AsyncStorage.getItem('userAvatar').catch(error => {
+          console.error('Error fetching user avatar:', error);
+        });
+        if (avatarUrl) {
+          setUserAvatar(await AsyncStorage.getItem('userAvatar'));
+        }
+      };
+  
+      fetchUserAvatar();
+    }, []);
+    // const [location, setLocation] = useState(null);
+    // const [errorMsg, setErrorMsg] = useState(null);
+    // useEffect(() => {
+    //     (async () => {
+          
+    //       let { status } = await Location.requestForegroundPermissionsAsync();
+    //       if (status !== 'granted') {
+    //         setErrorMsg('Permission to access location was denied');
+    //         return;
+    //       }
 
-    const fetchUserInfo = async () => {
-      const emailValue = AsyncStorage.getItem("userEmail");
-      const passwordValue = AsyncStorage.getItem("userPassword");
+    //       let location = await Location.getCurrentPositionAsync({});
+    //       setLocation(location);
+    //     })();
+    //   }, []);
 
-      fetch('http://localhost:8000/get_user_info', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: emailValue,
-          password: passwordValue,
-        })
-      })
-      .then(response => {
-          if (!response.ok) {
-              throw new Error('Network response was not ok');
-          }
-          return response.json();
-      })
-      .then(data => {
-          console.log('Received data:', data);
-          // Handle the user information here
-      })
-      .catch(error => {
-          console.error('Error:', error);
-          console.log("email", emailValue, "password", passwordValue);
-      });
-    };
+    // if(location){console.log(location)}
+
 
     const changeAvatar = async () => {
-      const emailValue = AsyncStorage.getItem("userEmail");
-    
-      ImagePicker.launchImageLibrary({ mediaType: 'photo' }, (response) => {
-        if (!response.didCancel) {
-          const data = new FormData();
-          data.append('user_email', emailValue);
-    
-          const file = {
-            uri: response.uri,
-            name: response.fileName,
-            type: response.type,
-          };
-    
-          data.append('avatar_file', file);
-    
-          // Add fetch request here to send data to the backend
-        }  
+      const email = await AsyncStorage.getItem('userEmail');
+      const randomNum = Math.floor(Math.random() * 10);
+      const avatarNumber = Nums[randomNum];
+
+      fetch('http://localhost:8000/change_avatar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        avatarNumber: avatarNumber,
+      })
+    })
+      .then(response => response.json())
+      .then(async data => {
+        if (data.detail) {
+          console.error('Error:', data.detail); // Log the error if there is one
+        } else {
+          await AsyncStorage.setItem('userAvatar', avatarNumber);
+          setUserAvatar(avatarNumber);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
       });
     };
 
@@ -74,7 +107,7 @@ export default function DrawerExample({ navigation }) {
       console.log('log out');
       setOpen(false);
       navigation.navigate('Cover');
-    }
+    };
 
     return (
       <Drawer
@@ -83,8 +116,8 @@ export default function DrawerExample({ navigation }) {
         onClose={() => setOpen(false)}
         renderDrawerContent={() => (
           <View>
-            <TouchableOpacity>
-              <Text style={styles.Discover}>Discover People</Text>
+            <TouchableOpacity onPress={() => navigation.replace('Homepage')}> 
+              <Text style={styles.Discover}> HomePage </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={logout}>
               <Image
@@ -106,7 +139,7 @@ export default function DrawerExample({ navigation }) {
 
             <TouchableOpacity onPress={toggleModal}>
               <Image
-                  source={require('../assets/avatar2.avif')}
+                  source={selectableImages[userAvatar]}
                   style={styles.avatar}
               ></Image>
             </TouchableOpacity>
@@ -114,21 +147,19 @@ export default function DrawerExample({ navigation }) {
             <Modal isVisible={isModalVisible}>
               <View style={styles.modalContent}>
                 <Image
-                  source={require('../assets/avatar2.avif')}
+                  source={selectableImages[userAvatar]}
                   style={styles.enlargedAvatar}
                 />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={changeAvatar}>
                   <Text style={styles.changeAvatarButton}>Change Avatar</Text>
                 </TouchableOpacity>
                 <Button title="Close" onPress={toggleModal} />
               </View>
             </Modal>
-            
 
             <Text style={styles.username}> username </Text>
 
             <Text style={styles.userId}> userId </Text>
-
         </View>
       </Drawer>
     );
@@ -182,6 +213,7 @@ const styles = StyleSheet.create({
   },
   changeAvatarButton: {
     marginTop: 20,
+    fontSize: 30,
     color: 'blue',
   },
   LogoutIcon: {
