@@ -27,8 +27,8 @@ export default function App() {
         await AsyncStorage.setItem('userEmail', '');
         await AsyncStorage.setItem('userPassword', '');
         await AsyncStorage.setItem('isLoggedIn', 'false');
+        await AsyncStorage.setItem('LoginStatus', 'false');
       }
-      // console.log(data);
     }catch (errer) {
       console.log('error', error);
     }

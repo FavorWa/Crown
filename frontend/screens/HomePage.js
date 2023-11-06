@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Pressable, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { selectableImages } from './User';
 
 export default function Homepage({ navigation }) {
 
@@ -9,14 +9,27 @@ export default function Homepage({ navigation }) {
     try {
       const login = await AsyncStorage.getItem('LoginStatus');
       if (login !== 'true') {
-        navigation.navigate('Login');
+        navigation.replace('Login');
       } else {
-        navigation.navigate(web);
+        navigation.replace(web);
       }
     } catch (error) {
       console.log('Error checking login status:', error);
     }
   };
+
+  const [userAvatar, setUserAvatar] = useState(null);
+  const fetchUserAvatar = async () => {
+    const loginStatus = await AsyncStorage.getItem('LoginStatus');
+    if (loginStatus === 'true') {
+      const avatar = await AsyncStorage.getItem('userAvatar');
+      setUserAvatar(avatar);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserAvatar();
+  }, []);
 
   return(
     <SafeAreaView style={styles.container}>
@@ -104,11 +117,14 @@ export default function Homepage({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => isLoggedIn('User')}>
-            <Image
-              source={require('../assets/User.png')}
-              style={styles.User}
-            ></Image>
-            <Text style={styles.Userword}>User</Text>
+            {userAvatar ? (
+              <Image source={selectableImages[userAvatar]} style={styles.avatar} />
+            ) : (
+              <>
+                <Image source={require('../assets/User.png')} style={styles.User} />
+                <Text style={styles.Userword}>Profile</Text>
+              </>
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -308,7 +324,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1.2,
   },
   Userword: {
-    marginLeft: 342,
+    marginLeft: 338,
     marginBottom: -40,
   },
   Bottonline: {
@@ -320,5 +336,12 @@ const styles = StyleSheet.create({
     borderColor: '#472415',
     marginHorizontal: 30,
     marginBottom: -210,
+  },
+  avatar: {
+    width: 55,
+    height: 55,
+    borderRadius: 40,
+    marginLeft: 330,
+    marginVertical: -55,
   },
 });
