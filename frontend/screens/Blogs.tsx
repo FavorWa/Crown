@@ -91,7 +91,7 @@ const Blogs = ({navigation}) => {
         getDigest();
     }, []);
 
-    const makeThumbnails = (thumbnailInfos : ThumbnailInfo[]) => {
+    const makeThumbnails = (thumbnailInfos) => {
         return thumbnailInfos.map((info) => {
             const image = info.image ? info.image : "https://cdn3.vectorstock.com/i/1000x1000/51/27/gold-crown-logo-icon-element-vector-21245127.jpg";
             return {

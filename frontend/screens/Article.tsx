@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { TextInput, ActivityIndicator, Button, ToggleButton, Text, List } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, StyleSheet} from "react-native";
+import { View, StyleSheet, ScrollView} from "react-native";
 import openWebPage from "../functions/openWebPage";
 import callApi from "../functions/callApi";
 
@@ -120,11 +120,13 @@ const Article = ({ route }) => {
           Comment
         </Button>
   
+        <ScrollView>
         <List.Section title="Comments">
             {comments.map((comment) => (
                 <List.Item title={comment.email} description={comment.text}/>
             ))}
         </List.Section>
+        </ScrollView>
       </View>
     );
   };
