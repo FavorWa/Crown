@@ -18,6 +18,9 @@ class User(BaseModel):
     email: str
     avatarNumber: str
 
+class Email(BaseModel):
+    email: str
+
 @router.post('/change_avatar')
 async def change_avatar(user: User):
     if not user.email or not user.avatarNumber:
@@ -33,3 +36,18 @@ async def change_avatar(user: User):
 
     else:
         raise HTTPException(status_code=401, detail="email incorrect!")
+    
+@router.post('/get_user_info')
+def get_user_info(body: Email):
+    if not body.email:
+        raise HTTPException(status_code=400, detail="Email needed.")
+    
+    user = users_collection.find_one({"email": body.email})
+    if user:
+        return {
+            "hairType": user["hairType"]
+        }
+    
+    else:
+        raise HTTPException(status_code=404, detail="User not found.")
+

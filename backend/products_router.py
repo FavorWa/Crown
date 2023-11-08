@@ -1,111 +1,19 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from secret_values import rainforest_api_key
 from db import get_database
-import requests
+from amazon_to_db import hair_types, product_types
+from digest_router import ids_to_strings
 
 products_router = APIRouter()
 db = get_database()
 
-def make_search_string(hair_type: str):
-    return f'type {hair_type} hair products'
-
-def get_products_from_rainforest_api(hair_type: str):
-
-    # set up the request parameters
-    params = {
-    'api_key': rainforest_api_key,
-    'type': 'search',
-    'amazon_domain': 'amazon.com',
-    'search_term': make_search_string(hair_type),
-    'sort_by': 'average_review',
-    'page': '1',
-    'output': 'json'
-    }
-
-    # make the http GET request to Rainforest API, should get json back
-    api_result = requests.get('https://api.rainforestapi.com/request', params)
-
-    json = api_result.json()
-
-    return json["search_results"]
-
-def transform_products(products):
-    transformed_products = []
-    for product in products:
-        try:
-            transformed_products.append({
-                "title": product["title"],
-                "link": product["link"],
-                "image": product["image"],
-                "price": product["price"]["raw"]
-            })
-        except KeyError:
-            print("An item doesn't have a title, link, image, or price. It has been omitted.")
+@products_router.get('/{hair_type}/{product_type}')
+def get_products(hair_type, product_type):
+    if hair_type in hair_types and product_type in product_types:
+        query = {"hairType": hair_type, "productType": product_type}
+        docs = db["Products"].find(query).limit(10)
+        ids_to_strings(docs)
+        return docs
     
-    return transformed_products
-
-def get_products(hair_type):
-    collection_names = db.list_collection_names()
-    if hair_type not in collection_names:
-        products = get_products_from_rainforest_api(hair_type)
-        transformed_products = transform_products(products)
-        db[hair_type].insert_many(transformed_products)
-        return transform_products(transformed_products)
     else:
-        print('products from database')
-        products = [item for item in db[hair_type].find()]
-        for product in products:
-            product["id"] = str(product["_id"])
-            del product["_id"]
-        return products
-
-USE_DATABASE = True
-def update_database():
-    hair_types = ["2A", "2B", "2C", "3A", "3B", "3C", "4A", "4B", "4C"]
-    for hair_type in hair_types:
-
-        # drop database
-        db[hair_type].drop()
-
-        products = get_products_from_rainforest_api(hair_type)
-        transformed_products = transform_products(products)
-
-        # re initialize it
-        db[hair_type].insert_many(transformed_products)
-        
-
-@products_router.get('/2A')
-def get_2a_hair_products():
-    return get_products("2A")
-
-@products_router.get('/2B')
-def get_2b_hair_products():
-    return get_products("2B")
-    
-@products_router.get('/2C')
-def get_2b_hair_products():
-    return get_products("2C")
-
-@products_router.get('/3A')
-def get_2b_hair_products():
-    return get_products("3A")
-
-@products_router.get('/3B')
-def get_2b_hair_products():
-    return get_products("3B")
-
-@products_router.get('/3C')
-def get_2b_hair_products():
-    return get_products("3C")
-
-@products_router.get('/4A')
-def get_2b_hair_products():
-    return get_products("4A")
-
-@products_router.get('/4B')
-def get_2b_hair_products():
-    return get_products("4B")
-
-@products_router.get('/4C')
-def get_2b_hair_products():
-    return get_products("4C")
+        raise HTTPException(status_code=400, detail="Malformed API request")
