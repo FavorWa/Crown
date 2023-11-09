@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button, ScrollView, FlatList } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Drawer } from 'react-native-drawer-layout';
 import Modal from 'react-native-modal';
@@ -15,7 +15,18 @@ export const selectableImages = {
   'avatar6': require('../assets/avatar6.jpeg'),
   'avatar7': require('../assets/avatar7.jpeg'),
   'avatar8': require('../assets/avatar8.avif'),
-  'avatar9': require('../assets/avatar9.webp')
+  'avatar9': require('../assets/avatar9.webp'),
+  'avatar10': require('../assets/avatar10.jpeg'),
+  'avatar11': require('../assets/avatar11.jpeg'),
+  'avatar12': require('../assets/avatar12.jpeg'),
+  'avatar13': require('../assets/avatar13.jpeg'),
+  'avatar14': require('../assets/avatar14.jpeg'),
+  'avatar15': require('../assets/avatar15.jpeg'),
+  'avatar16': require('../assets/avatar16.jpeg'),
+  'avatar17': require('../assets/avatar17.jpeg'),
+  'avatar18': require('../assets/avatar18.jpeg'),
+  'avatar19': require('../assets/avatar19.jpeg'),
+  'avatar20': require('../assets/avatar20.avif')
 };
 const Nums = [
   'avatar1',
@@ -26,14 +37,25 @@ const Nums = [
   'avatar6',
   'avatar7',
   'avatar8',
-  'avatar9'
+  'avatar9',
+  'avatar10',
+  'avatar11',
+  'avatar12',
+  'avatar13',
+  'avatar14',
+  'avatar15',
+  'avatar16',
+  'avatar17',
+  'avatar18',
+  'avatar19',
+  'avatar20'
 ];
 
 export default function DrawerExample({ navigation }) {
     const [userName, setuserName] = useState('');
     const [userId, setuserId] = useState('');
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     const [isModalVisible, setModalVisible] = useState(false);
 
@@ -73,12 +95,13 @@ export default function DrawerExample({ navigation }) {
         })();
       }, []);
 
-    if(location){console.log(location)}
+    // if(location){console.log(location)}
 
 
     const changeAvatar = async () => {
       const email = await AsyncStorage.getItem('userEmail');
-      const randomNum = Math.floor(Math.random() * 10);
+      console.log(email);
+      const randomNum = Math.floor(Math.random() * 20);
       const avatarNumber = Nums[randomNum];
 
       fetch('http://localhost:8000/change_avatar', {
@@ -94,7 +117,7 @@ export default function DrawerExample({ navigation }) {
       .then(response => response.json())
       .then(async data => {
         if (data.detail) {
-          console.error('Error:', data.detail); // Log the error if there is one
+          // console.error('Error:', data.detail); // Log the error if there is one
         } else {
           await AsyncStorage.setItem('userAvatar', avatarNumber);
           setUserAvatar(avatarNumber);
@@ -112,44 +135,138 @@ export default function DrawerExample({ navigation }) {
       await AsyncStorage.setItem('LoginStatus', 'false'); 
       console.log('log out');
       setOpen(false);
-      navigation.navigate('Cover');
+      navigation.replace('Cover');
     };
 
     return (
       <Drawer
+        drawerPosition='right'
+        drawerStyle={{ right: 0 }}
+        drawerType='front'
         open={open}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
         renderDrawerContent={() => (
-          <View>
-            <TouchableOpacity onPress={() => navigation.replace('Homepage')}> 
-              <Text style={styles.Discover}> HomePage </Text>
+          <View style={{ top: 35 }}>
+            <Text style={{ fontSize: 32, top: 5, left: 20, marginVertical: 20 }}> Settings </Text>
+            <TouchableOpacity> 
+              <Image
+                    source={require('../assets/saved.png')}
+                    style={{marginTop: 40, width: 20, height: 20, left: 20,}}
+              ></Image>
+              <Text style={{left: 50, fontSize: 20, top: -25}}> Saved </Text>
+              <View style={{ flex: 1, height: 1, marginLeft: 45, top: -15, borderWidth: 0.5, borderColor: '#713200', marginRight: 30, }} />
             </TouchableOpacity>
+
+            <TouchableOpacity> 
+              <Image
+                    source={require('../assets/friends.png')}
+                    style={{marginTop: 10, width: 20, height: 20, left: 20,}}
+              ></Image>
+              <Text style={{left: 50, fontSize: 20, top: -25}}> Friends </Text>
+              <View style={{ flex: 1, height: 1, marginLeft: 45, top: -15, borderWidth: 0.5, borderColor: '#713200', marginRight: 30, }} />
+            </TouchableOpacity>
+
+            <TouchableOpacity> 
+              <Image
+                    source={require('../assets/reset.png')}
+                    style={{marginTop: 10, width: 20, height: 20, left: 20,}}
+              ></Image>
+              <Text style={{left: 50, fontSize: 20, top: -25}}> Reset Filter </Text>
+              <View style={{ flex: 1, height: 1, marginLeft: 45, top: -15, borderWidth: 0.5, borderColor: '#713200', marginRight: 30, }} />
+            </TouchableOpacity>
+
+            <TouchableOpacity> 
+              <Image
+                    source={require('../assets/privacy.png')}
+                    style={{marginTop: 10, width: 20, height: 20, left: 20,}}
+              ></Image>
+              <Text style={{left: 50, fontSize: 20, top: -25}}> Privacy </Text>
+              <View style={{ flex: 1, height: 1, marginLeft: 45, top: -15, borderWidth: 0.5, borderColor: '#713200', marginRight: 30, }} />
+            </TouchableOpacity>
+
+            <TouchableOpacity> 
+              <Image
+                    source={require('../assets/Settings.png')}
+                    style={{marginTop: 10, width: 20, height: 20, left: 20,}}
+              ></Image>
+              <Text style={{left: 50, fontSize: 20, top: -25}}> Settings </Text>
+              <View style={{ flex: 1, height: 1, marginLeft: 45, top: -15, borderWidth: 0.5, borderColor: '#713200', marginRight: 30, }} />
+            </TouchableOpacity>
+
             <TouchableOpacity onPress={logout}>
               <Image
                     source={require('../assets/logout.png')}
-                    style={styles.LogoutIcon}
+                    style={{marginTop: 10, width: 20, height: 20, left: 20,}}
               ></Image>
-              <Text style={styles.Logout}>Log Out</Text>
+              <Text style={{ color: '#A02000', left: 50, fontSize: 18, top: -22 }}> Log Out </Text>
             </TouchableOpacity>
           </View>
         )}
       >
-        <View style={styles.container}>
-            <TouchableOpacity onPress={() => setOpen((prevOpen) => !prevOpen) }>
+
+            <Text style={{ fontSize: 34, fontWeight: '500', left: 33, top: 60}}>Profile</Text>
+            <Text style={{ fontSize: 14, fontWeight: '500', left: 33, top: 70, color: '#713200'}}>All the details, catered to you.</Text>
+            
+            <View style={{ top: -50, width: 70 }}>
+              <TouchableOpacity onPress={() => setOpen((prevOpen) => !prevOpen)} >
                 <Image
                     source={require('../assets/content_list.png')}
                     style={styles.Contentlist}
                 ></Image>
+              </TouchableOpacity>
+            </View>
+
+            <Image
+                source={require('../assets/Rectangle4.png')}
+                style={{ alignSelf: 'center', borderRadius: 20, width: 350, height: 150, top: 10}}
+            ></Image>
+
+            <TouchableOpacity>
+              <View style={{ top: 20, backgroundColor: '#C9A227', borderRadius: 15, alignItems: 'center', height: 30, marginHorizontal: 5, width: 170, left: 200 }}>
+                <Text style={{ top: 2, fontSize: 20 }}> See Your Results </Text>
+              </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={toggleModal}>
-              <Image
-                  source={selectableImages[userAvatar]}
-                  style={styles.avatar}
-              ></Image>
-            </TouchableOpacity>
+            <Text style={{ fontSize: 24, left: 30, top: 40}}>Set Your Hair Goals</Text>
 
+            <View style={{ top: 50, backgroundColor: '#EDE0D4', borderRadius: 20, height: 70, marginHorizontal: 30, }}>
+              <TouchableOpacity>
+                <Image
+                    source={require('../assets/Plus.png')}
+                    style={{top: 20, left: 10, height: 30, width: 30}}
+                ></Image>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{ top: 60, backgroundColor: '#EDE0D4', borderRadius: 20, height: 70, marginHorizontal: 30, }}>
+              <TouchableOpacity>
+                <Image
+                    source={require('../assets/Plus.png')}
+                    style={{top: 20, left: 10, height: 30, width: 30}}
+                ></Image>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{ top: 70, backgroundColor: '#EDE0D4', borderRadius: 20, height: 70, marginHorizontal: 30, }}>
+              <TouchableOpacity>
+                <Image
+                    source={require('../assets/Plus.png')}
+                    style={{top: 20, left: 10, height: 30, width: 30}}
+                ></Image>
+              </TouchableOpacity>
+            </View>
+
+            {/* <View style={{ height: 40, width: 40 }}>
+              <TouchableOpacity onPress={toggleModal}>
+                  <Image
+                      source={selectableImages[userAvatar]}
+                      style={styles.avatar}
+                  ></Image>
+              </TouchableOpacity>
+            </View> */}
+
+            
             <Modal isVisible={isModalVisible}>
               <View style={styles.modalContent}>
                 <Image
@@ -163,25 +280,120 @@ export default function DrawerExample({ navigation }) {
               </View>
             </Modal>
 
-            <Text style={styles.username}> {userName} </Text>
+            <Text style={{fontSize: 24, left: 230, top: 80}}>Notifications</Text>
+            <ScrollView style={{ top: 90, left: 200 }}>
+              <View style={{ backgroundColor: '#E3A387', borderRadius: 20, alignItems: 'center', marginHorizontal: 5, marginBottom: 10, width: 180 }}>
+                <Text style={{ marginVertical: 8, fontSize: 12, marginHorizontal: 5 }}>You have an upcoming appointment with Chantelle on Nov. 6</Text>
+              </View>
+              <View style={{ backgroundColor: '#E3A387', borderRadius: 20, alignItems: 'center', marginHorizontal: 5, marginBottom: 10, width: 180 }}>
+                <Text style={{ marginVertical: 8, fontSize: 12, marginHorizontal: 5 }}>Sara M. wants to share their hair journey with you!</Text>
+              </View>
+              <View style={{ backgroundColor: '#E3A387', borderRadius: 20, alignItems: 'center', marginHorizontal: 5, marginBottom: 10, width: 180 }}>
+                <Text style={{ marginVertical: 8, fontSize: 12, marginHorizontal: 5 }}>Set your hair goals for this month.</Text>
+              </View>
+            </ScrollView>
 
-            <Text style={styles.userId}> {userId} </Text>
-        </View>
+            {/* <Text style={styles.username}> {userName} </Text>
+
+            <Text style={styles.userId}> {userId} </Text> */}
+
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', top: 360 }}>
+              <View style={styles.Bottonline}> 
+                <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
+                <Image
+                  source={require('../assets/Compass.png')}
+                  style={styles.Compass}
+                ></Image>
+                <Text style={styles.Compassword}>Discover</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity onPress={() => navigation.replace('Stylist')}>
+                <Image
+                  source={require('../assets/Barbershop.png')}
+                  style={styles.Barbershop}
+                ></Image>
+                <Text style={styles.Barbershopword}>Stylist</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Image
+                  source={require('../assets/Community.png')}
+                  style={styles.Community}
+                ></Image>
+                <Text style={styles.Communityword}>Community</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => navigation.replace('User')}>
+                <Image source={selectableImages[userAvatar]} style={styles.bottomAvatar} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        
       </Drawer>
     );
   }
 
 const styles = StyleSheet.create({
+  Compass: {
+    aspectRatio: 1.2,
+    marginLeft: 35,
+    marginTop: 15,
+  },
+  Compassword: {
+    marginLeft: 30,
+  },
+  Barbershop: {
+    aspectRatio: 1.2,
+    marginLeft: 135,
+    marginTop: -55,
+  },
+  Barbershopword: {
+    marginLeft: 135,
+    marginBottom: -40,
+  },
+  Community: {
+    aspectRatio: 1.2,
+    marginLeft: 235,
+    marginTop: -55,
+  },
+  Communityword: {
+    marginLeft: 225,
+    marginBottom: -40,
+  },
+  User: {
+    marginLeft: 335,
+    marginTop: -55,
+    aspectRatio: 1.2,
+  },
+  Userword: {
+    marginLeft: 338,
+    marginBottom: -40,
+  },
+  Bottonline: {
+    width: 430,
+    height: 210,
+    flexShrink: 0,
+    borderRadius: 39,
+    borderWidth: 1,
+    borderColor: '#472415',
+    marginHorizontal: 30,
+  },
+  bottomAvatar: {
+    width: 55,
+    height: 55,
+    borderRadius: 40,
+    marginLeft: 330,
+    marginVertical: -55,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#EDE0D4',
+    backgroundColor: '#FFFFFF',
   },
   Contentlist: {
-    marginLeft: 10,
-    marginTop: 15,
+    left: 330,
+    marginTop: 60,
     height: 30,
     width: 60,
-    marginLeft: 10,  
   },
   avatar: {
     width: 80,
@@ -221,19 +433,5 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 30,
     color: 'blue',
-  },
-  LogoutIcon: {
-    marginTop: 20,
-    width: 40,
-    height: 40,
-    alignSelf: 'center',
-  },
-  Logout: {
-    alignSelf: 'center',
-  },
-  Discover: {
-    alignSelf: 'center',
-    fontSize: 20,
-    marginTop: 20,
   },
 });

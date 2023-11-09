@@ -5,28 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'; // Import 
 import { BACKEND_BASE_ANDROID, BACKEND_BASE_IOS } from '../secrets';
 
 
-// this auth method is temporary, TODO!
-// export let loginStatus = false;
-// export const changeStatus = (bol) => {
-//   loginStatus = bol;
-// };
-// export const getStatus = () => {
-//   return loginStatus;
-// };
-// export let useremail = '';
-// export const changeEmail = (email) => {
-//   useremail = email;
-// } 
-// export const getEmail = () => {
-//   return useremail;
-// };
-// export let userpassword = '';
-// export const changePassword = (password) => {
-//   userpassword = password;
-// }
-// export const getPassword = () => {
-//   return userpassword;
-// };
 const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
 
 export default function Login({ navigation }) {
@@ -58,8 +36,6 @@ export default function Login({ navigation }) {
         if (data.detail) {
           console.error('Error:', data.detail); // Log the error if there is one
         } else {
-          await AsyncStorage.setItem('userEmail', email);
-          await AsyncStorage.setItem('userPassword', password);
           await AsyncStorage.setItem('LoginStatus', 'true');
           if (keepLoggedIn == true){
               await AsyncStorage.setItem('keepLogIn', 'true');
@@ -72,6 +48,8 @@ export default function Login({ navigation }) {
           await AsyncStorage.setItem('userName', userObject.name);
           await AsyncStorage.setItem('userAvatar', userObject.avatarNumber);
           await AsyncStorage.setItem('userHairType', userObject.hairType);
+          await AsyncStorage.setItem('userEmail', userObject.email);
+          await AsyncStorage.setItem('userPassword', userObject.password);
           navigation.replace('Homepage'); // Navigate to the login screen
           console.clear();
         }
@@ -118,10 +96,11 @@ export default function Login({ navigation }) {
                 <Text style={styles.keepsignin}> Keep me logged in </Text>
             </View>
             
-            <Image source={require('../assets/Rectangle4.png')} style={styles.signInBackground} />
-            <TouchableOpacity onPress={userLogin}>
-                <Text style={styles.logIn}> Log in </Text>
-            </TouchableOpacity>
+            <View style={{ backgroundColor: '#C9A227', top: 80, width: 204, alignSelf: 'center', alignItems: 'center', height: 50, borderRadius: 15}}>
+              <TouchableOpacity onPress={userLogin}>
+                  <Text style={styles.logIn}> Log in </Text>
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity onPress={() => navigation.replace('SignUp')}> 
                 <Text style={styles.bottomText1}> Don't have an account? <Text style={styles.boldText}>Sign up</Text></Text>
@@ -141,7 +120,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '400',
     letterSpacing: 0.1,
-    marginTop: 20,
+    marginTop: 80,
     marginLeft: 30,
   },
   secondLine: {
@@ -199,8 +178,6 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: '400',
     letterSpacing: 0.2,
-    marginTop: 80,
-    alignSelf: 'center'
   },
   signInBackground: {
     width: 204,
@@ -216,7 +193,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '300',
     letterSpacing: 0.1,
-    bottom: -180,
+    top: 280,
     alignSelf: 'center',
   },
   boldText: {

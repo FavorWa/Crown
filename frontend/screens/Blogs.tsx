@@ -109,12 +109,13 @@ const Blogs = ({navigation}) => {
     return (
         isLoading ? <ActivityIndicator /> : (
             <ScrollView style={styles.container}>
-                <Text variant="headlineLarge" style={{textAlign: "center"}}>Today's Digest</Text>
-                <Text variant="headlineSmall" style={{textAlign: "center"}}>General</Text>
-                {createThumbnails(digest["general"])}
-                <Text variant="headlineSmall" style={{textAlign: "center"}}>Just for You</Text>
-                {createThumbnails(digest["forYou"])}
-
+                <View style={{ top: 30 }}>
+                    <Text variant="headlineLarge" style={{textAlign: "center"}}>Today's Digest</Text>
+                    <Text variant="headlineSmall" style={{textAlign: "center"}}>General</Text>
+                    {createThumbnails(digest["general"])}
+                    <Text variant="headlineSmall" style={{textAlign: "center"}}>Just for You</Text>
+                    {createThumbnails(digest["forYou"])}
+                </View>
             </ScrollView>
         )
 

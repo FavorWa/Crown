@@ -88,10 +88,12 @@ export default function SignUp() {
             secureTextEntry
             ></TextInput>
               
-            <Image source={require('../assets/Rectangle4.png')} style={styles.signInBackground} />
-            <TouchableOpacity onPress={handleSignUp}>
-              <Text style={styles.signIn}> Sign In </Text>
-            </TouchableOpacity>
+            <View style={{ backgroundColor: '#C9A227', top: 50, width: 204, alignSelf: 'center', alignItems: 'center', height: 50, borderRadius: 15}}>
+              <TouchableOpacity onPress={handleSignUp}>
+                <Text style={styles.signIn}> Sign In </Text>
+              </TouchableOpacity>
+            </View>
+            
 
             <TouchableOpacity onPress={() => navigation.replace('Login')}>    
                 <Text style={styles.bottomText1}> Have an account? <Text style={styles.boldText}>Login</Text></Text>
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '400',
     letterSpacing: 0.1,
-    marginTop: 20,
+    marginTop: 80,
     marginLeft: 30,
   },
   name: {
@@ -137,24 +139,13 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: '400',
     letterSpacing: 0.2,
-    marginTop: 50,
-    alignSelf: 'center'
-  },
-  signInBackground: {
-    width: 204,
-    height: 50,
-    tintColor: '#C9A227',
-    borderRadius: 5,
-    marginTop: 510,
-    alignSelf: 'center',
-    position: 'absolute',
   },
   bottomText1: {
     color: 'black',
     fontSize: 14,
     fontWeight: '300',
     letterSpacing: 0.1,
-    bottom: -180,
+    top: 250,
     alignSelf: 'center',
   },
   boldText: {
