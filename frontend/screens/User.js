@@ -208,131 +208,149 @@ export default function DrawerExample({ navigation }) {
           </View>
         )}
       >
-
-            <Text style={{ fontSize: 34, fontWeight: '500', left: 33, top: 60}}>Profile</Text>
-            <Text style={{ fontSize: 14, fontWeight: '500', left: 33, top: 70, color: '#713200'}}>All the details, catered to you.</Text>
-            
-            <View style={{ top: -50, width: 70 }}>
-              <TouchableOpacity onPress={() => setOpen((prevOpen) => !prevOpen)} >
-                <Image
-                    source={require('../assets/content_list.png')}
-                    style={styles.Contentlist}
-                ></Image>
-              </TouchableOpacity>
-            </View>
-
-            <Image
-                source={require('../assets/Rectangle4.png')}
-                style={{ alignSelf: 'center', borderRadius: 20, width: 350, height: 150, top: 10}}
-            ></Image>
-
-            <TouchableOpacity>
-              <View style={{ top: 20, backgroundColor: '#C9A227', borderRadius: 15, alignItems: 'center', height: 30, marginHorizontal: 5, width: 170, left: 200 }}>
-                <Text style={{ top: 2, fontSize: 20 }}> See Your Results </Text>
-              </View>
-            </TouchableOpacity>
-
-            <Text style={{ fontSize: 24, left: 30, top: 40}}>Set Your Hair Goals</Text>
-
-            <View style={{ top: 50, backgroundColor: '#EDE0D4', borderRadius: 20, height: 70, marginHorizontal: 30, }}>
-              <TouchableOpacity>
-                <Image
-                    source={require('../assets/Plus.png')}
-                    style={{top: 20, left: 10, height: 30, width: 30}}
-                ></Image>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ top: 60, backgroundColor: '#EDE0D4', borderRadius: 20, height: 70, marginHorizontal: 30, }}>
-              <TouchableOpacity>
-                <Image
-                    source={require('../assets/Plus.png')}
-                    style={{top: 20, left: 10, height: 30, width: 30}}
-                ></Image>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ top: 70, backgroundColor: '#EDE0D4', borderRadius: 20, height: 70, marginHorizontal: 30, }}>
-              <TouchableOpacity>
-                <Image
-                    source={require('../assets/Plus.png')}
-                    style={{top: 20, left: 10, height: 30, width: 30}}
-                ></Image>
-              </TouchableOpacity>
-            </View>
-
-            {/* <View style={{ height: 40, width: 40 }}>
-              <TouchableOpacity onPress={toggleModal}>
+          <ScrollView>
+              <Text style={{ fontSize: 34, fontWeight: '500', left: 33, top: 60}}>Profile</Text>
+              <Text style={{ fontSize: 14, fontWeight: '500', left: 33, top: 70, color: '#713200'}}>All the details, catered to you.</Text>
+              
+              <View style={{ top: -50, width: 70 }}>
+                <TouchableOpacity onPress={() => setOpen((prevOpen) => !prevOpen)} >
                   <Image
-                      source={selectableImages[userAvatar]}
-                      style={styles.avatar}
+                      source={require('../assets/content_list.png')}
+                      style={styles.Contentlist}
                   ></Image>
+                </TouchableOpacity>
+              </View>
+
+              <Image
+                  source={require('../assets/Rectangle4.png')}
+                  style={{ alignSelf: 'center', borderRadius: 20, width: 350, height: 150, top: 10}}
+              ></Image>
+
+              <TouchableOpacity>
+                <View style={{ top: 20, backgroundColor: '#C9A227', borderRadius: 15, alignItems: 'center', height: 30, marginHorizontal: 5, width: 170, left: 200 }}>
+                  <Text style={{ top: 2, fontSize: 20 }}> See Your Results </Text>
+                </View>
               </TouchableOpacity>
-            </View> */}
+
+              <Text style={{ fontSize: 24, left: 30, top: 40}}>Set Your Hair Goals</Text>
+
+              <View style={{ top: 50, backgroundColor: '#EDE0D4', borderRadius: 20, height: 70, marginHorizontal: 30, }}>
+                <TouchableOpacity>
+                  <Image
+                      source={require('../assets/Plus.png')}
+                      style={{top: 20, left: 10, height: 30, width: 30}}
+                  ></Image>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ top: 60, backgroundColor: '#EDE0D4', borderRadius: 20, height: 70, marginHorizontal: 30, }}>
+                <TouchableOpacity>
+                  <Image
+                      source={require('../assets/Plus.png')}
+                      style={{top: 20, left: 10, height: 30, width: 30}}
+                  ></Image>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ top: 70, backgroundColor: '#EDE0D4', borderRadius: 20, height: 70, marginHorizontal: 30, }}>
+                <TouchableOpacity>
+                  <Image
+                      source={require('../assets/Plus.png')}
+                      style={{top: 20, left: 10, height: 30, width: 30}}
+                  ></Image>
+                </TouchableOpacity>
+              </View>
+
+              {/* <View style={{ height: 40, width: 40 }}>
+                <TouchableOpacity onPress={toggleModal}>
+                    <Image
+                        source={selectableImages[userAvatar]}
+                        style={styles.avatar}
+                    ></Image>
+                </TouchableOpacity>
+              </View> */}
 
             
-            <Modal isVisible={isModalVisible}>
-              <View style={styles.modalContent}>
-                <Image
-                  source={selectableImages[userAvatar]}
-                  style={styles.enlargedAvatar}
-                />
-                <TouchableOpacity onPress={changeAvatar}>
-                  <Text style={styles.changeAvatarButton}>Change Avatar</Text>
+              <Modal isVisible={isModalVisible}>
+                <View style={styles.modalContent}>
+                  <Image
+                    source={selectableImages[userAvatar]}
+                    style={styles.enlargedAvatar}
+                  />
+                  <TouchableOpacity onPress={changeAvatar}>
+                    <Text style={styles.changeAvatarButton}>Change Avatar</Text>
+                  </TouchableOpacity>
+                  <Button title="Close" onPress={toggleModal} />
+                </View>
+              </Modal>
+
+              <Text style={{fontSize: 24, left: 230, top: 80}}>Notifications</Text>
+              <ScrollView style={{ top: 90, left: 200 }}>
+                <View style={{ backgroundColor: '#E3A387', borderRadius: 20, alignItems: 'center', marginHorizontal: 5, marginBottom: 10, width: 180 }}>
+                  <Text style={{ marginVertical: 8, fontSize: 12, marginHorizontal: 5 }}>You have an upcoming appointment with Chantelle on Nov. 6</Text>
+                </View>
+                <View style={{ backgroundColor: '#E3A387', borderRadius: 20, alignItems: 'center', marginHorizontal: 5, marginBottom: 10, width: 180 }}>
+                  <Text style={{ marginVertical: 8, fontSize: 12, marginHorizontal: 5 }}>Sara M. wants to share their hair journey with you!</Text>
+                </View>
+                <View style={{ backgroundColor: '#E3A387', borderRadius: 20, alignItems: 'center', marginHorizontal: 5, marginBottom: 10, width: 180 }}>
+                  <Text style={{ marginVertical: 8, fontSize: 12, marginHorizontal: 5 }}>Set your hair goals for this month.</Text>
+                </View>
+              </ScrollView>
+
+              <View style={{width: 150, height: 200, top: -90, left: 33}}>
+                <Image  
+                    source={require('../assets/Rectangle4.png')}
+                    style={{ borderRadius: 20, width: 150, height: 200, tintColor: '#E9B8A9' }}
+                ></Image>
+                <Text style={{ top: -190, fontSize: 20, }}> November </Text>
+                <TouchableOpacity>
+                  <Image  
+                      source={require('../assets/leftArrow.png')}
+                      style={{ left: 110,top: -205, width: 10, height: 10 }}
+                  ></Image>
                 </TouchableOpacity>
-                <Button title="Close" onPress={toggleModal} />
+                <TouchableOpacity>
+                  <Image  
+                      source={require('../assets/rightArrow.png')}
+                      style={{ left: 130,top: -215, width: 10, height: 10 }}
+                  ></Image>
+                </TouchableOpacity>
               </View>
-            </Modal>
+              {/* <Text style={styles.username}> {userName} </Text>
 
-            <Text style={{fontSize: 24, left: 230, top: 80}}>Notifications</Text>
-            <ScrollView style={{ top: 90, left: 200 }}>
-              <View style={{ backgroundColor: '#E3A387', borderRadius: 20, alignItems: 'center', marginHorizontal: 5, marginBottom: 10, width: 180 }}>
-                <Text style={{ marginVertical: 8, fontSize: 12, marginHorizontal: 5 }}>You have an upcoming appointment with Chantelle on Nov. 6</Text>
-              </View>
-              <View style={{ backgroundColor: '#E3A387', borderRadius: 20, alignItems: 'center', marginHorizontal: 5, marginBottom: 10, width: 180 }}>
-                <Text style={{ marginVertical: 8, fontSize: 12, marginHorizontal: 5 }}>Sara M. wants to share their hair journey with you!</Text>
-              </View>
-              <View style={{ backgroundColor: '#E3A387', borderRadius: 20, alignItems: 'center', marginHorizontal: 5, marginBottom: 10, width: 180 }}>
-                <Text style={{ marginVertical: 8, fontSize: 12, marginHorizontal: 5 }}>Set your hair goals for this month.</Text>
-              </View>
-            </ScrollView>
-
-            {/* <Text style={styles.username}> {userName} </Text>
-
-            <Text style={styles.userId}> {userId} </Text> */}
-
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', top: 360 }}>
+              <Text style={styles.userId}> {userId} </Text> */}
+          </ScrollView>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', top: 10 }}>
               <View style={styles.Bottonline}> 
                 <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-                <Image
-                  source={require('../assets/Compass.png')}
-                  style={styles.Compass}
-                ></Image>
-                <Text style={styles.Compassword}>Discover</Text>
-              </TouchableOpacity>
+                  <Image
+                    source={require('../assets/Compass.png')}
+                    style={styles.Compass}
+                  ></Image>
+                  <Text style={styles.Compassword}>Discover</Text>
+                </TouchableOpacity>
               
-              <TouchableOpacity onPress={() => navigation.replace('Stylist')}>
-                <Image
-                  source={require('../assets/Barbershop.png')}
-                  style={styles.Barbershop}
-                ></Image>
-                <Text style={styles.Barbershopword}>Stylist</Text>
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.replace('Stylist')}>
+                  <Image
+                    source={require('../assets/Barbershop.png')}
+                    style={styles.Barbershop}
+                  ></Image>
+                  <Text style={styles.Barbershopword}>Stylist</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Image
-                  source={require('../assets/Community.png')}
-                  style={styles.Community}
-                ></Image>
-                <Text style={styles.Communityword}>Community</Text>
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                  <Image
+                    source={require('../assets/Community.png')}
+                    style={styles.Community}
+                  ></Image>
+                  <Text style={styles.Communityword}>Community</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => navigation.replace('User')}>
-                <Image source={selectableImages[userAvatar]} style={styles.bottomAvatar} />
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.replace('User')}>
+                  <Image source={selectableImages[userAvatar]} style={styles.bottomAvatar} />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        
       </Drawer>
     );
   }
@@ -381,6 +399,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#472415',
     marginHorizontal: 30,
+    backgroundColor: 'white',
   },
   bottomAvatar: {
     width: 55,
