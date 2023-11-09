@@ -36,7 +36,6 @@ export default function Login({ navigation }) {
         if (data.detail) {
           console.error('Error:', data.detail); // Log the error if there is one
         } else {
-          await AsyncStorage.setItem('LoginStatus', 'true');
           if (keepLoggedIn == true){
               await AsyncStorage.setItem('keepLogIn', 'true');
           }else{
@@ -44,6 +43,7 @@ export default function Login({ navigation }) {
           }
           const userString = JSON.stringify(data.user);
           const userObject = JSON.parse(userString);
+          await AsyncStorage.setItem('LoginStatus', 'true');
           await AsyncStorage.setItem('userId', userObject._id);
           await AsyncStorage.setItem('userName', userObject.name);
           await AsyncStorage.setItem('userAvatar', userObject.avatarNumber);
@@ -62,6 +62,9 @@ export default function Login({ navigation }) {
 
   return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
+              <Image source={require('../assets/gobackIcon.png')} style={{ left: 20, top: 40, height: 40, width: 40}} />
+            </TouchableOpacity>
             <Text style={styles.login}> Log in </Text>
 
             <Text style={styles.secondLine}> Sign in with your data that you entered during your registration</Text>
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '400',
     letterSpacing: 0.1,
-    marginTop: 80,
+    marginTop: 40,
     marginLeft: 30,
   },
   secondLine: {

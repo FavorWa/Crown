@@ -24,6 +24,18 @@ export default function Homepage({ navigation }) {
     if (loginStatus === 'true') {
       const avatar = await AsyncStorage.getItem('userAvatar');
       setUserAvatar(avatar);
+      console.log('user logged in');
+      console.log(await AsyncStorage.getItem('userAvatar'));
+      console.log(await AsyncStorage.getItem('userEmail'));
+      console.log(await AsyncStorage.getItem('userId'));
+      console.log(await AsyncStorage.getItem('userPassword'));
+    }
+    else{
+      console.log('user didn\'t log in');
+      console.log(await AsyncStorage.getItem('userAvatar'));
+      console.log(await AsyncStorage.getItem('userEmail'));
+      console.log(await AsyncStorage.getItem('userId'));
+      console.log(await AsyncStorage.getItem('userPassword'));
     }
   };
 

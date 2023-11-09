@@ -42,7 +42,7 @@ export default function App() {
 
   useEffect(() => {
     _retriveData();
-  }, []);
+  });
 
   return (
     <NavigationContainer>

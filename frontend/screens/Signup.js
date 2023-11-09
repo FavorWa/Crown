@@ -44,6 +44,9 @@ export default function SignUp() {
 
   return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
+              <Image source={require('../assets/gobackIcon.png')} style={{ left: 20, top: 40, height: 40, width: 40}} />
+            </TouchableOpacity>
             <Text style={styles.signup}> Sign Up </Text>
 
             <Text style={styles.name}> Name </Text>
@@ -113,7 +116,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '400',
     letterSpacing: 0.1,
-    marginTop: 80,
+    marginTop: 40,
     marginLeft: 30,
   },
   name: {

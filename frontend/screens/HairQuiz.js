@@ -74,6 +74,9 @@ export default function HairQuiz({ navigation }) {
             </Text>
           </TouchableOpacity>
 
+          <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
+            <Image source={require('../assets/gobackIcon.png')} style={{ left: 33, top: 130, marginVertical: 10, height: 40, width: 40}} />
+          </TouchableOpacity>
       </View>
     )
   }
@@ -121,7 +124,7 @@ export default function HairQuiz({ navigation }) {
     rectangle2: {
         backgroundColor: `rgba(217, 217, 217, 1)`,
         width: 345,
-        height: 149,
+        height: 180,
         alignSelf: 'center',
         top: 150,
         borderRadius: 20,
@@ -140,7 +143,7 @@ export default function HairQuiz({ navigation }) {
       fontSize: 28,
       color: 'blue',
       left: 300,
-      top: 160,
+      top: 170,
     },
 
     container: {

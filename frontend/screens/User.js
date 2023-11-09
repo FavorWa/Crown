@@ -129,8 +129,12 @@ export default function DrawerExample({ navigation }) {
     };
 
     const logout = async () => {
+      await AsyncStorage.setItem('userAvatar', '');
+      await AsyncStorage.setItem('userName', '');
+      await AsyncStorage.setItem('userId', '');
       await AsyncStorage.setItem('userEmail', '');
       await AsyncStorage.setItem('userPassword', '');
+      await AsyncStorage.setItem('userHairType', '');
       await AsyncStorage.setItem('keepLogIn', 'false');
       await AsyncStorage.setItem('LoginStatus', 'false'); 
       console.log('log out');
