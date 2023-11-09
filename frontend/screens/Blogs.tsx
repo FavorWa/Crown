@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, Surface, Text, Divider, ActivityIndicator } from 'react-native-paper';
-import { StyleSheet, Image, View, ScrollView, GestureResponderEvent, Platform} from 'react-native';
+import { StyleSheet, Image, View, ScrollView, TouchableOpacity, Platform} from 'react-native';
 import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 import openWebPage from "../functions/openWebPage";
 import Homepage from "./HomePage";
@@ -109,12 +109,16 @@ const Blogs = ({navigation}) => {
     return (
         isLoading ? <ActivityIndicator /> : (
             <ScrollView style={styles.container}>
-                <Text variant="headlineLarge" style={{textAlign: "center"}}>Today's Digest</Text>
-                <Text variant="headlineSmall" style={{textAlign: "center"}}>General</Text>
-                {createThumbnails(digest["general"])}
-                <Text variant="headlineSmall" style={{textAlign: "center"}}>Just for You</Text>
-                {createThumbnails(digest["forYou"])}
-
+                <View style={{ top: 10 }}>
+                    <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
+                        <Image source={require('../assets/gobackIcon.png')} style={{ left: 20, top: 20, marginVertical: 10, height: 40, width: 40}} />
+                    </TouchableOpacity>
+                    <Text variant="headlineLarge" style={{textAlign: "center"}}>Today's Digest</Text>
+                    <Text variant="headlineSmall" style={{textAlign: "center"}}>General</Text>
+                    {createThumbnails(digest["general"])}
+                    <Text variant="headlineSmall" style={{textAlign: "center"}}>Just for You</Text>
+                    {createThumbnails(digest["forYou"])}
+                </View>
             </ScrollView>
         )
 

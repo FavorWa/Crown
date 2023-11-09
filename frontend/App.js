@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppState } from 'react-native';
+// import { AppState } from 'react-native';
 import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -13,6 +13,7 @@ import Login from './screens/Login';
 import ProductsPage from './screens/ProductsPage';
 import Blogs from './screens/Blogs';
 import User from './screens/User';
+import Stylist from './screens/Stylist';
 import Article from './screens/Article'
 
 const Stack = createStackNavigator();
@@ -41,29 +42,15 @@ export default function App() {
 
   useEffect(() => {
     _retriveData();
-
-    const handleAppStateChange = async (nextAppState) => {
-      if (nextAppState === 'background') {
-        try {
-          await AsyncStorage.removeItem('userEmail');
-          await AsyncStorage.removeItem('userPassword');
-          await AsyncStorage.setItem('isLoggedIn', 'false');
-        } catch (error) {
-          console.error('Error clearing login information:', error);
-        }
-      }
-    };
-
-    AppState.addEventListener('change', handleAppStateChange);
-
-    return () => {
-      AppState.removeEventListener('change', handleAppStateChange);
-    };
-  }, []);
+  });
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false, // Hide the header for all screens
+        }}
+      >
 
       <Stack.Screen 
           name="Cover" 
@@ -108,6 +95,11 @@ export default function App() {
         <Stack.Screen
           name="Article"
           component={Article}
+        />
+
+        <Stack.Screen
+          name="Stylist"
+          component={Stylist}
         />
       </Stack.Navigator>
     </NavigationContainer>

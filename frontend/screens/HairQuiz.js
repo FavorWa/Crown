@@ -74,6 +74,9 @@ export default function HairQuiz({ navigation }) {
             </Text>
           </TouchableOpacity>
 
+          <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
+            <Image source={require('../assets/gobackIcon.png')} style={{ left: 33, top: 130, marginVertical: 10, height: 40, width: 40}} />
+          </TouchableOpacity>
       </View>
     )
   }
@@ -100,15 +103,15 @@ export default function HairQuiz({ navigation }) {
       fontSize: 48,
       color: 'black',
       left: 33,
-      top: 30,
+      top: 50,
     },
     rectangle1: {
         backgroundColor: `rgba(217, 217, 217, 1)`,
         width: 345,
         height: 330,
-        position: 'absolute',
-        left: 33,
+        alignSelf: 'center',
         top: 88,
+        borderRadius: 30,
     },
     agreement: {
       textAlign: 'left',
@@ -116,15 +119,15 @@ export default function HairQuiz({ navigation }) {
       fontSize: 20,
       color: 'black',
       left: 33,
-      top: 410,
+      top: 130,
     },
     rectangle2: {
         backgroundColor: `rgba(217, 217, 217, 1)`,
         width: 345,
-        height: 149,
-        position: 'absolute',
-        left: 33,
-        top: 450,
+        height: 180,
+        alignSelf: 'center',
+        top: 150,
+        borderRadius: 20,
     },
     rectangle3: {
       backgroundColor: `rgba(217, 217, 217, 1)`,
@@ -140,7 +143,7 @@ export default function HairQuiz({ navigation }) {
       fontSize: 28,
       color: 'blue',
       left: 300,
-      top: 580,
+      top: 170,
     },
 
     container: {

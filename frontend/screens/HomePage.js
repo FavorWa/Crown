@@ -24,6 +24,18 @@ export default function Homepage({ navigation }) {
     if (loginStatus === 'true') {
       const avatar = await AsyncStorage.getItem('userAvatar');
       setUserAvatar(avatar);
+      console.log('user logged in');
+      console.log(await AsyncStorage.getItem('userAvatar'));
+      console.log(await AsyncStorage.getItem('userEmail'));
+      console.log(await AsyncStorage.getItem('userId'));
+      console.log(await AsyncStorage.getItem('userPassword'));
+    }
+    else{
+      console.log('user didn\'t log in');
+      console.log(await AsyncStorage.getItem('userAvatar'));
+      console.log(await AsyncStorage.getItem('userEmail'));
+      console.log(await AsyncStorage.getItem('userId'));
+      console.log(await AsyncStorage.getItem('userPassword'));
     }
   };
 
@@ -127,7 +139,7 @@ export default function Homepage({ navigation }) {
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <View style={styles.Bottonline}> 
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
             <Image
               source={require('../assets/Compass.png')}
               style={styles.Compass}
@@ -135,7 +147,7 @@ export default function Homepage({ navigation }) {
             <Text style={styles.Compassword}>Discover</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity onPress={() => isLoggedIn('Stylist')}>
             <Image
               source={require('../assets/Barbershop.png')}
               style={styles.Barbershop}
@@ -170,6 +182,7 @@ export default function Homepage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    top: 50,
   },
   hairquiz: {
     textAlign: 'left',

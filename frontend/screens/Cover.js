@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
 
 export default function Cover({ navigation }) {
+  // const [LoginStatus, setLoginStatus] = useState(false);
+  // const _retriveData = async() => {
+  //   try{
+  //     const data = await AsyncStorage.getItem("keepLogIn");
+  //     if (data === 'true'){
+  //       await AsyncStorage.setItem('isLoggedIn', 'true');
+  //     }else{
+  //     }
+  //   }catch (errer) {
+  //     console.log('error', error);
+  //   }
+  // };
 
+  // useEffect(() => {
+  //   _retriveData();
   return (
         <SafeAreaView style={styles.container}>
 
@@ -20,6 +34,13 @@ export default function Cover({ navigation }) {
               <Text style={styles.signup}>SignUp/Login</Text>
           </TouchableOpacity>
     
+          {/* {!LoginStatus && (
+            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+              <Text style={styles.signup}>SignUp/Login</Text>
+            </TouchableOpacity>
+          )} */}
+
+
           {/* <StatusBar style="auto" /> */}
         </SafeAreaView>
     );

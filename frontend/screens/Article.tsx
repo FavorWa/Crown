@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { TextInput, ActivityIndicator, Button, ToggleButton, Text, List } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, StyleSheet, ScrollView} from "react-native";
+import { View, StyleSheet, ScrollView, TouchableOpacity, Image} from "react-native";
 import openWebPage from "../functions/openWebPage";
 import callApi from "../functions/callApi";
 
 
-const Article = ({ route }) => {
+const Article = ({ route, navigation }) => {
     const {_id, link} = route.params
     const [isLoading, setIsLoading] = useState(true);
     const [liked, setLiked] = useState(false);
@@ -95,6 +95,9 @@ const Article = ({ route }) => {
   
     return (
       <View style={styles.container}>
+        <TouchableOpacity onPress={() => navigation.replace('Blogs')}>
+            <Image source={require('../assets/gobackIcon.png')} style={{ left: 20, top: 20, height: 40, width: 40, marginVertical: 20}} />
+        </TouchableOpacity>
         <Text style={styles.articleText} onPress={() => openWebPage(link)}>{link}</Text>
         <ToggleButton
         icon={liked ? 'heart' : 'heart-outline'}
@@ -137,6 +140,8 @@ container: {
     padding: 16,
 },
 articleText: {
+    alignSelf: 'center',
+    top: 10,
     fontSize: 16,
     marginBottom: 16,
 },
