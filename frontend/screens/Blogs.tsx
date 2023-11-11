@@ -1,135 +1,159 @@
 import { useState, useEffect } from "react";
-import { Card, Surface, Text, Divider, ActivityIndicator } from 'react-native-paper';
+import { Card, Surface, Text, Divider, ActivityIndicator,  } from 'react-native-paper';
 import { StyleSheet, Image, View, ScrollView, GestureResponderEvent, Platform} from 'react-native';
 import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 import openWebPage from "../functions/openWebPage";
 import Homepage from "./HomePage";
+import Box from "../components/Box";
+import callApi from "../functions/callApi";
 
 
 const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
 
-const Thumbnail = ({image, title, link, snippet, minutes, styles, isArticle, _id, navigation}) => {
-
-    const minutes_line = minutes == -1 ? "" : minutes + " minute read"
+const Row = ({blogBoxes}) => {
     return (
-        isArticle ? (
-            <Card style={styles} onPress={() => navigation.navigate('Article', {_id, link})}>
-                <Card.Title title={title} titleNumberOfLines={2} subtitle={minutes_line} left={() => <Image style={{width: 50, height: 50}}source={{uri: image}} />}/>
-                    <Card.Content>
-                        <Text variant="bodyMedium">{snippet}</Text>
-                    </Card.Content>
-            </Card>
-        ) : 
-        (
-            <Card style={styles} onPress={() => navigation.navigate('Article', {_id, link})}>
-                    <Card.Cover source={{ uri: image }} style={{width: undefined}}/>
-                    <Card.Title title={title} subtitle={minutes_line} titleNumberOfLines={2}/>
-                    <Card.Content>
-                        <Text variant="bodyMedium">{snippet}</Text>
-                    </Card.Content>
-            </Card>
-        )
+        <View style={styles.scrollContainer}>
+            <ScrollView horizontal={true} >
+                {blogBoxes}
+            </ScrollView>
+        </View>
     )
 }
 
 const Blogs = ({navigation}) => {
+    const sections = ["Today's Digest", "Styling 101", "The Latest on Products", "Hair Health", "Making an Impact"]
+    const [blogs, setBlogs] = useState([]);
+    console.log(blogs);
 
+    const getBlogBoxes = (blogs) => {
+        const NUM_BOXES = 6;
+        const blogsBoxes = [];
+        for (let index = 0; index < NUM_BOXES; index++) {
+          try {
+            const blogObj = blogs[index];
+            if (blogObj) {
+              const blogBox = 
+              <Box 
+                image = {blogObj.image}
+                title = {blogObj.title}
+                link = {blogObj.link}
+                time = {blogObj.time}
+                isArticle = {blogObj.isArticle}
+                _id = {blogObj._id}
+                navigation = {navigation}
+              />
+              blogsBoxes.push(blogBox)
+            }
+          }
     
-    const [isLoading, setLoading] = useState(true);
-    const [digest, setDigest] = useState({general: [], forYou: []});
-
-    const getDigest = async () => {
-        try {
-            const generalUrl = `${backend_base_url}/digest/general`;
-            console.log(generalUrl);
-            const generalResponse = await fetch(generalUrl);
-            const generalData = await generalResponse.json();
-
-            const forYouUrl = `${backend_base_url}/digest/personal`;
-            console.log(forYouUrl);
-            const forYouResponse = await fetch(forYouUrl);
-            const forYouData = await forYouResponse.json()
-
-            setDigest({
-                general: generalData,
-                forYou: forYouData
-            })
-
-            setLoading(false);
-        } 
-            
-        catch (error) {
-            console.error(error);
+          catch {
+            blogsBoxes.push(
+              <Image
+                source={require('../assets/Rectangle4.png')}
+                style={styles.scrollObject}
+              />
+            )
+          }
         }
     
-    };
+        return blogsBoxes;
+    }
 
-    const createThumbnails = (thumbnailInfos) => {
+    const getBlogs = async () => {
+        let url = "/blogs/sections?"
 
-        return thumbnailInfos.map((info) => {
+        for (const section of sections) {
+            url += `&sections=${section}`;
+        }
 
-            const image = info.image ? info.image : "https://cdn3.vectorstock.com/i/1000x1000/51/27/gold-crown-logo-icon-element-vector-21245127.jpg"
-            const minutes = info.minutes ? Math.ceil(info.minutes) : -1
-            return (
-                <Thumbnail 
-                key={info._id}
-                _id={info._id}
-                image={image}
-                title={info.title}
-                link={info.link}
-                snippet={info.snippet}
-                minutes={minutes}
-                styles={styles.smallCard} 
-                isArticle={info.isArticle}
-                navigation={navigation}
-            />
-            )
-        });
+
+        const blogsData = await callApi(url);
+        setBlogs(blogsData);
     }
 
     useEffect(() => {
-        getDigest();
+        getBlogs();
     }, []);
 
-    const makeThumbnails = (thumbnailInfos) => {
-        return thumbnailInfos.map((info) => {
-            const image = info.image ? info.image : "https://cdn3.vectorstock.com/i/1000x1000/51/27/gold-crown-logo-icon-element-vector-21245127.jpg";
-            return {
-                image, // Add image URL to the object
-                title: info.title,
-                link: info.link,
-                snippet: info.snippet,
-                minutes: info.minutes ? Math.ceil(info.minutes) : -1,
-                isArticle: info.isArticle
-            };
-        });
-    };
-    
-
     return (
-        isLoading ? <ActivityIndicator /> : (
-            <ScrollView style={styles.container}>
-                <Text variant="headlineLarge" style={{textAlign: "center"}}>Today's Digest</Text>
-                <Text variant="headlineSmall" style={{textAlign: "center"}}>General</Text>
-                {createThumbnails(digest["general"])}
-                <Text variant="headlineSmall" style={{textAlign: "center"}}>Just for You</Text>
-                {createThumbnails(digest["forYou"])}
+        <ScrollView>
+            <Text variant="headlineLarge" style={styles.heading}>Blogs</Text>
+            <Text variant="headlineSmall" style={styles.subheading}>All the information you need in one place.</Text>
+            {
+                blogs.length == 0 ? <ActivityIndicator /> : (
+                    sections.map((section) => {
 
-            </ScrollView>
-        )
+                        const filteredBlogs = blogs.filter((blog) => {
+                            return blog.tags.includes(section);
+                        })
+        
+                        const filteredBlogComponents = getBlogBoxes(filteredBlogs);
+                        return (
+                            <View style={styles.section}>
+                                <Text variant="headlineMedium" style={styles.sectionHeading}>{section}</Text>
+                                <Row blogBoxes={filteredBlogComponents} />
+                            </View>
+                        )
+                    })
+                )
+            }
+        </ScrollView>
+    );
 
-    )
-    
+
 }
 
 export default Blogs;
 
 const styles = StyleSheet.create({
+    heading: {
+        marginTop: 7,
+        marginHorizontal: 28,
+    },
+
+    subheading: {
+        color: "#713200",
+        marginHorizontal: 28,
+        fontSize: 14,
+    },
+
+    sectionHeading: {
+        marginTop: 14,
+        marginHorizontal: 28,
+    },
+
     container: {
         padding: 16,
     },
 
     smallCard: {
         marginBottom: 16
-    }
+    },
+
+    scrollContainer: {
+        top: 15,
+        height: 160,
+        marginHorizontal: 28,
+    },
+
+    scrollObject: {
+        height: 160,
+        width: 120,
+        borderRadius: 15,
+        marginRight: 10,
+      },
+
+    section: {
+        marginBottom: 20
+    },
+
+    rectangle4: {
+        backgroundColor: 'rgba(217, 217, 217, 1)',
+        width: 355,
+        height: 150,
+        borderRadius: 20,
+        position: 'absolute',
+        left: 28,
+        top: 40,
+    },
 })

@@ -6,7 +6,6 @@ const callApi = async (endpoint, obj={}) => {
     const url = backend_base_url + endpoint;
     const response = await fetch(url, obj);
     const data = await response.json();
-    console.log(data);
     return data;
 }
 

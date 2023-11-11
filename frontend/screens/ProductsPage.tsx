@@ -1,4 +1,4 @@
-import { View, Image, SafeAreaView, ScrollView } from "react-native"
+import { View, Image, SafeAreaView, ScrollView, StyleSheet} from "react-native"
 import { Style } from "react-native-paper/lib/typescript/components/List/utils"
 import { Text, TouchableRipple, List, ActivityIndicator, SegmentedButtons} from "react-native-paper"
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage from the correct package
@@ -52,87 +52,74 @@ const Product = ({title, link, image, price}: Product) => {
     )
 }
 
-// a couple 2a hair products
-const dummyProducts = [
-    {
-        title: "LUS Brands Love Ur Curls for Wavy Hair, 3-Step System - Shampoo and Conditioner Set with All-in-One Styler - LUS Curls Hair Products for Volume - Nonsticky, Nongreasy, Light Formula - 8.5oz each",
-        link: "https://www.amazon.com/Brands-Love-Ur-Curls-3-Step/dp/B09YMZC7S4/ref=sr_1_1?keywords=hair+type+2a+products&qid=1697754897&sr=8-1",
-        image: "https://m.media-amazon.com/images/I/71lzaC-MvFL._AC_UL320_.jpg",
-        price: "$55.00"
-    },
-    {
-        title: "DevaCurl Wave Maker Lightweight Moisturizing Definer | Hydrates and Smooths Curls | Tames Frizz Up To 48 hours",
-        link: "https://www.amazon.com/DevaCurl-Maker-Lightweight-Moisturizing-Definer/dp/B09CQLZ2MY/ref=sr_1_2?keywords=hair+type+2a+products&qid=1697754897&sr=8-2",
-        image: "https://m.media-amazon.com/images/I/51Q-zu6wdkL._AC_UL320_.jpg",
-        price: "$18.00"
-    },
-    {
-        title: "SheaMoisture Curl Mousse Coconut and Hibiscus for Frizz Control Styling Mousse with Shea Butter 7.5 oz",
-        link: "https://www.amazon.com/SheaMoisture-Coconut-Hibiscus-Frizz-Free-Mousse/dp/B07NQCBRK3/ref=sr_1_3?keywords=hair+type+2a+products&qid=1697754897&sr=8-3",
-        image: "https://m.media-amazon.com/images/I/71FUUduzcgL._AC_UL320_.jpg",
-        price: "$8.03"
-    }
-]
+
 let ProductsPage = () => {
 
     const [isLoading, setLoading] = useState(true);
     const [products, setProducts] = useState<Product[]>([]);
-    const [hairType, setHairType] = useState("2A");
+    const [hairType, setHairType] = useState("");
+    const [productType, setProductType] = useState("");
+    const [email, setEmail] = useState(null);
 
     const getProducts = async () => {
         try {
-            const url = `${backend_base_url}/products/${hairType}`
+            const url = `${backend_base_url}/products/${hairType}/${productType}`
             const response = await fetch(url);
             const data = await response.json();
             setProducts(data);
+            setLoading(false);
         } 
         
         catch (error) {
             console.error(error);
         }
-
-        finally {
-            setLoading(false);
-        }
     };
-
-    const getHairType = async () => {
-        const email = await AsyncStorage.getItem('userEmail');
-        const password = await AsyncStorage.getItem('userPassword');
-
-        console.log(`Email: ${email}, Password: ${password}`)
-        const reqBody = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email, password
-            }),
-        }
-
-        const userInfo = await callApi(`/get_hair_info`, reqBody);
-        const type = userInfo["hairType"];
-        console.log(`hair type: ${type}`);
-        setHairType(type);
-    }
-
 
 
     useEffect(() => {
         (async () => {
             const email = await AsyncStorage.getItem('userEmail');
             const password = await AsyncStorage.getItem('userPassword');
+            setEmail(email);
 
+            // get and set hair type
             if (email && password) {
-                await getHairType();
+                const reqBody = {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email, password
+                    }),
+                }
+        
+                const userInfo = await callApi(`/get_user_info`, reqBody);
+                const type = userInfo["hairType"];
+                console.log(`hair type: ${type}`);
+                setHairType(type);  
+                setProductType("Shampoo");          
+            }
+
+            else {
+                setHairType("2A");
+                setProductType("Shampoo");
             }
         })();
+
+        return () => {
+            setEmail("");
+            setHairType("");
+            setProductType("");
+            setLoading(true);
+        }
     }, []);
 
     useEffect(() => {
-        getProducts()
-    }, [hairType]);
+        if (hairType != "" && productType != "") {
+            getProducts();
+        }
+    }, [hairType, productType]);
       
     const productsToComponents = (products: Product[]) => {
         return products.map((product: Product) => {
@@ -151,10 +138,37 @@ let ProductsPage = () => {
         setHairType(value);
     }
 
-    const hair_type_values = ["2A", "2B", "2C", "3A", "3B", "3C", "4A", "4B", "4C"]
-    const buttons = hair_type_values.map((hair_type) => {
-        return {value: hair_type, label: hair_type}
+    const handleProductTypeChange = (value: string) => {
+        setLoading(true);
+        setProductType(value);
+    }
+
+    const hairTypeValues = ["2A", "2B", "2C", "3A", "3B", "3C", "4A", "4B", "4C"];
+    const productTypeValues = ["Shampoo", "Conditioner", "Hair Moisturizer", "Hair Oils", "Hair Gel", "Hair Mousse"];
+
+    const hairTypeButtons = hairTypeValues.map((type) => {
+        return {
+            value: type, 
+            label: type, 
+            style: {
+                borderRadius: 0,
+                backgroundColor: hairType == type ? "#EDE0D4" : "white"
+            }
+        }
+    });
+
+    const productTypeButtons = productTypeValues.map((type) => {
+        return {
+            value: type, 
+            label: type, 
+            style: {
+                borderRadius: 0,
+                backgroundColor: productType == type ? "#EDE0D4" : "white"
+            }
+        }
     })
+
+
 
     if (isLoading) {
         return <ActivityIndicator />
@@ -165,18 +179,33 @@ let ProductsPage = () => {
         return (
             <>
                 <SafeAreaView>
+                    {
+                        !email ? (
+                            <ScrollView horizontal>
+                                <SegmentedButtons
+                                    value={hairType}
+                                    onValueChange={handleValueChange}
+                                    buttons={hairTypeButtons}
+                                    style={{marginBottom: 10}}
+                                    theme={{roundness: 0}}
+                                />
+                            </ScrollView>
+                        ) : null
+                    }
+
                     <ScrollView horizontal>
                         <SegmentedButtons
-                            value={hairType}
-                            onValueChange={handleValueChange}
-                            buttons={buttons}
+                            value={productType}
+                            onValueChange={handleProductTypeChange}
+                            buttons={productTypeButtons}
+                            theme={{roundness: 0}}
                         />
                     </ScrollView>
                 </SafeAreaView>
 
                 <ScrollView>
                     <List.Section>
-                        <List.Subheader>Products for hair type {hairType}</List.Subheader>
+                        <List.Subheader style={styles.listSubheader}>{productType} products for {hairType} hair</List.Subheader>
                         {productComponents}
                     </List.Section>
                 </ScrollView>
@@ -185,31 +214,11 @@ let ProductsPage = () => {
     }
 }
 
-/*
-ProductsPage = () => {
-
-    const productsToComponents = (products: Product[]) => {
-        return products.map((product: Product) => {
-            return (
-                <Product 
-                title={product.title}
-                link={product.link}
-                image={product.image}
-                price={product.price}/>
-            )
-        })
-    }
-
-    let products = dummyProducts
-    const productComponents = productsToComponents(products)
-    return (
-        <>
-            <List.Section>
-                <List.Subheader>Products good for all hair types</List.Subheader>
-                {productComponents}
-            </List.Section>
-        </>
-    )
-}
-*/
+const styles = StyleSheet.create({
+    listSubheader: {
+        color: "#713200",
+        fontSize: 20, 
+        textAlign: "center"
+    },
+})
 export default ProductsPage;
