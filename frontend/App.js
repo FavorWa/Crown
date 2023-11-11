@@ -13,6 +13,8 @@ import Login from './screens/Login';
 import ProductsPage from './screens/ProductsPage';
 import Blogs from './screens/Blogs';
 import User from './screens/User';
+import Friends from './screens/Friends';
+import Settings from './screens/Settings';
 import Stylist from './screens/Stylist';
 import Article from './screens/Article'
 
@@ -100,6 +102,16 @@ export default function App() {
         <Stack.Screen
           name="Stylist"
           component={Stylist}
+        />
+
+        <Stack.Screen
+          name="Friends"
+          component={Friends}
+        />
+
+        <Stack.Screen
+          name="Settings"
+          component={Settings}
         />
       </Stack.Navigator>
     </NavigationContainer>

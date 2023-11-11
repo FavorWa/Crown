@@ -79,24 +79,6 @@ export default function DrawerExample({ navigation }) {
       fetchUserAvatar();
     }, []);
 
-    const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
-    useEffect(() => {
-        (async () => {
-          
-          let { status } = await Location.requestForegroundPermissionsAsync();
-          if (status !== 'granted') {
-            setErrorMsg('Permission to access location was denied');
-            return;
-          }
-
-          let location = await Location.getCurrentPositionAsync({});
-          setLocation(location);
-        })();
-      }, []);
-
-    // if(location){console.log(location)}
-
 
     const changeAvatar = async () => {
       const email = await AsyncStorage.getItem('userEmail');
@@ -162,7 +144,7 @@ export default function DrawerExample({ navigation }) {
               <View style={{ flex: 1, height: 1, marginLeft: 45, top: -15, borderWidth: 0.5, borderColor: '#713200', marginRight: 30, }} />
             </TouchableOpacity>
 
-            <TouchableOpacity> 
+            <TouchableOpacity onPress={() => navigation.replace('Friends')}> 
               <Image
                     source={require('../assets/friends.png')}
                     style={{marginTop: 10, width: 20, height: 20, left: 20,}}
@@ -189,7 +171,7 @@ export default function DrawerExample({ navigation }) {
               <View style={{ flex: 1, height: 1, marginLeft: 45, top: -15, borderWidth: 0.5, borderColor: '#713200', marginRight: 30, }} />
             </TouchableOpacity>
 
-            <TouchableOpacity> 
+            <TouchableOpacity onPress={() => navigation.replace('Settings')}> 
               <Image
                     source={require('../assets/Settings.png')}
                     style={{marginTop: 10, width: 20, height: 20, left: 20,}}
@@ -260,16 +242,6 @@ export default function DrawerExample({ navigation }) {
                   ></Image>
                 </TouchableOpacity>
               </View>
-
-              {/* <View style={{ height: 40, width: 40 }}>
-                <TouchableOpacity onPress={toggleModal}>
-                    <Image
-                        source={selectableImages[userAvatar]}
-                        style={styles.avatar}
-                    ></Image>
-                </TouchableOpacity>
-              </View> */}
-
             
               <Modal isVisible={isModalVisible}>
                 <View style={styles.modalContent}>
@@ -338,7 +310,7 @@ export default function DrawerExample({ navigation }) {
                   <Text style={styles.Barbershopword}>Stylist</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <TouchableOpacity onPress={() => navigation.replace('Friends')}>
                   <Image
                     source={require('../assets/Community.png')}
                     style={styles.Community}
