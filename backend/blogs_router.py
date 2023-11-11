@@ -1,10 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from secret_values import rainforest_api_key, google_search_api_key, google_search_engine_id
 from db import get_database
 import random
 from pydantic import BaseModel
+from typing import Annotated
 
-digest_router = APIRouter()
+blogs_router = APIRouter()
 db = get_database()
 
 
@@ -16,6 +17,9 @@ class User(BaseModel):
 
 class Comment(User):
     text: str
+
+class Sections(BaseModel):
+    sections: list[str]
 
 ###############################
 #### HELPER FUNCTIONS ########
@@ -43,69 +47,41 @@ def get_comments(article_id):
 ########## ROUTES ##############
 ################################
 
-@digest_router.get('/general')
-def getGeneralDigest():
-    thumbnail_infos = [info for info in db["generalDigest"].find()]
-    ids_to_strings(thumbnail_infos)
-    return thumbnail_infos
+@blogs_router.get('/sample')
+def get_sample():
+    collection = db["Blogs"]
+    sample_size = 5
+    total_documents = collection.count_documents({})
+    random_indices = random.sample(range(total_documents), sample_size)
+    random_documents = [collection.find_one(skip=index) for index in random_indices]
+    ids_to_strings(random_documents)
+    return random_documents
 
-@digest_router.get('/personal')
-def getPersonalDigest():
-
-    user_tags = get_user_tags()
-
-    if not user_tags:
-        thumbnail_infos = list(db["articles"].find())
-        random.shuffle(thumbnail_infos)
+@blogs_router.get('/sections')
+def get_sections(sections: Annotated[list[str], Query()]):
+    collection = db["Blogs"]
+    blogs = []
+    for section in sections:
+        cursor = collection.find({"tags": section})
+        docs = [doc for doc in cursor]
+        ids_to_strings(docs)
+        blogs += docs
+    return blogs
     
-    else:
-        # Define the aggregation pipeline
-        pipeline = [
-            {
-                "$match": {
-                    "tags": {
-                        "$in": user_tags
-                    }
-                }
-            },
-            {
-                "$addFields": {
-                    "matchingTags": {
-                        "$size": {
-                            "$setIntersection": ["$tags", user_tags]
-                        }
-                    }
-                }
-            },
-            {
-                "$sort": {
-                    "matchingTags": -1
-                }
-            }
-        ]
-
-        # Execute the aggregation query
-        thumbnail_infos = list(db["articles"].aggregate(pipeline))
-    
-    three_articles = thumbnail_infos[:3]
-    ids_to_strings(three_articles)
-
-    return three_articles
-
-@digest_router.get('/{article_id}/likes')
+@blogs_router.get('/{article_id}/likes')
 def get_article_likes(article_id):
     likes = get_likes(article_id)
     ids_to_strings(likes)
     return likes 
 
-@digest_router.get('/{article_id}/comments')
+@blogs_router.get('/{article_id}/comments')
 def get_article_likes(article_id):
     comments = get_comments(article_id)
     ids_to_strings(comments)
     print(comments)
     return comments
 
-@digest_router.post('/{article_id}/add_like')
+@blogs_router.post('/{article_id}/add_like')
 def add_like(article_id, user: User):
     doc_to_insert = {"articleId": article_id, "email": user.email}
     existing_doc = db["articleLikes"].find_one(doc_to_insert)
@@ -115,7 +91,7 @@ def add_like(article_id, user: User):
     else:
         return {"message": f'{user.email} has already liked article {article_id}'}
     
-@digest_router.post('/{article_id}/delete_like')
+@blogs_router.post('/{article_id}/delete_like')
 def delete_like(article_id, user: User):
     doc_to_delete = {"articleId": article_id, "email": user.email}
     existing_doc = db["articleLikes"].find_one(doc_to_delete)
@@ -125,7 +101,7 @@ def delete_like(article_id, user: User):
         db["articleLikes"].delete_one(doc_to_delete)
         return {"message": f'{user.email} has unliked article {article_id}'}
     
-@digest_router.post('/{article_id}/toggle_like')
+@blogs_router.post('/{article_id}/toggle_like')
 def toggle_like(article_id, user: User):
     doc = {"articleId": article_id, "email": user.email}
     existing_doc = db["articleLikes"].find_one(doc)
@@ -135,7 +111,7 @@ def toggle_like(article_id, user: User):
     else:
         delete_like(article_id, user)
 
-@digest_router.post('/{article_id}/comment')
+@blogs_router.post('/{article_id}/comment')
 def add_comment(article_id, comment: Comment):
     print(comment)
     doc_to_insert = {"articleId": article_id, "email": comment.email, "text": comment.text}
