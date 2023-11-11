@@ -143,7 +143,7 @@ export default function Homepage({ navigation }) {
             <Text style={styles.Barbershopword}>Stylist</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity onPress={() => isLoggedIn('Friends')}>
             <Image
               source={require('../assets/Community.png')}
               style={styles.Community}

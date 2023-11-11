@@ -4,6 +4,9 @@ import { StyleSheet, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput
 import { Avatar, Button, Card, Text } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from './User';
+import * as Location from 'expo-location';
+import RNPickerSelect from 'react-native-picker-select';
+
 
 
 export default function Stylist({ navigation }) {
@@ -12,7 +15,6 @@ export default function Stylist({ navigation }) {
   const fetchUserAvatar = async () => {
       const avatar = await AsyncStorage.getItem('userAvatar');
       setUserAvatar(avatar);
-    
   };
 
   useEffect(() => {
@@ -21,6 +23,125 @@ export default function Stylist({ navigation }) {
 
   const [Question, setQuestion] = useState('');
   const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
+
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  useEffect(() => {
+      (async () => {
+        
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          return;
+        }
+
+        let location = await Location.getCurrentPositionAsync({
+          enableHighAccuracy: true,
+          accuracy: Location.Accuracy.High,
+        });
+        setLocation(location);
+
+        if (await AsyncStorage.getItem('YelpData') !== null){
+          const parsedData = JSON.parse(await AsyncStorage.getItem('YelpData'));
+          setYelpData(parsedData);
+        }
+        
+      })();
+    }, []);
+
+  // if(location){console.log(location)}
+  const metersToMiles = (distanceInMeters) => {
+    const miles = distanceInMeters * 0.000621371; // 1 meter = 0.000621371 miles
+    return miles.toFixed(1); // Format to one decimal place
+  };
+
+  const [range, setRange] = useState(2);
+  const [YelpData, setYelpData] = useState([]);
+  const handleSearch = async () => {
+    const email = await AsyncStorage.getItem('userEmail');
+    fetch('http://localhost:8000/get_barbershop_from_yelp_api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        request: Question,
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        range: range,
+      })
+    })
+      .then(response => response.json())
+      .then( async data => {
+        // console.log(data);
+        // Handle the response data here
+        if (data.detail) {
+          console.error('Error:', data.detail); // Log the error if there is one
+        } else {
+          await AsyncStorage.setItem('YelpData', JSON.stringify(data));
+          const parsedData = JSON.parse(await AsyncStorage.getItem('YelpData'));
+          setYelpData(parsedData);
+          // console.log('result within range', range);
+          // console.log(YelpData);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  const renderBusinessCard = (business, index) => {
+    return (
+      <Card key={index} style={{ backgroundColor: '#EDE0D4', borderRadius: 15, marginBottom: 20 }}>
+        {/* <Card.Title titleStyle={styles.cardTitle} title={business.name} left={LeftContent} /> */}
+        <ScrollView horizontal style={{ width: 230 }}>
+          <Card.Title titleStyle={styles.cardTitle} title={business.name} left={LeftContent} />
+        </ScrollView>
+
+        <Image source={require('../assets/fourStarReview.png')} style={{ width: 74, height: 15, top: -50, left: 250 }} />
+        {/* Add other information or customization for each business */}
+        <Card.Content>
+          <Text variant="bodyMedium">
+            Hello! My name is Kiki and I am an independent salon owner and professional stylist. 
+            I specialize in chemical treatments including texturizing... see more
+          </Text>
+        
+          <View style={{ height: 30, top: 10 }}>
+            <ScrollView horizontal={true} >
+              <View style={styles.stylistFeatureContainer}>
+                <Text style={styles.stylistFeature}>  highly skilled  </Text>
+              </View>
+              <View style={styles.stylistFeatureContainer}>
+                <Text style={styles.stylistFeature}>  fair price  </Text>
+              </View>
+              <View style={styles.stylistFeatureContainer}>
+                <Text style={styles.stylistFeature}>  mask required  </Text>
+              </View>
+              <View style={styles.stylistFeatureContainer}>
+                <Text style={styles.stylistFeature}>  5+ year of experience  </Text>
+              </View>
+            </ScrollView>
+          </View>
+        </Card.Content>
+
+        <Text style={{ left: 24, top: 28 }}>{business.price}</Text>
+        <Text style={{ color: '#242424', top: 10, marginLeft: 60, }}>
+          {metersToMiles(business.distance)} miles
+        </Text>
+        
+        <Card.Actions style={{ top: -20, marginBottom: -10 }}>
+          <TouchableOpacity>
+            <View style={styles.BAContainer}>
+              <Text style={styles.BookAppointment}>  Book an appointment  </Text>
+            </View>
+          </TouchableOpacity>
+        </Card.Actions>
+      </Card>
+    );
+  };
+  console.log(YelpData);
+
   return (
         <SafeAreaView style={styles.container}>
           <Text style={styles.findastylist}> Find a Stylist </Text>
@@ -42,7 +163,29 @@ export default function Stylist({ navigation }) {
             maxLength={120}
             onChangeText={text => setQuestion(text)}
             value={Question}
+            enterKeyHint='search'
+            onSubmitEditing={handleSearch}
           ></TextInput>
+          <Text style={{ left: 350, top: -80, }}>Km</Text>
+          <View style={{ top: -65, left: 355 }}>
+            <RNPickerSelect
+              onValueChange={(value) => setRange(value)}
+              placeholder={{
+                label: '0',
+                value: 0, // or whatever value should be used for the placeholder
+              }}
+              items={Array.from({ length: 15 }, (_, index) => ({ label: `${index + 1}`, value: index + 1 }))}
+              style={{
+                inputIOS: {
+                  fontSize: 18,
+                  color: 'purple',
+                },
+                inputAndroid: {
+                  // Your Android styles here
+                },
+              }}
+            />
+          </View>
 
           <View style={styles.filterContainer}>
             <ScrollView horizontal={true} >
@@ -70,7 +213,14 @@ export default function Stylist({ navigation }) {
 
           <View style={styles.StylistScroll}>
             <ScrollView style={styles.mainScroll}>
-              <Card style={{ backgroundColor: '#EDE0D4', borderRadius: 15, marginBottom: 20 }}>
+
+              {YelpData && YelpData.length > 0 ? (
+                YelpData.map((business, index) => renderBusinessCard(business, index))
+              ) : (
+                <Text>Try your first search</Text>
+              )}
+
+              {/* <Card style={{ backgroundColor: '#EDE0D4', borderRadius: 15, marginBottom: 20 }}>
                   <Card.Title titleStyle={styles.cardTitle} title="Kiki's Salon"  left={LeftContent} />
                   <Image source={require('../assets/fourStarReview.png')} style={{ width: 74, height: 15, top: -50, left: 250 }} />
                 
@@ -206,14 +356,14 @@ export default function Stylist({ navigation }) {
                       </TouchableOpacity>
                     </Card.Actions>
                   
-              </Card>
+              </Card> */}
             </ScrollView>
           </View>
 
           
 
 
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 250 }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 290 }}>
               <View style={styles.Bottonline}> 
                 <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
                 <Image
@@ -231,7 +381,7 @@ export default function Stylist({ navigation }) {
                 <Text style={styles.Barbershopword}>Stylist</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <TouchableOpacity onPress={() => navigation.replace('Friends')}>
                 <Image
                   source={require('../assets/Community.png')}
                   style={styles.Community}
@@ -351,16 +501,15 @@ const styles = StyleSheet.create({
   },
   SearchInput: {
     top: -17,
-    left: 30,
-    width: 330,
+    left: 65,
+    width: 260,
     height: 40,
-    alignSelf: 'center',
     borderRadius: 5,
     fontSize: 14,
   },
   filterContainer: {
     left: 33,
-    // width: 500,
+    top: -35,
     height: 24,
   },
   textContainer: {
@@ -380,7 +529,6 @@ const styles = StyleSheet.create({
   },
   StylistScroll: {
     marginHorizontal: 33,
-    top: 50,
     marginBottom: 80,
   },
   mainScroll: {
@@ -413,15 +561,5 @@ const styles = StyleSheet.create({
     top: 4,
     fontSize: 16,
     color: '#472415',
-  },
-  price: {
-    top: 24,
-    left: 13,
-    aspectRatio: 1.5,
-  },
-  distance: {
-    color: '#242424',
-    top: 10,
-    left: 40,
   },
 });
