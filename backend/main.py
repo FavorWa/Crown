@@ -4,7 +4,7 @@ from db import get_database
 from products_router import products_router
 from signUp import router as sign_up_router
 from login import router as log_in_router
-from digest_router import digest_router
+from blogs_router import blogs_router
 from user import router as user
 from stylist import router as stylist
 
@@ -14,7 +14,7 @@ app = FastAPI()
 app.include_router(products_router, prefix="/products")
 app.include_router(sign_up_router)
 app.include_router(log_in_router)
-app.include_router(digest_router, prefix="/digest")
+app.include_router(blogs_router, prefix="/blogs")
 app.include_router(user)
 app.include_router(stylist)
 

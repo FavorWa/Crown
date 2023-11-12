@@ -28,7 +28,7 @@ const Article = ({ route, navigation }) => {
         }
 
         try {
-          const res = await callApi(`/digest/${_id}/toggle_like`, reqObj);
+          const res = await callApi(`/blogs/${_id}/toggle_like`, reqObj);
           setLiked(!liked);
         }
 
@@ -57,7 +57,7 @@ const Article = ({ route, navigation }) => {
         }
 
         try {
-          const data = await callApi(`/digest/${_id}/comment`, reqObj);
+          const data = await callApi(`/blogs/${_id}/comment`, reqObj);
           setComment("");
           setIsLoading(true);
         }
@@ -74,8 +74,8 @@ const Article = ({ route, navigation }) => {
   
     const setArticle = async () => {
       const email = await AsyncStorage.getItem("userEmail");
-      const comments = await callApi(`/digest/${_id}/comments`);
-      const likes = await callApi(`/digest/${_id}/likes`);
+      const comments = await callApi(`/blogs/${_id}/comments`);
+      const likes = await callApi(`/blogs/${_id}/likes`);
       if (likes.includes(userEmail)) {
         setLiked(true);
       }

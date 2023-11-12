@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Box from '../components/Box';
 import { selectableImages } from './User';
+import callApi from '../functions/callApi';
 
 export default function Homepage({ navigation }) {
+
+  const [blogs, setBlogs] = useState([]);
 
   const isLoggedIn = async (web) => {
     try {
@@ -27,8 +31,48 @@ export default function Homepage({ navigation }) {
     }
   };
 
+  const fetchBlogs = async () => {
+    const blogs = await callApi("/blogs/sample");
+    setBlogs(blogs);
+  }
+
+  const showBlogs = () => {
+    const NUM_BOXES = 6;
+    const blogsBoxes = [];
+    for (let index = 0; index < NUM_BOXES; index++) {
+      try {
+        const blogObj = blogs[index];
+        if (blogObj) {
+          const blogBox = 
+          <Box 
+            image = {blogObj.image}
+            title = {blogObj.title}
+            link = {blogObj.link}
+            time = {blogObj.time}
+            isArticle = {blogObj.isArticle}
+            _id = {blogObj._id}
+            navigation = {navigation}
+          />
+          blogsBoxes.push(blogBox)
+        }
+      }
+
+      catch {
+        blogsBoxes.push(
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          />
+        )
+      }
+    }
+
+    return blogsBoxes;
+  }
+
   useEffect(() => {
     fetchUserAvatar();
+    fetchBlogs();
   }, []);
 
   return(
@@ -59,33 +103,13 @@ export default function Homepage({ navigation }) {
       
       <View style={styles.blogScrollContainer}>
         <ScrollView horizontal={true} >
-          <Image
-            source={require('../assets/blogM1.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/blogM2.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/blogM3.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
+          {showBlogs()}
         </ScrollView>
       </View>
 
+      <TouchableOpacity onPress={() => navigation.navigate('Blogs')}>
+        <Text style={styles.productPage}> See more </Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
         <Text style={styles.productPage}> Products </Text>
       </TouchableOpacity>
@@ -298,3 +322,31 @@ const styles = StyleSheet.create({
     marginHorizontal: 28,
   },
 });
+
+
+/*
+          <Image
+            source={require('../assets/blogM1.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/blogM2.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/blogM3.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          ></Image>
+          <Image
+            source={require('../assets/Rectangle4.png')}
+            style={styles.scrollObject}
+          ></Image>
+*/

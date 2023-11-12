@@ -3,18 +3,18 @@ from db import get_database
 import requests
 
 db = get_database()
+hair_types = ["2A", "2B", "2C", "3A", "3B", "3C", "4A", "4B", "4C"]
+product_types = ["Shampoo", "Conditioner", "Hair Moisturizer", "Hair Oils", "Hair Gel", "Hair Mousse"]
 
-def make_search_string(hair_type: str):
-    return f'type {hair_type} hair products'
 
-def get_products_from_rainforest_api(hair_type: str):
+def get_products_from_rainforest_api(query: str):
 
     # set up the request parameters
     params = {
     'api_key': rainforest_api_key,
     'type': 'search',
     'amazon_domain': 'amazon.com',
-    'search_term': make_search_string(hair_type),
+    'search_term': query,
     'sort_by': 'average_review',
     'page': '1',
     'output': 'json'
@@ -27,7 +27,7 @@ def get_products_from_rainforest_api(hair_type: str):
 
     return json["search_results"]
 
-def transform_products(products):
+def transform_products(products, hair_type, product_type):
     transformed_products = []
     for product in products:
         try:
@@ -35,7 +35,9 @@ def transform_products(products):
                 "title": product["title"],
                 "link": product["link"],
                 "image": product["image"],
-                "price": product["price"]["raw"]
+                "price": product["price"]["raw"],
+                "hairType": hair_type,
+                "productType": product_type
             })
         except KeyError:
             print("An item doesn't have a title, link, image, or price. It has been omitted.")
@@ -57,19 +59,33 @@ def get_products(hair_type):
             del product["_id"]
         return products
 
-USE_DATABASE = True
 def update_database():
-    hair_types = ["2A", "2B", "2C", "3A", "3B", "3C", "4A", "4B", "4C"]
     for hair_type in hair_types:
+        for product_type in product_types:
+            query = f'hair type {hair_type} {product_type}'
+            products = get_products_from_rainforest_api(query)
+            transformed_products = transform_products(products, hair_type, product_type)
+            db["Products"].insert_many(transformed_products)
 
-        # drop database
-        db[hair_type].drop()
+def test():
+    hair_types = ["2A"]
+    product_types = ["Shampoo"]
+    for hair_type in hair_types:
+        for product_type in product_types:
+            query = f'hair type {hair_type} {product_type}'
+            products = get_products_from_rainforest_api(query)
+            transformed_products = transform_products(products, hair_type, product_type)
+            db["Products"].insert_many(transformed_products)
 
-        products = get_products_from_rainforest_api(hair_type)
-        transformed_products = transform_products(products)
+def count_products():
+    hair_types = ["2A", "2B", "2C", "3A", "3B", "3C", "4A", "4B", "4C"]
+    product_types = ["Shampoo", "Conditioner", "Hair Moisturizer", "Hair Oils", "Hair Gel", "Hair Mousse"]
 
-        # re initialize it
-        db[hair_type].insert_many(transformed_products)
+    for hair_type in hair_types:
+        for product_type in product_types:
+            query = {"hairType": hair_type, "productType": product_type}
+            num_of_products = db["Products"].count_documents(query)
+            print(f'{hair_type} {product_type} products: {num_of_products}')
 
 if __name__ == '__main__':
-    update_database()
+    count_products()
