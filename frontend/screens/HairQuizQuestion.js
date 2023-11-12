@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 24,
     color: 'black',
-    marginTop: 24,
+    marginTop: 64,
     marginLeft: 40,
   },
   secondLine:{

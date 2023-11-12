@@ -151,7 +151,7 @@ export default function Homepage({ navigation }) {
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <View style={styles.Bottonline}> 
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
             <Image
               source={require('../assets/Compass.png')}
               style={styles.Compass}
@@ -159,7 +159,7 @@ export default function Homepage({ navigation }) {
             <Text style={styles.Compassword}>Discover</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity onPress={() => isLoggedIn('Stylist')}>
             <Image
               source={require('../assets/Barbershop.png')}
               style={styles.Barbershop}
@@ -167,7 +167,7 @@ export default function Homepage({ navigation }) {
             <Text style={styles.Barbershopword}>Stylist</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity onPress={() => isLoggedIn('Friends')}>
             <Image
               source={require('../assets/Community.png')}
               style={styles.Community}
@@ -194,6 +194,7 @@ export default function Homepage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    top: 50,
   },
   hairquiz: {
     textAlign: 'left',
