@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Cover from './screens/Cover.js';
 import Homepage from './screens/HomePage';
-import HairQuiz from './screens/HairQuiz';
+import Result from './screens/Result.js';
 import HairQuizQuestion from './screens/HairQuizQuestion'; 
 import SignUp from './screens/Signup';
 import Login from './screens/Login';
@@ -74,8 +74,8 @@ export default function App() {
           component={Homepage}
         />
         <Stack.Screen 
-          name="HairQuiz" 
-          component={HairQuiz}
+          name="Result" 
+          component={Result}
         />
         <Stack.Screen 
           name="HairQuizQuestion" 

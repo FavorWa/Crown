@@ -21,6 +21,35 @@ app.include_router(user)
 async def root():
     return {"message": "Hello World"}
 
+hairQuizQuestionCollection = db["hairQuestions"]
+
+
+@app.get("/questions")
+async def get_hair_questions():
+    questions = list(hairQuizQuestionCollection.find({}, {"_id": 0}))
+    return questions
+
+
+class Response(BaseModel):
+    userEmail: str
+    answers: list
+
+
+userCollection = db["Userinfo"]
+responsesCollection = db["user_responses"]
+
+
+@app.post("/submit_response")
+async def submit_responses(responses: Response):
+    try:
+        # Store the submitted responses in MongoDB
+
+        response_id = await responsesCollection.insert_one(dict(responses))
+        return {"message": "Responses submitted successfully",
+                "response_id": str(response_id.inserted_id)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 class Hair_Attributes(BaseModel):
     curlPattern: str
@@ -41,53 +70,41 @@ hair_descriptions = {
 }
 
 
-@app.post("/getHairType")
-async def getHairType(hair_attributes: Hair_Attributes):
-    hair_type = ""
-    hair_dict = hair_attributes.model_dump()
+class Email(BaseModel):
+    userEmail: str
 
-    if hair_dict["curlPattern"] == "Wavy":
+
+@app.post("/getHairType")
+async def getHairType(userEmail: Email):
+    # print(userEmail)
+    answers = responsesCollection.find_one(
+        {"userEmail": userEmail.userEmail})
+
+    hair_type = ""
+    if answers:
+        # Get the 'answers' array with a default empty list
+        answers_array = answers.get("answers", [])
+
+        if len(answers_array) >= 2:  # Check if the array has at least two elements
+            curlPattern = answers_array[0]
+            curlDegree = answers_array[1]
+    if curlPattern == "Wavy":
         hair_type += "2"
-    elif hair_dict["curPattern"] == "Curly":
+    elif curlPattern == "Curly":
         hair_type += "3"
-    elif hair_dict["curlPattern"] == "Coily":
+    elif curlPattern == "Coily":
         hair_type += "4"
     else:
         raise HTTPException(status_code=400, detail="Invalid curl pattern")
 
-    if hair_dict["curlDegree"] == "Wide":
+    if curlDegree == "Wide":
         hair_type += "A"
-    elif hair_dict["curlDegree"] == "Medium":
+    elif curlDegree == "Medium":
         hair_type += "B"
-    elif hair_dict["curlDegree"] == "Tight":
+    elif curlDegree == "Tight":
         hair_type += "C"
     else:
         raise HTTPException(status_code=400, detail="Invalid curl degree")
 
-    return {"hairType": hair_type, "description": hair_descriptions[hair_type]}
-
-hairQuizQuestionCollection = db["hairQuestions"]
-
-
-@app.get("/questions")
-async def get_hair_questions():
-    questions = list(hairQuizQuestionCollection.find({}, {"_id": 0}))
-    return questions
-
-
-class Response(BaseModel):
-    answers: list
-
-
-userCollection = db["Userinfo"]
-responsesCollection = db["user_responses"]
-
-
-@app.post("/submit_response")
-async def submit_responses(responses: Response):
-    try:
-        # Store the submitted responses in MongoDB
-        response_id = await responsesCollection.insert_one(responses.dict())
-        return {"message": "Responses submitted successfully", "response_id": str(response_id.inserted_id)}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    print(hair_type)
+    return {"hairType": hair_type, "hairDescription": hair_descriptions[hair_type]}

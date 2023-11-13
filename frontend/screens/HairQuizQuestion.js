@@ -3,6 +3,9 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, SectionList, TouchableOpacity, Pressable, Input } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+
 
 
 
@@ -12,36 +15,99 @@ export default function HairQuizQuestion({ navigation }) {
   const [responses, setResponses] = useState({});
   const [selectedAnswers, setSelectedAnswers] = useState({}); // To track selected answers for all questions
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0); // Track the current category
+  
+ 
+   // Group questions by category
+   const groupedQuestions = questions.reduce((acc, question) => {
+    acc[question.category] = acc[question.category] || [];
+    acc[question.category].push(question);
+    return acc;
+  }, {});
+
+  const currentCategory = Object.keys(groupedQuestions)[currentCategoryIndex];
+  const currentQuestions = groupedQuestions[currentCategory];
+
 
   const onPressHandler = () => {
       // navigation.navigate('HomePage');
       navigation.goBack();
   }
+
+  const getUserEmail = async () => {
+    try {
+      const userEmail = await AsyncStorage.getItem('userEmail');
+      return userEmail;
+    } catch (error) {
+      console.error('Error getting user email from AsyncStorage:', error);
+      return null;
+    }
+  };
+
   const handleResponse = (question, answer) => {
     setSelectedAnswers({ ...selectedAnswers, [question]: answer });
-    setCurrentQuestionIndex(currentQuestionIndex + 1);
+    if (currentQuestionIndex < currentQuestions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      // If there are no more questions in the current category, switch to the next category
+      //nextCategory();
+    }
   };
   
+  const nextCategory = () => {
+    if (currentCategoryIndex < Object.keys(groupedQuestions).length - 1) {
+      setCurrentCategoryIndex(currentCategoryIndex + 1);
+      setCurrentQuestionIndex(0); // Reset the question index for the new category
+    }
+    else{
+      submitResponses();
+      navigation.navigate('Result');
+    }
+  };
 
-  const submitResponses = () => {
-    // Check if all questions have been answered
+  const previousCategory = () => {
+    if (currentCategoryIndex > 0) {
+      setCurrentCategoryIndex(currentCategoryIndex - 1);
+      setCurrentQuestionIndex(0);
+    }
+  };
+
+  const startOver = () => {
+    setCurrentCategoryIndex(0);
+    setCurrentQuestionIndex(0);
+    setSelectedAnswers({});
+  };
+
+  const submitResponses = async () => {
+    const userEmail = await getUserEmail();
+
+    if (!userEmail) {
+      alert('Unable to retrieve user email.');
+      return;
+    }
+
     if (Object.keys(selectedAnswers).length === questions.length) {
-      // All questions have been answered
       const selectedAnswersArray = Object.values(selectedAnswers);
+      
+      // Include user's email along with the responses
       axios
         .post('http://127.0.0.1:8000/submit_response', {
+          userEmail: userEmail,
           answers: selectedAnswersArray,
-          // You may include user identifier (email, username) here
         })
         .then(() => {
-          // Handle successful response submission (e.g., show a confirmation message)
+          // Handle successful response submission
+          
         })
         .catch((error) => console.error('Error submitting responses:', error));
+      
+        
+      
     } else {
-      // Not all questions have been answered, you can show an error message
       alert('Please answer all questions before proceeding.');
     }
   };
+  
 
   useEffect(() => {
     // Fetch questions from your backend API
@@ -55,54 +121,73 @@ export default function HairQuizQuestion({ navigation }) {
   
   return(
     <ScrollView>
-      <Text style={styles.crownText}> Hair Characteristics </Text>
-      <Text style={styles.secondLine}> Let's figure out what's right for you!</Text>
-      
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <View style={styles.TextContainer}>
-          <Text style={styles.textInsideContainer}>
-            Our Hair Quiz is formulated to help you figure out your hair type and which products 
-            and regimens may be best suited for you. Please be as honest as possible in your responses
-            to ensure accurate results, if you're not sure, we can help you out!
-          </Text>
-          <Text style={styles.line}> {/* Line */} </Text>
-          <TouchableOpacity>
-            <Text style={styles.gotit}>
-              Got It!
-            </Text>
-          </TouchableOpacity>
+      {currentCategoryIndex === 0 ? (
+        <View>
+          <Text style={styles.crownText}> Hair Characteristics </Text>
+          <Text style={styles.secondLine}> Let's figure out what's right for you!</Text>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={styles.TextContainer}>
+              <Text style={styles.textInsideContainer}>
+                Our Hair Quiz is formulated to help you figure out your hair type and which products 
+                and regimens may be best suited for you. Please be as honest as possible in your responses
+                to ensure accurate results, if you're not sure, we can help you out!
+              </Text>
+              <Text style={styles.line}> {/* Line */} </Text>
+              <TouchableOpacity>
+                <Text style={styles.gotit}>
+                  Got It!
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      </View>
+      ) : (
+        <TouchableOpacity>
+          
+          <Text style={styles.categoryText}onPress={previousCategory}>{currentCategory}</Text>
+        </TouchableOpacity>
+      )}
 
-      {questions.map((item, index) => (
+      {currentQuestions && currentQuestions.map((item, index) => (
         <View key={index} style={styles.QuestionBox}>
-          <Text style={styles.text}>{item.question}</Text>
+          <Text style={styles.questionText}>{item.question}</Text>
           <Text style={styles.miniText}>{item.description}</Text>
           <View style={{ ...styles.imageRow, marginTop: 25 }}>
-  {item.answers.map((answer, answerIndex) => (
-    <TouchableOpacity
-      key={answerIndex}
-      style={{
-        ...styles.rectangleContainer,
-      }}
-      onPress={() => handleResponse(item.question, answer)}
-    >
-      <Image source={require('../assets/Rectangle4.png')} style={styles.rectangle2} />
-      <Text style={styles.rectangleText}>{answer}</Text>
-    </TouchableOpacity>
-  ))}
+        {item.answers.map((answer, answerIndex) => (
+          <TouchableOpacity
+            key={answerIndex}
+            style={{
+              ...styles.rectangle2,
+              borderWidth: selectedAnswers[item.question] === answer ? 3 : 1,
+            }}
+            onPress={() => handleResponse(item.question, answer)}
+          >
+            <Image source={require('../assets/Rectangle4.png')} style={styles.rectangle2} />
+            <Text style={styles.answerText}>{answer}</Text>
+          </TouchableOpacity>
+        ))}
 </View>
         </View>
       ))}
 
 <TouchableOpacity
   style={styles.nextContainer}
-  onPress={submitResponses}
+  onPress={nextCategory}
 >
-  <Text style={styles.next}>
-    Next
-  </Text>
+<Text style={styles.next}>
+          {currentCategoryIndex < Object.keys(groupedQuestions).length - 1
+            ? 'Next'
+            : 'Finish'}
+        </Text>
 </TouchableOpacity>
+<TouchableOpacity
+        style={styles.startOverButton}
+        onPress={startOver}
+      >
+        <Text style={styles.startOverText}>
+          Start Over
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   )
 }
@@ -153,16 +238,16 @@ const styles = StyleSheet.create({
   gotit: {
     color: 'black',
     fontSize: 20,
-    fontStyle: 'italic',
+    
     marginLeft: 260,
   },
-  text: {
+  questionText: {
     color: '#000000',
-    fontSize: 25,
-    fontStyle: 'italic',
+    fontSize: 20,
     marginTop: 10,
     textAlignVertical: 'center', // Center the text vertically
     alignSelf: 'flex-start', // Align the text to the start (left) horizontally
+    fontFamily: '',
   },
   miniText: {
     color: '#000000',
@@ -200,7 +285,10 @@ const styles = StyleSheet.create({
     width: 91,
     height: 95,
     marginHorizontal: 15,
-    alignItems: 'left',
+    borderWidth: 2,
+    borderColor: '#472415',
+    alignItems: 'center', //Center items horizontally
+    
   },
   imageRow: {
     flexDirection: 'row',
@@ -211,8 +299,9 @@ const styles = StyleSheet.create({
   rectangleContainer: {
     alignItems: 'center', // Center items horizontally
     justifyContent: 'center', // Center items vertically
+    
   },
-  rectangleText: {
+  answerText: {
     textAlign: 'center',
     top: -55,
     fontSize: 14, // Adjust the font size as needed
@@ -223,13 +312,13 @@ const styles = StyleSheet.create({
   },
   next: {
     color: 'black',
-    fontSize: 28,
+    fontSize: 14,
     fontWeight: '400',
   },
   nextContainer: {
     backgroundColor: '#C9A227', // Orange background color
-    height: 45, // Height of the rectangle
-    width: 75, // Width of the rectangle
+    height: 26, // Height of the rectangle
+    width: 54, // Width of the rectangle
     marginTop: 15,
     marginBottom: 50,
     left: 300,
@@ -239,4 +328,16 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderRadius: 4, // Add border radius of 4
   },
+  startOverButton:{
+    alignItems: 'center',
+    color: '#713200',
+    marginBottom: 20,
+  },
+
+  categoryText:{
+    fontSize: 24,
+    fontWeight: 500,
+    marginTop: 30,
+    marginLeft: 30,
+  }
 });
