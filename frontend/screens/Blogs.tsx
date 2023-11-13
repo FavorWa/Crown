@@ -23,39 +23,39 @@ const Row = ({blogBoxes}) => {
 const Blogs = ({navigation}) => {
     const sections = ["Today's Digest", "Styling 101", "The Latest on Products", "Hair Health", "Making an Impact"]
     const [blogs, setBlogs] = useState([]);
-    console.log(blogs);
 
     const getBlogBoxes = (blogs) => {
         const NUM_BOXES = 6;
         const blogsBoxes = [];
+
         for (let index = 0; index < NUM_BOXES; index++) {
-          try {
-            const blogObj = blogs[index];
-            if (blogObj) {
-              const blogBox = 
-              <Box 
-                image = {blogObj.image}
-                title = {blogObj.title}
-                link = {blogObj.link}
-                time = {blogObj.time}
-                isArticle = {blogObj.isArticle}
-                _id = {blogObj._id}
-                navigation = {navigation}
-              />
-              blogsBoxes.push(blogBox)
+            if (index < blogs.length) {
+                const blogObj = blogs[index];
+                if (blogObj) {
+                    const blogBox = 
+                    <Box 
+                    image = {blogObj.image}
+                    title = {blogObj.title}
+                    link = {blogObj.link}
+                    time = {blogObj.time}
+                    isArticle = {blogObj.isArticle}
+                    _id = {blogObj._id}
+                    navigation = {navigation}
+                    />
+                    blogsBoxes.push(blogBox)
+                }
             }
-          }
-    
-          catch {
-            blogsBoxes.push(
-              <Image
-                source={require('../assets/Rectangle4.png')}
-                style={styles.scrollObject}
-              />
-            )
-          }
-        }
-    
+
+            else {
+                blogsBoxes.push(
+                    <Image
+                    source={require('../assets/Rectangle4.png')}
+                    style={styles.scrollObject}
+                    />
+                )
+            }
+            }
+        
         return blogsBoxes;
     }
 
@@ -76,7 +76,7 @@ const Blogs = ({navigation}) => {
     }, []);
 
     return (
-        <ScrollView>
+        <ScrollView style={{marginTop: 50}}>
             <Text variant="headlineLarge" style={styles.heading}>Blogs</Text>
             <Text variant="headlineSmall" style={styles.subheading}>All the information you need in one place.</Text>
             {
@@ -84,7 +84,7 @@ const Blogs = ({navigation}) => {
                     sections.map((section) => {
 
                         const filteredBlogs = blogs.filter((blog) => {
-                            return blog.tags.includes(section);
+                            return blog["tags"].includes(section);
                         })
         
                         const filteredBlogComponents = getBlogBoxes(filteredBlogs);

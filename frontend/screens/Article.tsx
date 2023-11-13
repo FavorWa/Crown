@@ -119,7 +119,7 @@ const Article = ({ route, navigation }) => {
           onChangeText={(text) => setComment(text)}
           style={styles.commentInput}
         />
-        <Button mode="contained" onPress={submitComment} >
+        <Button mode="contained" onPress={submitComment} style={{backgroundColor: "#713200"}}>
           Comment
         </Button>
   
@@ -146,6 +146,7 @@ articleText: {
     marginBottom: 16,
 },
 commentInput: {
+    backgroundColor: "#EDE0D4",
     marginBottom: 16,
 },
 });
