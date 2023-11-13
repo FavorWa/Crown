@@ -110,9 +110,7 @@ export default function Homepage({ navigation }) {
       <TouchableOpacity onPress={() => navigation.navigate('Blogs')}>
         <Text style={styles.productPage}> See more </Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
-        <Text style={styles.productPage}> Products </Text>
-      </TouchableOpacity>
+      
       
       <TouchableOpacity>
         <Text style={styles.Inspiration}>
@@ -148,6 +146,10 @@ export default function Homepage({ navigation }) {
           ></Image>
         </ScrollView>
       </View>
+
+      <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
+        <Text style={styles.productPage}> Products </Text>
+      </TouchableOpacity>
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <View style={styles.Bottonline}> 
@@ -289,7 +291,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#472415',
     marginHorizontal: 30,
-    marginBottom: -210,
+    marginBottom: -140,
   },
   avatar: {
     width: 55,

@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { Card, Surface, Text, Divider, ActivityIndicator,  } from 'react-native-paper';
-import { StyleSheet, Image, View, ScrollView, GestureResponderEvent, Platform} from 'react-native';
+import { StyleSheet, Image, View, ScrollView, TouchableOpacity, Platform} from 'react-native';
 import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 import openWebPage from "../functions/openWebPage";
 import Homepage from "./HomePage";
 import Box from "../components/Box";
 import callApi from "../functions/callApi";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { selectableImages } from './User';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
@@ -75,39 +78,87 @@ const Blogs = ({navigation}) => {
         getBlogs();
     }, []);
 
+    const [userAvatar, setUserAvatar] = useState(null);
+    const fetchUserAvatar = async () => {
+        const avatar = await AsyncStorage.getItem('userAvatar');
+        setUserAvatar(avatar);
+    };
+
+    useEffect(() => {
+        fetchUserAvatar();
+    }, []);
+
     return (
-        <ScrollView>
-            <Text variant="headlineLarge" style={styles.heading}>Blogs</Text>
-            <Text variant="headlineSmall" style={styles.subheading}>All the information you need in one place.</Text>
-            {
-                blogs.length == 0 ? <ActivityIndicator /> : (
-                    sections.map((section) => {
+        <SafeAreaView>
+            <ScrollView style={{ marginBottom: 60}}>
+                <Text variant="headlineLarge" style={styles.heading}>Blogs</Text>
+                <Text variant="headlineSmall" style={styles.subheading}>All the information you need in one place.</Text>
+                {
+                    blogs.length == 0 ? <ActivityIndicator /> : (
+                        sections.map((section) => {
 
-                        const filteredBlogs = blogs.filter((blog) => {
-                            return blog.tags.includes(section);
+                            const filteredBlogs = blogs.filter((blog) => {
+                                return blog.tags.includes(section);
+                            })
+            
+                            const filteredBlogComponents = getBlogBoxes(filteredBlogs);
+                            return (
+                                <View style={styles.section}>
+                                    <Text variant="headlineMedium" style={styles.sectionHeading}>{section}</Text>
+                                    <Row blogBoxes={filteredBlogComponents} />
+                                </View>
+                            )
                         })
-        
-                        const filteredBlogComponents = getBlogBoxes(filteredBlogs);
-                        return (
-                            <View style={styles.section}>
-                                <Text variant="headlineMedium" style={styles.sectionHeading}>{section}</Text>
-                                <Row blogBoxes={filteredBlogComponents} />
-                            </View>
-                        )
-                    })
-                )
-            }
-        </ScrollView>
+                    )
+                }
+                
+            </ScrollView>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 60 }}>
+                <View style={styles.Bottonline}> 
+                    <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
+                    <Image
+                    source={require('../assets/Compass.png')}
+                    style={styles.Compass}
+                    ></Image>
+                    <Text style={styles.Compassword}>Discover</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity onPress={() => navigation.navigate('Stylist')}>
+                    <Image
+                    source={require('../assets/Barbershop.png')}
+                    style={styles.Barbershop}
+                    ></Image>
+                    <Text style={styles.Barbershopword}>Stylist</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => navigation.replace('Friends')}>
+                    <Image
+                    source={require('../assets/Community.png')}
+                    style={styles.Community}
+                    ></Image>
+                    <Text style={styles.Communityword}>Community</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => navigation.replace('User')}>
+                    {userAvatar ? (
+                    <Image source={selectableImages[userAvatar]} style={styles.avatar} />
+                    ) : (
+                    <>
+                        <Image source={require('../assets/User.png')} style={styles.User} />
+                        <Text style={styles.Userword}>Profile</Text>
+                    </>
+                    )}
+                </TouchableOpacity>
+                </View>
+            </View>
+        </SafeAreaView>
     );
-
-
 }
 
 export default Blogs;
 
 const styles = StyleSheet.create({
     heading: {
-        marginTop: 7,
         marginHorizontal: 28,
     },
 
@@ -156,4 +207,56 @@ const styles = StyleSheet.create({
         left: 28,
         top: 40,
     },
+    Compass: {
+        aspectRatio: 1.2,
+        marginLeft: 35,
+        marginTop: 15,
+      },
+      Compassword: {
+        marginLeft: 30,
+      },
+      Barbershop: {
+        aspectRatio: 1.2,
+        marginLeft: 135,
+        marginTop: -55,
+      },
+      Barbershopword: {
+        marginLeft: 135,
+        marginBottom: -40,
+      },
+      Community: {
+        aspectRatio: 1.2,
+        marginLeft: 235,
+        marginTop: -55,
+      },
+      Communityword: {
+        marginLeft: 225,
+        marginBottom: -40,
+      },
+      User: {
+        marginLeft: 335,
+        marginTop: -55,
+        aspectRatio: 1.2,
+      },
+      Userword: {
+        marginLeft: 338,
+        marginBottom: -40,
+      },
+      Bottonline: {
+        width: 430,
+        height: 210,
+        flexShrink: 0,
+        borderRadius: 39,
+        borderWidth: 1,
+        borderColor: '#472415',
+        marginHorizontal: 30,
+        marginBottom: -210,
+      },
+      avatar: {
+        width: 55,
+        height: 55,
+        borderRadius: 40,
+        marginLeft: 330,
+        marginVertical: -55,
+      },
 })
