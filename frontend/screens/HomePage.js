@@ -85,7 +85,7 @@ export default function Homepage({ navigation }) {
         style={styles.rectangle4}
       ></Image>
 
-      <TouchableOpacity onPress={() => navigation.navigate('HairQuiz')}>
+      <TouchableOpacity onPress={() => navigation.navigate('HairQuizQuestion')}>
         <Image
           source={require('../assets/Rectangle4.png')}
           style={styles.hairQuizRectangle}
