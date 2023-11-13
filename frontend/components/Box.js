@@ -4,11 +4,8 @@ import { Text } from "react-native-paper";
 const Box = ({image, title, link, time, isArticle, _id, navigation}) => {
 
     const handlePress = () => {
-        console.log('pressed');
         navigation.navigate('Article', {_id, link});
     }
-
-    console.log('box made');
 
     const activity = isArticle ? "read" : "watch";
     const minutesLine = `${time} minute ${activity}`;
@@ -19,8 +16,8 @@ const Box = ({image, title, link, time, isArticle, _id, navigation}) => {
         <TouchableOpacity onPress={handlePress}>
             <ImageBackground source={source} style={styles.box}>
                 <View style={styles.title}>
-                    <Text style={{color: "white"}}>{title}</Text>
-                    <Text style={{color: "white"}}>{minutesLine}</Text>
+                    <Text style={{color: "white", fontWeight: "bold"}}>{title}</Text>
+                    <Text style={{color: "white", fontWeight: "bold"}}>{minutesLine}</Text>
                 </View>
                 {!isArticle ? (
                     <Text style={styles.videoLabel}>Video</Text>
