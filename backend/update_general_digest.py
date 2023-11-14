@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 from db import get_database
-import requests
 
 
 digestRouter = APIRouter()
