@@ -2,8 +2,12 @@ from fastapi import APIRouter, HTTPException
 from pymongo import MongoClient
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
-from secret_values import mongodb_uri
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+mongodb_uri = os.getenv("mongodb_uri")
 router = APIRouter()
 
 # MongoDB connection

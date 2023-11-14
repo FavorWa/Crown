@@ -1,12 +1,15 @@
 from secret_values import yelp_api_key
 from db import get_database
 import requests
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from pymongo import MongoClient
 from pydantic import BaseModel
-from fastapi.responses import JSONResponse
-from secret_values import mongodb_uri
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+mongodb_uri = os.getenv("mongodb_uri")
 db = get_database()
 
 router = APIRouter()
