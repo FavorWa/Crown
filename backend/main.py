@@ -7,6 +7,9 @@ from login import router as log_in_router
 from blogs_router import blogs_router
 from user import router as user
 from stylist import router as stylist
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 db = get_database()
