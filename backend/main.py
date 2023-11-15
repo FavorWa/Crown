@@ -28,6 +28,10 @@ async def root():
 hairQuizQuestionCollection = db["hairQuestions"]
 
 
+@app.get("/healtcheck", status_code=200)
+def healthceck():
+    return "server is live!"
+
 @app.get("/questions")
 async def get_hair_questions():
     questions = list(hairQuizQuestionCollection.find({}, {"_id": 0}))
