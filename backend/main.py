@@ -28,7 +28,7 @@ async def root():
 hairQuizQuestionCollection = db["hairQuestions"]
 
 
-@app.get("/healtcheck", status_code=200)
+@app.get("/healthcheck", status_code=200)
 def healthceck():
     return "server is live!"
 
