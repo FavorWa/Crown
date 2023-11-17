@@ -81,7 +81,7 @@ export default function Homepage({ navigation }) {
         Hair Quiz
       </Text>
       <Image
-        source={require('../assets/Rectangle4.png')}
+        source={require('../assets/profile_page.png')}
         style={styles.rectangle4}
       ></Image>
 
@@ -226,11 +226,8 @@ const styles = StyleSheet.create({
   },
   rectangle4: {
     backgroundColor: 'rgba(217, 217, 217, 1)',
-    width: 355,
     height: 150,
-    borderRadius: 20,
     position: 'absolute',
-    left: 28,
     top: 40,
   },
   blogs: {

@@ -181,7 +181,7 @@ export default function DrawerExample({ navigation }) {
 
               <Image
                   source={require('../assets/profile_page.png')}
-                  style={{ alignSelf: 'center', borderRadius: 20, width: 350, height: 150, top: 10}}
+                  style={{ alignSelf: 'center', height: 150, top: 10}}
               ></Image>
 
               <TouchableOpacity>
