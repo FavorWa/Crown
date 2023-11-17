@@ -532,7 +532,7 @@ const styles = StyleSheet.create({
     marginBottom: 80,
   },
   mainScroll: {
-    marginBottom: 220,
+    marginBottom: 210,
   },
   cardTitle: {
     fontSize: 20,

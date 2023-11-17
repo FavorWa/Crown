@@ -81,7 +81,7 @@ export default function Homepage({ navigation }) {
         Hair Quiz
       </Text>
       <Image
-        source={require('../assets/Rectangle4.png')}
+        source={require('../assets/profile_page.png')}
         style={styles.rectangle4}
       ></Image>
 
@@ -110,9 +110,7 @@ export default function Homepage({ navigation }) {
       <TouchableOpacity onPress={() => navigation.navigate('Blogs')}>
         <Text style={styles.productPage}> See more </Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
-        <Text style={styles.productPage}> Products </Text>
-      </TouchableOpacity>
+      
       
       <TouchableOpacity>
         <Text style={styles.Inspiration}>
@@ -148,6 +146,10 @@ export default function Homepage({ navigation }) {
           ></Image>
         </ScrollView>
       </View>
+
+      <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
+        <Text style={styles.productPage}> Products </Text>
+      </TouchableOpacity>
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <View style={styles.Bottonline}> 
@@ -224,11 +226,8 @@ const styles = StyleSheet.create({
   },
   rectangle4: {
     backgroundColor: 'rgba(217, 217, 217, 1)',
-    width: 355,
     height: 150,
-    borderRadius: 20,
     position: 'absolute',
-    left: 28,
     top: 40,
   },
   blogs: {
@@ -289,7 +288,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#472415',
     marginHorizontal: 30,
-    marginBottom: -210,
+    marginBottom: -140,
   },
   avatar: {
     width: 55,

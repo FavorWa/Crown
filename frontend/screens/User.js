@@ -7,26 +7,14 @@ import * as Location from 'expo-location';
 
 
 export const selectableImages = {
-  'avatar1': require('../assets/avatar1.avif'),
-  'avatar2': require('../assets/avatar2.jpeg'),
-  'avatar3': require('../assets/avatar3.jpeg'),
-  'avatar4': require('../assets/avatar4.jpeg'),
-  'avatar5': require('../assets/avatar5.jpeg'),
-  'avatar6': require('../assets/avatar6.jpeg'),
-  'avatar7': require('../assets/avatar7.jpeg'),
-  'avatar8': require('../assets/avatar8.avif'),
-  'avatar9': require('../assets/avatar9.webp'),
-  'avatar10': require('../assets/avatar10.jpeg'),
-  'avatar11': require('../assets/avatar11.jpeg'),
-  'avatar12': require('../assets/avatar12.jpeg'),
-  'avatar13': require('../assets/avatar13.jpeg'),
-  'avatar14': require('../assets/avatar14.jpeg'),
-  'avatar15': require('../assets/avatar15.jpeg'),
-  'avatar16': require('../assets/avatar16.jpeg'),
-  'avatar17': require('../assets/avatar17.jpeg'),
-  'avatar18': require('../assets/avatar18.jpeg'),
-  'avatar19': require('../assets/avatar19.jpeg'),
-  'avatar20': require('../assets/avatar20.avif')
+  'avatar1': require('../assets/avatar1.png'),
+  'avatar2': require('../assets/avatar2.png'),
+  'avatar3': require('../assets/avatar3.png'),
+  'avatar4': require('../assets/avatar4.png'),
+  'avatar5': require('../assets/avatar5.png'),
+  'avatar6': require('../assets/avatar6.png'),
+  'avatar7': require('../assets/avatar7.png'),
+  'avatar8': require('../assets/avatar8.png')
 };
 const Nums = [
   'avatar1',
@@ -36,19 +24,7 @@ const Nums = [
   'avatar5',
   'avatar6',
   'avatar7',
-  'avatar8',
-  'avatar9',
-  'avatar10',
-  'avatar11',
-  'avatar12',
-  'avatar13',
-  'avatar14',
-  'avatar15',
-  'avatar16',
-  'avatar17',
-  'avatar18',
-  'avatar19',
-  'avatar20'
+  'avatar8'
 ];
 
 export default function DrawerExample({ navigation }) {
@@ -83,7 +59,7 @@ export default function DrawerExample({ navigation }) {
     const changeAvatar = async () => {
       const email = await AsyncStorage.getItem('userEmail');
       console.log(email);
-      const randomNum = Math.floor(Math.random() * 20);
+      const randomNum = Math.floor(Math.random() * 8);
       const avatarNumber = Nums[randomNum];
 
       fetch('http://localhost:8000/change_avatar', {
@@ -204,8 +180,8 @@ export default function DrawerExample({ navigation }) {
               </View>
 
               <Image
-                  source={require('../assets/Rectangle4.png')}
-                  style={{ alignSelf: 'center', borderRadius: 20, width: 350, height: 150, top: 10}}
+                  source={require('../assets/profile_page.png')}
+                  style={{ alignSelf: 'center', height: 150, top: 10}}
               ></Image>
 
               <TouchableOpacity>
