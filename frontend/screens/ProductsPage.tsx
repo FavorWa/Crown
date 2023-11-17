@@ -1,4 +1,4 @@
-import { View, Image, SafeAreaView, ScrollView, StyleSheet} from "react-native"
+import { View, Image, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from "react-native"
 import { Style } from "react-native-paper/lib/typescript/components/List/utils"
 import { Text, TouchableRipple, List, ActivityIndicator, SegmentedButtons} from "react-native-paper"
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage from the correct package
@@ -34,10 +34,28 @@ const Product = ({title, link, image, price}: Product) => {
         openWebPage(link);
     }
 
+    /*
+    // working on custom products card
+    return (
+        <TouchableOpacity onPress={handleProductPress}>
+            <Image 
+                source={{
+                    uri: image,
+                    method: 'GET'
+                }}
+                style={{width: 64, height: 64}}
+            />
+            <Text>{title}</Text>
+            <Text>{price}</Text>
+
+        </TouchableOpacity>
+    )
+    */
     return (
         <List.Item
             onPress={handleProductPress}
             title={title}
+            titleNumberOfLines={5}
             description=""
             left={() => (
                 <Image
@@ -177,7 +195,7 @@ let ProductsPage = () => {
     else {
         const productComponents = productsToComponents(products)
         return (
-            <>
+            <View style={{marginTop: 49}}>
                 <SafeAreaView>
                     {
                         !email ? (
@@ -209,7 +227,7 @@ let ProductsPage = () => {
                         {productComponents}
                     </List.Section>
                 </ScrollView>
-            </>
+            </View>
         )
     }
 }
