@@ -450,7 +450,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#472415',
     marginHorizontal: 30,
-    marginBottom: 0,
+    marginBottom: -210,
   },
   avatar: {
     width: 55,
