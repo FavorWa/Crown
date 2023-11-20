@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, File, UploadFile
 from pydantic import BaseModel
 from db import get_database
 from products_router import products_router
@@ -116,3 +116,19 @@ async def getHairType(userEmail: Email):
 
     print(hair_type)
     return {"hairType": hair_type, "hairDescription": hair_descriptions[hair_type]}
+
+
+#Function for uploading the images of the inspos
+
+hairInspo = db["hairInspo"]
+
+@app.get("/get_images")
+async def get_images():
+    try:
+        # Retrieve image URLs from MongoDB
+        images = list(hairInspo.find({}, {"_id": 0, "image.url": 1}))
+        image_urls = [item["image"]["url"] for item in images]
+        return {"image_urls": image_urls}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+

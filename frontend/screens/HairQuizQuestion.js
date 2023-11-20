@@ -16,6 +16,8 @@ export default function HairQuizQuestion({ navigation }) {
   const [selectedAnswers, setSelectedAnswers] = useState({}); // To track selected answers for all questions
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0); // Track the current category
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupAnswers, setPopupAnswers] = useState([]);
   
  
    // Group questions by category
@@ -29,10 +31,46 @@ export default function HairQuizQuestion({ navigation }) {
   const currentQuestions = groupedQuestions[currentCategory];
 
 
-  const onPressHandler = () => {
-      // navigation.navigate('HomePage');
-      navigation.goBack();
-  }
+  const showNotSurePopup = (answers, index) => {
+    const details = currentQuestions[index].details;
+  
+    if (details) {
+      setPopupAnswers([...popupAnswers, { answers, details }]);
+      setShowPopup(true);
+    }
+  };
+
+  const hidePopup = () => {
+    setShowPopup(false);
+  };
+
+  const NotSurePopup = ({ answers, hidePopup, index }) => (
+    <View style={styles.popupBackground}>
+      <View style={styles.popupContainer}>
+        <ScrollView>
+          {answers.map((answerSet, setIndex) => (
+            <View key={setIndex} style={styles.popupAnswerContainer}>
+              <Text style={styles.popupAnswerText}>Answers:</Text>
+              {answerSet.answers.map((answer, answerIndex) => (
+                <Text key={answerIndex} style={styles.popupAnswerText}>
+                  - {answer}
+                </Text>
+              ))}
+              <Text style={styles.popupAnswerText}>Details:</Text>
+              {answerSet.details.map((detail, detailIndex) => (
+                <Text key={detailIndex} style={styles.popupDescriptionText}>
+                  - {detail}
+                </Text>
+              ))}
+            </View>
+          ))}
+        </ScrollView>
+        <TouchableOpacity style={styles.closePopupButton} onPress={hidePopup}>
+          <Text style={styles.closePopupButtonText}>Close</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 
   const getUserEmail = async () => {
     try {
@@ -152,6 +190,16 @@ export default function HairQuizQuestion({ navigation }) {
         <View key={index} style={styles.QuestionBox}>
           <Text style={styles.questionText}>{item.question}</Text>
           <Text style={styles.miniText}>{item.description}</Text>
+          {item.details && (
+          <TouchableOpacity
+            style={styles.notSureButton}
+            onPress={() => showNotSurePopup(item.answers, currentQuestionIndex)}
+          >
+          <Text style={styles.notSureButtonText}>NOT SURE?</Text>
+          
+          </TouchableOpacity>
+          
+)}
           <View style={{ ...styles.imageRow, marginTop: 25 }}>
         {item.answers.map((answer, answerIndex) => (
           <TouchableOpacity
@@ -164,6 +212,7 @@ export default function HairQuizQuestion({ navigation }) {
           >
             <Image source={require('../assets/Rectangle4.png')} style={styles.rectangle2} />
             <Text style={styles.answerText}>{answer}</Text>
+            
           </TouchableOpacity>
         ))}
 </View>
@@ -188,6 +237,9 @@ export default function HairQuizQuestion({ navigation }) {
           Start Over
         </Text>
       </TouchableOpacity>
+      {showPopup && (
+            <NotSurePopup answers={popupAnswers} hidePopup={hidePopup} index={currentQuestionIndex} />
+          )}
     </ScrollView>
   )
 }
