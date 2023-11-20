@@ -17,6 +17,8 @@ import Friends from './screens/Friends';
 import Settings from './screens/Settings';
 import Stylist from './screens/Stylist';
 import Article from './screens/Article'
+import StylistProfile from './screens/StylistProfile';
+import InHouseStylists from './screens/InHouseStylists.js';
 
 const Stack = createStackNavigator();
 
@@ -112,6 +114,16 @@ export default function App() {
         <Stack.Screen
           name="Settings"
           component={Settings}
+        />
+
+        <Stack.Screen
+          name="StylistProfile"
+          component={StylistProfile}
+        />
+
+        <Stack.Screen
+          name="InHouseStylists"
+          component={InHouseStylists}
         />
       </Stack.Navigator>
     </NavigationContainer>
