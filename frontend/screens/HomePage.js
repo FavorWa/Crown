@@ -112,6 +112,10 @@ export default function Homepage({ navigation }) {
       </TouchableOpacity>
       
       
+      <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
+        <Text style={styles.productPage}> In House Stylists </Text>
+      </TouchableOpacity>
+      
       <TouchableOpacity>
         <Text style={styles.Inspiration}>
           Inspiration
@@ -288,7 +292,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#472415',
     marginHorizontal: 30,
-    marginBottom: -140,
+    marginBottom: 0,
   },
   avatar: {
     width: 55,
