@@ -8,6 +8,7 @@ from blogs_router import blogs_router
 from user import router as user
 from stylist import router as stylist
 from dotenv import load_dotenv
+from stylists_router import stylists_router
 
 load_dotenv()
 
@@ -20,6 +21,7 @@ app.include_router(log_in_router)
 app.include_router(blogs_router, prefix="/blogs")
 app.include_router(user)
 app.include_router(stylist)
+app.include_router(stylists_router, prefix="/stylists")
 
 @app.get("/")
 async def root():
