@@ -7,9 +7,9 @@ from fastapi.responses import JSONResponse
 from secret_values import mongodb_uri
 from typing import List, Dict, Union
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 mongodb_uri = os.getenv("mongodb_uri")
 yelp_api_key = os.getenv("yelp_api_key")
