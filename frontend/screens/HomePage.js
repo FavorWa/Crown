@@ -4,6 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Box from '../components/Box';
 import { selectableImages } from './User';
 import callApi from '../functions/callApi';
+import axios from 'axios'; 
+
 
 export default function Homepage({ navigation }) {
 
@@ -69,12 +71,56 @@ export default function Homepage({ navigation }) {
 
     return blogsBoxes;
   }
+  
 
   useEffect(() => {
     fetchUserAvatar();
     fetchBlogs();
   }, []);
 
+  const ImageGallery = () => {
+    const [imageUrls, setImageUrls] = useState([]);
+
+    useEffect(() => {
+      const fetchImages = async () => {
+        try {
+          const response = await axios.get('http://127.0.0.1:8000/get_images');
+          setImageUrls(response.data.image_urls || []);  // Assuming the response.data is an array of image URLs
+        } catch (error) {
+          console.error('Error fetching images:', error);
+        }
+      };
+
+      fetchImages();
+    }, []);
+
+    return (
+      <ScrollView horizontal>
+      {imageUrls.map((imageUrl, index) => (
+        <Image
+        key={index}
+        source={{ uri: imageUrl }}
+        style={{
+          width: 120,
+          height: 160,
+          borderRadius: 15,
+          marginRight: 10,
+          borderWidth: 1, // Border width
+          borderColor: '#3E2723', // Brown color
+        }}
+        indicatorProps={{
+          size: 40,
+          borderWidth: 2,
+          color: 'rgba(150, 150, 150, 1)',
+          unfilledColor: 'rgba(200, 200, 200, 0.2)',
+        }}
+      />
+    ))}
+    </ScrollView>
+    );
+  };
+
+  
   return(
     <SafeAreaView style={styles.container}>
       <Text style={styles.hairquiz}>
@@ -123,32 +169,10 @@ export default function Homepage({ navigation }) {
       </TouchableOpacity>
 
       <View style={styles.InspirationScrollContainer}>
-        <ScrollView horizontal={true} >
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-        </ScrollView>
+      <View>
+      
+      <ImageGallery />
+    </View>
       </View>
 
       <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
@@ -209,6 +233,12 @@ const styles = StyleSheet.create({
     color: 'black',
     left: 28,
     top: 5,
+  },
+  image: {
+    width: 100, // Set the width of each image as needed
+    height: 100, // Set the height of each image as needed
+    margin: 5,
+    borderRadius: 10,
   },
   takeTheQuiz: {
     textAlign: 'center', // Center the text horizontally within the container
@@ -318,6 +348,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     left: 33,
+    fontFamily: 'Rig Sans',
   },
   InspirationScrollContainer:{
     top: 15,
