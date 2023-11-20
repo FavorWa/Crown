@@ -2,10 +2,13 @@ from fastapi import APIRouter, HTTPException
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 from pydantic import BaseModel
-from fastapi.responses import JSONResponse
-from secret_values import mongodb_uri
 import re
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+mongodb_uri = os.getenv("mongodb_uri")
 
 router = APIRouter()
 

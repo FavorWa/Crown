@@ -6,8 +6,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from './User';
 import * as Location from 'expo-location';
 import RNPickerSelect from 'react-native-picker-select';
+import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 
-
+const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
 
 export default function Stylist({ navigation }) {
 
@@ -59,7 +60,7 @@ export default function Stylist({ navigation }) {
   const [YelpData, setYelpData] = useState([]);
   const handleSearch = async () => {
     const email = await AsyncStorage.getItem('userEmail');
-    fetch('http://localhost:8000/get_barbershop_from_yelp_api', {
+    fetch(`${backend_base_url}/get_barbershop_from_yelp_api`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -140,7 +141,7 @@ export default function Stylist({ navigation }) {
       </Card>
     );
   };
-  console.log(YelpData);
+  //console.log(YelpData);
 
   return (
         <SafeAreaView style={styles.container}>

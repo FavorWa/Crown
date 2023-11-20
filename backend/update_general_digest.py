@@ -1,8 +1,6 @@
 from fastapi import APIRouter
 from db import get_database
-import requests
-import random
-from bs4 import BeautifulSoup
+
 
 digestRouter = APIRouter()
 db = get_database()

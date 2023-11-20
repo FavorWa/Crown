@@ -19,6 +19,10 @@ import Stylist from './screens/Stylist';
 import StylistProfile from './screens/StylistProfile';
 import ResetFilter from './screens/ResetFilter';
 import Article from './screens/Article'
+import StylistProfile from './screens/StylistProfile';
+import InHouseStylists from './screens/InHouseStylists.js';
+import UserStylist from './screens/UserStylist';
+
 
 const Stack = createStackNavigator();
 
@@ -117,13 +121,23 @@ export default function App() {
         />
 
         <Stack.Screen
+          name="StylistProfile"
+          component={StylistProfile}
+        />
+
+        <Stack.Screen
+          name="InHouseStylists"
+          component={InHouseStylists}
+        />
+
+        <Stack.Screen
           name="ResetFilter"
           component={ResetFilter}
         />
 
         <Stack.Screen
-          name="StylistProfile"
-          component={StylistProfile}
+          name="UserStylist"
+          component={UserStylist}
         />
       </Stack.Navigator>
     </NavigationContainer>

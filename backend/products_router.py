@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException
-from secret_values import rainforest_api_key
 from db import get_database
 from amazon_to_db import hair_types, product_types
 from blogs_router import ids_to_strings

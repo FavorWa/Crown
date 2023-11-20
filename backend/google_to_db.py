@@ -1,11 +1,14 @@
-from fastapi import APIRouter
-from secret_values import rainforest_api_key, google_search_api_key, google_search_engine_id
 from db import get_database
 import requests
-import random
 from bs4 import BeautifulSoup
+import os
+from dotenv import load_dotenv
 
-digestRouter = APIRouter()
+load_dotenv()
+
+google_search_api_key = os.getenv("google_search_api_key")
+google_search_engine_id = os.getenv("google_search_engine_id")
+
 db = get_database()
 
 def get_google_results(query : str, tags: [str], num_of_results: int, start: int):

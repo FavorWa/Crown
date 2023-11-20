@@ -1,6 +1,11 @@
-from secret_values import rainforest_api_key
 from db import get_database
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+rainforest_api_key = os.getenv("rainforest_api_key")
 
 db = get_database()
 hair_types = ["2A", "2B", "2C", "3A", "3B", "3C", "4A", "4B", "4C"]

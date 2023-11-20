@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Query
-from secret_values import rainforest_api_key, google_search_api_key, google_search_engine_id
 from db import get_database
 import random
 from pydantic import BaseModel
@@ -57,6 +56,7 @@ def get_sample():
     ids_to_strings(random_documents)
     return random_documents
 
+
 @blogs_router.get('/sections')
 def get_sections(sections: Annotated[list[str], Query()]):
     collection = db["Blogs"]
@@ -66,6 +66,7 @@ def get_sections(sections: Annotated[list[str], Query()]):
         docs = [doc for doc in cursor]
         ids_to_strings(docs)
         blogs += docs
+    print(blogs)
     return blogs
     
 @blogs_router.get('/{article_id}/likes')
