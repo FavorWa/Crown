@@ -16,6 +16,8 @@ import User from './screens/User';
 import Friends from './screens/Friends';
 import Settings from './screens/Settings';
 import Stylist from './screens/Stylist';
+import StylistProfile from './screens/StylistProfile';
+import ResetFilter from './screens/ResetFilter';
 import Article from './screens/Article'
 
 const Stack = createStackNavigator();
@@ -112,6 +114,16 @@ export default function App() {
         <Stack.Screen
           name="Settings"
           component={Settings}
+        />
+
+        <Stack.Screen
+          name="ResetFilter"
+          component={ResetFilter}
+        />
+
+        <Stack.Screen
+          name="StylistProfile"
+          component={StylistProfile}
         />
       </Stack.Navigator>
     </NavigationContainer>

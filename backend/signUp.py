@@ -23,6 +23,9 @@ class User(BaseModel):
     name: str
     email: str
     password: str
+    isStylist: str
+    hairType: str
+    avatarNumber: str
 
 
 @router.post('/sign_up')
@@ -33,6 +36,9 @@ async def sign_up(user: User):
             "name": user.name,
             "email": user.email,
             "password": user.password,
+            "isStylist": user.isStylist,
+            "hairType": user.hairType,
+            "avatarNumber": user.avatarNumber
         }
         if not user.name or not user.email or not user.password:
             raise HTTPException(status_code=400, detail="Email, name or password cannot be empty.")

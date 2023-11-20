@@ -21,7 +21,6 @@
     "@react-navigation/stack": "^6.3.18",
     "@ui-kitten/components": "^5.3.1",
     "base64-js": "^1.5.1",
-    "expo": "~49.0.13",
     "expo-cli": "^6.3.10",
     "expo-file-system": "~15.4.4",
     "expo-image-picker": "~14.3.2",
@@ -32,7 +31,9 @@
     "react-native": "0.72.6",
     "react-native-document-picker": "^9.0.1",
     "react-native-drawer-layout": "^4.0.0-alpha.1",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-dropdown-select-list": "^2.0.5",
+    "react-native-element-dropdown": "^2.10.0",
     "react-native-fetch-blob": "^0.10.8",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-image-picker": "^7.0.2",
@@ -55,6 +56,7 @@
     "@types/react": "^18.2.37",
     "@types/react-native": "^0.72.5",
     "@types/react-test-renderer": "^18.0.5",
+    "expo-updates": "^0.18.17",
     "typescript": "^5.2.2"
   },
   "private": true
