@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import { AppState } from 'react-native';
 import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -19,7 +18,6 @@ import Stylist from './screens/Stylist';
 import StylistProfile from './screens/StylistProfile';
 import ResetFilter from './screens/ResetFilter';
 import Article from './screens/Article'
-import StylistProfile from './screens/StylistProfile';
 import InHouseStylists from './screens/InHouseStylists.js';
 import UserStylist from './screens/UserStylist';
 

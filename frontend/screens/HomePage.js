@@ -162,24 +162,27 @@ export default function Homepage({ navigation }) {
         <Text style={styles.productPage}> In House Stylists </Text>
       </TouchableOpacity>
       
-      <TouchableOpacity>
-        <Text style={styles.Inspiration}>
-          Inspiration
-        </Text>
-      </TouchableOpacity>
+      <View style={{ height: 220 }}>
+        <TouchableOpacity>
+          <Text style={styles.Inspiration}>
+            Inspiration
+          </Text>
+        </TouchableOpacity>
 
-      <View style={styles.InspirationScrollContainer}>
-      <View>
-      
-      <ImageGallery />
-    </View>
+        <View style={styles.InspirationScrollContainer}>
+          <View>
+          
+            <ImageGallery />
+          </View>
+        </View>
+
+        <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
+          <Text style={styles.productPage}> Products </Text>
+        </TouchableOpacity>
       </View>
 
-      <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
-        <Text style={styles.productPage}> Products </Text>
-      </TouchableOpacity>
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: -50 }}>
         <View style={styles.Bottonline}> 
             <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
             <Image
@@ -354,6 +357,7 @@ const styles = StyleSheet.create({
     top: 15,
     height: 160,
     marginHorizontal: 28,
+    marginBottom: 0
   },
 });
 

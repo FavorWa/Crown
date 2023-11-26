@@ -171,7 +171,7 @@ export default function DrawerExample({ navigation }) {
           <ScrollView>
               {isStylist ? (
                 <View>
-                  <TouchableOpacity onPress={() => navigation.navigate('StylistProfile')}>
+                  <TouchableOpacity onPress={() => navigation.navigate('UserStylist')}>
                     <Text style={{ fontSize: 34, fontWeight: '500', left: 33, top: 60, color:'#d32e05'}}>Stylist</Text>
                     <Text style={{ fontSize: 14, fontWeight: '500', left: 33, top: 70, color: '#713200'}}>Master skill, time to show</Text>
                   </TouchableOpacity>
