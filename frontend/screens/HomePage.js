@@ -284,6 +284,7 @@ const styles = StyleSheet.create({
     marginLeft: 338,
     marginBottom: -40,
   },
+
   Bottonline: {
     width: 430,
     height: 210,
@@ -292,7 +293,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#472415',
     marginHorizontal: 30,
-    marginBottom: 0,
+    marginBottom: -140,
   },
   avatar: {
     width: 55,
