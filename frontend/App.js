@@ -22,7 +22,7 @@ import InHouseStylists from './screens/InHouseStylists.js';
 import UserStylist from './screens/UserStylist';
 import BookAppointment from './screens/BookAppointment';
 import ChooseDate from './screens/ChooseDate';
-
+import Inspo from './screens/Inspo.js';
 
 const Stack = createStackNavigator();
 
@@ -128,6 +128,10 @@ export default function App() {
         <Stack.Screen
           name="InHouseStylists"
           component={InHouseStylists}
+        />
+        <Stack.Screen
+        name="Inspo"
+        component={Inspo}
         />
 
         <Stack.Screen
