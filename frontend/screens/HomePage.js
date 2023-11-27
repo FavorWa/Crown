@@ -184,7 +184,7 @@ export default function Homepage({ navigation }) {
         <Text style={styles.productPage}> Products </Text>
       </TouchableOpacity>    
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 0 }}>
         <View style={styles.Bottonline}> 
             <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
             <Image
@@ -323,6 +323,7 @@ const styles = StyleSheet.create({
     marginLeft: 338,
     marginBottom: -40,
   },
+
   Bottonline: {
     width: '100%',
     height: 110,
@@ -334,7 +335,6 @@ const styles = StyleSheet.create({
     backgroundColor:"white",
     position:'absolute',
     bottom: -110,
-    
   },
   avatar: {
     width: 55,
@@ -366,6 +366,7 @@ const styles = StyleSheet.create({
     top: 15,
     height: 160,
     marginHorizontal: 28,
+    marginBottom: 0
   },
 });
 

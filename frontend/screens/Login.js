@@ -48,6 +48,7 @@ export default function Login({ navigation }) {
           await AsyncStorage.setItem('userName', userObject.name);
           await AsyncStorage.setItem('userAvatar', userObject.avatarNumber);
           await AsyncStorage.setItem('userHairType', userObject.hairType);
+          await AsyncStorage.setItem('userIdentity', userObject.isStylist);
           await AsyncStorage.setItem('userEmail', userObject.email);
           await AsyncStorage.setItem('userPassword', userObject.password);
           navigation.replace('Homepage'); // Navigate to the login screen

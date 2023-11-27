@@ -6,9 +6,11 @@ from signUp import router as sign_up_router
 from login import router as log_in_router
 from blogs_router import blogs_router
 from user import router as user
+from bookAppointment import router as bookAppointment
 from stylist import router as stylist
 from dotenv import load_dotenv
 from stylists_router import stylists_router
+
 
 load_dotenv()
 
@@ -20,6 +22,7 @@ app.include_router(sign_up_router)
 app.include_router(log_in_router)
 app.include_router(blogs_router, prefix="/blogs")
 app.include_router(user)
+app.include_router(bookAppointment)
 app.include_router(stylist)
 app.include_router(stylists_router, prefix="/stylists")
 

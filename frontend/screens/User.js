@@ -40,6 +40,7 @@ export default function DrawerExample({ navigation }) {
     };
     
     const [userAvatar, setUserAvatar] = useState(null);
+    const [isStylist, setisStylist] = useState(false);
     useEffect(() => {
       const fetchUserAvatar = async () => {
         const avatarUrl = await AsyncStorage.getItem('userAvatar').catch(error => {
@@ -49,6 +50,7 @@ export default function DrawerExample({ navigation }) {
           setUserAvatar(await AsyncStorage.getItem('userAvatar'));
           setuserName(await AsyncStorage.getItem('userName'));
           setuserId(await AsyncStorage.getItem('userId'));
+          setisStylist(await AsyncStorage.getItem('userIdentity'))
         }
       };
   
@@ -129,7 +131,7 @@ export default function DrawerExample({ navigation }) {
               <View style={{ flex: 1, height: 1, marginLeft: 45, top: -15, borderWidth: 0.5, borderColor: '#713200', marginRight: 30, }} />
             </TouchableOpacity>
 
-            <TouchableOpacity> 
+            <TouchableOpacity onPress={() => navigation.replace('ResetFilter')}> 
               <Image
                     source={require('../assets/reset.png')}
                     style={{marginTop: 10, width: 20, height: 20, left: 20,}}
@@ -167,8 +169,21 @@ export default function DrawerExample({ navigation }) {
         )}
       >
           <ScrollView>
-              <Text style={{ fontSize: 34, fontWeight: '500', left: 33, top: 60}}>Profile</Text>
-              <Text style={{ fontSize: 14, fontWeight: '500', left: 33, top: 70, color: '#713200'}}>All the details, catered to you.</Text>
+              {isStylist ? (
+                <View>
+                  <TouchableOpacity onPress={() => navigation.navigate('UserStylist')}>
+                    <Text style={{ fontSize: 34, fontWeight: '500', left: 33, top: 60, color:'#d32e05'}}>Stylist</Text>
+                    <Text style={{ fontSize: 14, fontWeight: '500', left: 33, top: 70, color: '#713200'}}>Master skill, time to show</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View>
+                  <Text style={{ fontSize: 34, fontWeight: '500', left: 33, top: 60}}>Profile</Text>
+                  <Text style={{ fontSize: 14, fontWeight: '500', left: 33, top: 70, color: '#713200'}}>All the details, catered to you.</Text>
+                </View>
+              )}
+              
+              
               
               <View style={{ top: -50, width: 70 }}>
                 <TouchableOpacity onPress={() => setOpen((prevOpen) => !prevOpen)} >
