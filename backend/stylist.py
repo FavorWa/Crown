@@ -3,6 +3,8 @@ import requests
 from fastapi import APIRouter
 from pymongo import MongoClient
 from pydantic import BaseModel
+from fastapi.responses import JSONResponse
+from typing import List, Dict, Union
 import os
 from dotenv import load_dotenv
 
@@ -88,3 +90,29 @@ def get_service_offerings_from_yelp_api(id: str):
 
 # Example usage
 # get_service_offerings_from_yelp_api("XHQEFR-Zlu1wvfx6cRAERA")
+
+class Stylist(BaseModel):
+    email: str
+    tags: List[str]
+    bio: str
+    businessHours: Dict[str, Dict[str, Union[str, None]]]  # Update the type
+    services: List[Dict[str, str]]  # Assuming services have names and prices
+
+@router.post('/saveStylistProfile')
+async def saveProfile(profile: Stylist):
+
+    stored_user = users_collection.find_one({"email": profile.email})
+    if stored_user:
+        users_collection.update_one(
+            {"email": profile.email},
+            {"$set": {
+                "tags": profile.tags,
+                "bio": profile.bio,
+                "businessHours": profile.businessHours,
+                "services": profile.services
+            }}
+        )
+        stored_user['_id'] = str(stored_user['_id'])
+        return JSONResponse(content={"message": "Profile updated successfully.", "user": stored_user})
+    else:
+        raise HTTPException(status_code=401, detail="Something Failed!")

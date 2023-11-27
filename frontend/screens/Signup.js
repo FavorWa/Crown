@@ -8,6 +8,11 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation();
+  const [willbeStylist, setwillbeStylist] = useState(false);
+
+  const toggleStylist = () => {
+    setwillbeStylist(!willbeStylist);
+  };
 
   const handleSignUp = () => {
     if (password !== confirmPassword) {
@@ -23,7 +28,10 @@ export default function SignUp() {
       body: JSON.stringify({
         name: name,
         email: email,
-        password: password
+        password: password,
+        isStylist: willbeStylist.toString(),
+        hairType: "3A",
+        avatarNumber: "avatar1"
       })
     })
       .then(response => response.json())
@@ -87,9 +95,16 @@ export default function SignUp() {
             keyboardAppearance='default'
             maxLength={40}
             onChangeText={text => setConfirmPassword(text)}
-          value={confirmPassword}
+            value={confirmPassword}
             secureTextEntry
             ></TextInput>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', top: 20, left: 20 }}>
+                <TouchableOpacity onPress={toggleStylist} style={{ backgroundColor: '#EDE0D4', padding: 1, borderRadius: 5, marginLeft: 30 }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 30 }}>{willbeStylist ? '✔️' : '◻️'}</Text>
+                </TouchableOpacity>
+                <Text style={{ color: '#00000099' }}> Do you want to register as a stylist? </Text>
+            </View>
               
             <View style={{ backgroundColor: '#C9A227', top: 50, width: 204, alignSelf: 'center', alignItems: 'center', height: 50, borderRadius: 15}}>
               <TouchableOpacity onPress={handleSignUp}>
@@ -97,6 +112,19 @@ export default function SignUp() {
               </TouchableOpacity>
             </View>
             
+
+            <View style={{ position: 'relative' }}>
+                <TouchableOpacity style={{ position: 'absolute', left: 70, top: 80 }}>
+                    <Image source={require('../assets/google.png')} style={{ height: 60, width: 60 }} />
+                </TouchableOpacity>
+                <TouchableOpacity style={{ position: 'absolute', left: 180, top: 80 }}>
+                    <Image source={require('../assets/facebook.png')} style={{ height: 60, width: 60 }} />
+                </TouchableOpacity>
+                <TouchableOpacity style={{ position: 'absolute', left: 290, top: 80 }}>
+                    <Image source={require('../assets/twitter.png')} style={{ height: 60, width: 60 }} />
+                </TouchableOpacity>
+            </View>
+
 
             <TouchableOpacity onPress={() => navigation.replace('Login')}>    
                 <Text style={styles.bottomText1}> Have an account? <Text style={styles.boldText}>Login</Text></Text>
@@ -148,7 +176,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '300',
     letterSpacing: 0.1,
-    top: 250,
+    top: 210,
     alignSelf: 'center',
   },
   boldText: {

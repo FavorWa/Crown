@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import { AppState } from 'react-native';
 import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -16,9 +15,14 @@ import User from './screens/User';
 import Friends from './screens/Friends';
 import Settings from './screens/Settings';
 import Stylist from './screens/Stylist';
-import Article from './screens/Article'
 import StylistProfile from './screens/StylistProfile';
+import ResetFilter from './screens/ResetFilter';
+import Article from './screens/Article'
 import InHouseStylists from './screens/InHouseStylists.js';
+import UserStylist from './screens/UserStylist';
+import BookAppointment from './screens/BookAppointment';
+import ChooseDate from './screens/ChooseDate';
+
 
 const Stack = createStackNavigator();
 
@@ -124,6 +128,26 @@ export default function App() {
         <Stack.Screen
           name="InHouseStylists"
           component={InHouseStylists}
+        />
+
+        <Stack.Screen
+          name="ResetFilter"
+          component={ResetFilter}
+        />
+
+        <Stack.Screen
+          name="UserStylist"
+          component={UserStylist}
+        />
+
+        <Stack.Screen
+          name="BookAppointment"
+          component={BookAppointment}
+        />
+
+        <Stack.Screen
+          name="ChooseDate"
+          component={ChooseDate}
         />
       </Stack.Navigator>
     </NavigationContainer>
