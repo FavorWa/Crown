@@ -11,8 +11,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mongodb_uri = os.getenv("mongodb_uri")
-
-mongodb_uri = os.getenv("mongodb_uri")
 yelp_api_key = os.getenv("yelp_api_key")
 
 db = get_database()

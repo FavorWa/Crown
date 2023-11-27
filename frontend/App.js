@@ -20,6 +20,8 @@ import ResetFilter from './screens/ResetFilter';
 import Article from './screens/Article'
 import InHouseStylists from './screens/InHouseStylists.js';
 import UserStylist from './screens/UserStylist';
+import BookAppointment from './screens/BookAppointment';
+import ChooseDate from './screens/ChooseDate';
 
 
 const Stack = createStackNavigator();
@@ -136,6 +138,16 @@ export default function App() {
         <Stack.Screen
           name="UserStylist"
           component={UserStylist}
+        />
+
+        <Stack.Screen
+          name="BookAppointment"
+          component={BookAppointment}
+        />
+
+        <Stack.Screen
+          name="ChooseDate"
+          component={ChooseDate}
         />
       </Stack.Navigator>
     </NavigationContainer>

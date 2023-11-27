@@ -182,7 +182,7 @@ export default function Homepage({ navigation }) {
       </View>
 
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: -50 }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 0 }}>
         <View style={styles.Bottonline}> 
             <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
             <Image
