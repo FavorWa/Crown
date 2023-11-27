@@ -22,6 +22,8 @@ import InHouseStylists from './screens/InHouseStylists.js';
 import UserStylist from './screens/UserStylist';
 import BookAppointment from './screens/BookAppointment';
 import ChooseDate from './screens/ChooseDate';
+import SendAppointment from './screens/SendAppointment';
+
 
 
 const Stack = createStackNavigator();
@@ -148,6 +150,11 @@ export default function App() {
         <Stack.Screen
           name="ChooseDate"
           component={ChooseDate}
+        />
+
+        <Stack.Screen
+          name="SendAppointment"
+          component={SendAppointment}
         />
       </Stack.Navigator>
     </NavigationContainer>

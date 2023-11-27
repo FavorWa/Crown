@@ -18,15 +18,16 @@ router = APIRouter()
 # MongoDB connection
 CONNECTION_STRING = mongodb_uri  
 client = MongoClient(CONNECTION_STRING)
-db = client['crown']  # Replace 'crown' with your database name
-users_collection = db['StylistProfiles']  # Replace 'UserInfo' with your collection name
+db = client['crown']  
+stylist_collection = db['StylistProfiles']  
+user_collection = db['UserInfo']
 
 class email(BaseModel):
     email: str
 
 @router.post('/get_stylist_service')
 async def get_stylist_service(input: email):
-    stored_user = users_collection.find_one({"email": input.email})
+    stored_user = stylist_collection.find_one({"email": input.email})
     if stored_user:
         services = stored_user.get('services', [])
 
@@ -52,6 +53,7 @@ async def get_stylist_service(input: email):
 import base64
 import os.path
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
@@ -92,7 +94,7 @@ def get_credentials():
 credentials = get_credentials()
 
 # If credentials are obtained, proceed to build the Gmail API service
-if credentials:
+if False and credentials:
     service = build("gmail", "v1", credentials=credentials)
 
     # Create a MIMEText message
@@ -108,3 +110,96 @@ if credentials:
     except HTTPError as error:
         print(f"An error occurred: {error}")
     
+
+class request(BaseModel):
+    stylistEmail: str
+    userEmail: str
+    stylist: str
+    service: str
+    price: str
+    date: str
+    time: str
+    notice: str
+
+@router.post('/send_appointment_request')
+async def send_appointment_request(input: request):
+    stored_user = user_collection.find_one({"email": input.userEmail})
+    stored_stylist = stylist_collection.find_one({"email": input.stylistEmail})
+
+    if stored_user and stored_stylist:
+        if credentials:
+            service = build("gmail", "v1", credentials=credentials)
+            # message = MIMEText(
+            #         f"Hello {stored_stylist['stylistName']}!\n\n"
+            #         f"We hope this message finds you well. You have a new appointment request!\n\n"
+            #         f"Client: {stored_user['name']}\n"
+            #         f"Service: {input.service}\n"
+            #         f"Date: {input.date}\n"
+            #         f"Time: {input.time}\n"
+            #         f"Price: {input.price}\n\n"
+            #         f"Please confirm this appointment at your earliest convenience. Thank you!\n\n"
+            #         f"Best regards,\nThe Crown Team"
+            #     )
+            # message["to"] = input.stylistEmail
+            # # print(input.stylistEmail)
+            # # print(input.userEmail)
+            # # print(f"Service: {input.service}")
+            # # print(f"Date: {input.date}")
+            # # print(f"Time: {input.time}")
+            # # print(f"Price: {input.price}")
+
+            # message["subject"] = "New Customer Appointment"
+            # create_message = {"raw": base64.urlsafe_b64encode(message.as_bytes()).decode()}
+            # try:
+            #     sent_message = service.users().messages().send(userId="me", body=create_message).execute()
+            #     print(f"Sent message to {sent_message} Message Id: {sent_message['id']}")
+            #     return JSONResponse(content={"message": "Email sent successfully"}, status_code=200)
+            try:
+                # Stylist Email
+                stylist_message = MIMEMultipart()
+                stylist_message.attach(MIMEText(
+                    f"Hello {stored_stylist['stylistName']}!\n\n"
+                    f"We hope this message finds you well. You have a new appointment request!\n\n"
+                    f"Client: {stored_user['name']}\n"
+                    f"Service: {input.service}\n"
+                    f"Date: {input.date}\n"
+                    f"Time: {input.time}\n"
+                    f"Price: {input.price}\n\n"
+                    f"Please confirm this appointment at your earliest convenience. Thank you!\n\n"
+                    f"Best regards,\nThe Crown Team"
+                ))
+                stylist_message["to"] = input.stylistEmail
+                stylist_message["subject"] = "New Customer Appointment - Confirmation Request"
+                stylist_create_message = {"raw": base64.urlsafe_b64encode(stylist_message.as_bytes()).decode()}
+
+                # Send the Stylist email
+                sent_stylist_message = service.users().messages().send(userId="me", body=stylist_create_message).execute()
+                print(f"Sent message to stylist: {sent_stylist_message} Message Id: {sent_stylist_message['id']}")
+
+                # User Email
+                user_message = MIMEMultipart()
+                user_message.attach(MIMEText(
+                    f"Hello {stored_user['name']}!\n\n"
+                    f"Thank you for booking an appointment with {stored_stylist['stylistName']}!\n\n"
+                    f"Service: {input.service}\n"
+                    f"Date: {input.date}\n"
+                    f"Time: {input.time}\n"
+                    f"Price: {input.price}\n\n"
+                    f"We will send you a confirmation once the stylist accepts your appointment.\n\n"
+                    f"Best regards,\nThe Crown Team"
+                ))
+                user_message["to"] = input.userEmail
+                user_message["subject"] = "Appointment Booking Confirmation"
+                user_create_message = {"raw": base64.urlsafe_b64encode(user_message.as_bytes()).decode()}
+
+                # Send the User email
+                sent_user_message = service.users().messages().send(userId="me", body=user_create_message).execute()
+                print(f"Sent message to user: {sent_user_message} Message Id: {sent_user_message['id']}")
+
+                return JSONResponse(content={"message": "Emails sent successfully"}, status_code=200)
+            except Exception as error:
+                print(f"An error occurred: {error}")
+                return JSONResponse(content={"error": f"Failed to send email. {error}"}, status_code=500)
+
+
+            
