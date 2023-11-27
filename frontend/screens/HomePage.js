@@ -72,11 +72,17 @@ export default function Homepage({ navigation }) {
     return blogsBoxes;
   }
   
-
+  
+  
   useEffect(() => {
     fetchUserAvatar();
     fetchBlogs();
   }, []);
+  
+  const axiosInstance = axios.create({
+    baseURL: 'http://127.0.0.1:8000/',
+    // Add other configurations as needed
+  });
 
   const ImageGallery = () => {
     const [imageUrls, setImageUrls] = useState([]);
@@ -84,7 +90,7 @@ export default function Homepage({ navigation }) {
     useEffect(() => {
       const fetchImages = async () => {
         try {
-          const response = await axios.get('http://127.0.0.1:8000/get_images');
+          const response = await axiosInstance.get('/get_images');
           setImageUrls(response.data.image_urls || []);  // Assuming the response.data is an array of image URLs
         } catch (error) {
           console.error('Error fetching images:', error);
@@ -122,6 +128,7 @@ export default function Homepage({ navigation }) {
 
   
   return(
+    <ScrollView style={styles.scrollContainer}>
     <SafeAreaView style={styles.container}>
       <Text style={styles.hairquiz}>
         Hair Quiz
@@ -157,30 +164,25 @@ export default function Homepage({ navigation }) {
         <Text style={styles.productPage}> See more </Text>
       </TouchableOpacity>
       
+      <TouchableOpacity onPress={() => navigation.navigate('Inspo')}>
+        <Text style={styles.Inspiration}>
+          Inspiration
+        </Text>
+      </TouchableOpacity>
+
+      <View style={styles.InspirationScrollContainer}>
+      <View>
+      <ImageGallery />
+    </View>
+      </View>
       
       <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
         <Text style={styles.productPage}> In House Stylists </Text>
       </TouchableOpacity>
       
-      <View style={{ height: 220 }}>
-        <TouchableOpacity>
-          <Text style={styles.Inspiration}>
-            Inspiration
-          </Text>
-        </TouchableOpacity>
-
-        <View style={styles.InspirationScrollContainer}>
-          <View>
-          
-            <ImageGallery />
-          </View>
-        </View>
-
-        <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
-          <Text style={styles.productPage}> Products </Text>
-        </TouchableOpacity>
-      </View>
-
+      <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
+        <Text style={styles.productPage}> Products </Text>
+      </TouchableOpacity>    
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 0 }}>
         <View style={styles.Bottonline}> 
@@ -221,6 +223,7 @@ export default function Homepage({ navigation }) {
         </View>
       </View>
     </SafeAreaView>
+    </ScrollView>
   )
 }
 
@@ -228,6 +231,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     top: 50,
+  },
+  scrollContainer:{
+    flex: 1
   },
   hairquiz: {
     textAlign: 'left',
@@ -319,14 +325,16 @@ const styles = StyleSheet.create({
   },
 
   Bottonline: {
-    width: 430,
-    height: 210,
+    width: '100%',
+    height: 110,
     flexShrink: 0,
     borderRadius: 39,
     borderWidth: 1,
     borderColor: '#472415',
     marginHorizontal: 30,
-    marginBottom: -140,
+    backgroundColor:"white",
+    position:'absolute',
+    bottom: -110,
   },
   avatar: {
     width: 55,

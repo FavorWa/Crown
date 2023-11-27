@@ -23,6 +23,11 @@ import UserStylist from './screens/UserStylist';
 import BookAppointment from './screens/BookAppointment';
 import ChooseDate from './screens/ChooseDate';
 import SendAppointment from './screens/SendAppointment';
+import Inspo from './screens/Inspo.js';
+
+
+
+
 
 
 
@@ -130,6 +135,10 @@ export default function App() {
         <Stack.Screen
           name="InHouseStylists"
           component={InHouseStylists}
+        />
+        <Stack.Screen
+        name="Inspo"
+        component={Inspo}
         />
 
         <Stack.Screen
