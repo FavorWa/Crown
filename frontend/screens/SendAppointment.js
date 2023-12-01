@@ -46,8 +46,8 @@ const SendAppointment = ({navigation}) => {
             'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                stylistEmail: "sjz2025@bu.edu",
-                userEmail: "sjz956230@gmail.com",
+                stylistEmail: stylistEmail,
+                userEmail: userEmail,
                 stylist: stylist,
                 service: service,
                 price: Price,
@@ -110,8 +110,8 @@ const SendAppointment = ({navigation}) => {
             <Text style={{ alignSelf: 'center', top: -110,fontSize: 22, fontWeight: '600'}}>Appointment Confirm</Text>
 
             <Text style={{ left: 33, fontSize: 20, fontWeight: '500', top: -60, color: '#C9A227' }}>Service</Text>
-            <Text style={{ left: 33, fontSize: 18, top: -25}}>{service}</Text>
-            <Text style={{ left: 320, fontSize: 18, top: -43}}>${price}</Text>
+            <Text style={{ left: 33, fontSize: 18, top: -35}}>{service}</Text>
+            <Text style={{ left: 320, fontSize: 18, top: -53}}>${price}</Text>
             <Text style={{ left: 33, fontSize: 20, fontWeight: '500', top: -20, color: '#C9A227'}}>Stylist</Text>
             <Text style={{ left: 33, fontSize: 18, top: 0}}>{stylist}</Text>
             <Text style={{ left: 33, fontSize: 20, fontWeight: '500', top: 30, color: '#C9A227'}}>Date & Time</Text>

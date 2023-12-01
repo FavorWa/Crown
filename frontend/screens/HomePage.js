@@ -354,13 +354,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginRight: 10,
   },
+  
   Inspiration: {
     textAlign: 'left',
     fontWeight: '400',
     fontSize: 20,
     color: 'black',
     left: 33,
-    fontFamily: 'Rig Sans',
   },
   InspirationScrollContainer:{
     top: 15,

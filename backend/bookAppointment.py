@@ -129,31 +129,6 @@ async def send_appointment_request(input: request):
     if stored_user and stored_stylist:
         if credentials:
             service = build("gmail", "v1", credentials=credentials)
-            # message = MIMEText(
-            #         f"Hello {stored_stylist['stylistName']}!\n\n"
-            #         f"We hope this message finds you well. You have a new appointment request!\n\n"
-            #         f"Client: {stored_user['name']}\n"
-            #         f"Service: {input.service}\n"
-            #         f"Date: {input.date}\n"
-            #         f"Time: {input.time}\n"
-            #         f"Price: {input.price}\n\n"
-            #         f"Please confirm this appointment at your earliest convenience. Thank you!\n\n"
-            #         f"Best regards,\nThe Crown Team"
-            #     )
-            # message["to"] = input.stylistEmail
-            # # print(input.stylistEmail)
-            # # print(input.userEmail)
-            # # print(f"Service: {input.service}")
-            # # print(f"Date: {input.date}")
-            # # print(f"Time: {input.time}")
-            # # print(f"Price: {input.price}")
-
-            # message["subject"] = "New Customer Appointment"
-            # create_message = {"raw": base64.urlsafe_b64encode(message.as_bytes()).decode()}
-            # try:
-            #     sent_message = service.users().messages().send(userId="me", body=create_message).execute()
-            #     print(f"Sent message to {sent_message} Message Id: {sent_message['id']}")
-            #     return JSONResponse(content={"message": "Email sent successfully"}, status_code=200)
             try:
                 # Stylist Email
                 stylist_message = MIMEMultipart()

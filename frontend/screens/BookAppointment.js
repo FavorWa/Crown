@@ -85,6 +85,8 @@ const BookAppointment = ({navigation}) => {
       );
     };
 
+     
+
     return (
         <SafeAreaView style={styles.container}>
 
