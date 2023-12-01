@@ -85,10 +85,12 @@ const BookAppointment = ({navigation}) => {
       );
     };
 
+     
+
     return (
         <SafeAreaView style={styles.container}>
 
-            <Text style={{ fontSize: 28, fontWeight: '600', alignSelf: 'center'}}> Booking an Appointment </Text>
+            <Text style={{ fontSize: 28, fontWeight: '600', alignSelf: 'center'}}> Book an Appointment </Text>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Image
                 source={require('../assets/gobackIcon.png')}
@@ -131,7 +133,7 @@ const BookAppointment = ({navigation}) => {
             </ScrollView>
 
             {selectedService !== null && (
-              <TouchableOpacity onPress={() => navigation.navigate('ChooseDate', { business: business, service: selectedService })}>
+              <TouchableOpacity onPress={() => navigation.navigate('ChooseDate', { business: business, service: serviceNames[selectedService], price: servicePrices[selectedService] })}>
                 <View style={{backgroundColor: '#E3A387', borderRadius: 15, width: 70, height: 25, left: 320, top: -40, alignItems: 'center'}}>
                   <Text style={{fontSize: 20, top: 0}}>Next</Text>
                 </View>
