@@ -1,30 +1,74 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, ScrollView, View, Image} from 'react-native';
-import { Avatar, Text, ActivityIndicator, List } from 'react-native-paper';
+import {StyleSheet, ScrollView, View, Pressable, useIs} from 'react-native';
+import { Avatar, Text, ActivityIndicator, IconButton } from 'react-native-paper';
 import {Tabs, TabScreen, TabsProvider, useTabIndex, useTabNavigation, } from 'react-native-paper-tabs';
+import { useIsFocused } from '@react-navigation/native';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import callApi from '../functions/callApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 
 const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
 
 const StylistProfile = ({ navigation, route }) => {
+    const isFocused = useIsFocused();
     const [stylist, setStylist] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [reviews, setReviews] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const {_id} = route.params; 
 
     const getStylist = async () => {
-        business = await callApi(`/stylists/inhouse/${_id}`);
+        const business = await callApi(`/stylists/inhouse/${_id}`);
         setStylist(business);
     }
 
-    useEffect(() => {
-        getStylist()
-    }, [])
+    const getReviews = async () => {
+        const reviews = await callApi(`/stylists/inhouse/${_id}/reviews`);
+        for (const review of reviews) {
+            const dateObj = new Date(review.time);
+            const formattedDate = new Intl.DateTimeFormat('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              }).format(dateObj);
+            review.time = formattedDate;
+        }
+        setReviews(reviews);
+    }
 
-    if (stylist) {
+
+    const postReview = async (review) => {
+        const reqObj = {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(review),
+          }
+
+        const res = await callApi(`/stylists/inhouse/${_id}/reviews`, reqObj);
+    }
+
+    const initPage = async () => {
+        const email = await AsyncStorage.getItem("userEmail");
+        setEmail(email);
+        await getReviews();
+        await getStylist();
+        setIsLoading(false);
+    }
+
+    useEffect(() => {
+        isFocused && initPage()
+    }, [isFocused])
+
+    if (!isLoading) {
+        console.log(`Reviews: ${reviews}`)
         return (
             <Profile
+                _id={_id}
                 picture={stylist.picture}
                 pricePoint={stylist.pricePoint}
                 tags={stylist["tags"]}
@@ -32,6 +76,8 @@ const StylistProfile = ({ navigation, route }) => {
                 services={stylist.services}
                 businessName={stylist.businessName}
                 description={stylist.description}
+                reviews={reviews}
+                navigation={navigation}
             />
         )
     }
@@ -61,9 +107,52 @@ const ServicesRow = ({name, descriptor, price}) => {
         </View>
     )
 }
+
+const Review = ({title, starsNum, reviewer, time, content, businessName, tags}) => {
+    return (
+        <View style={styles.reviewContainer}>
+            <View style={styles.reviewSectionContainer}>
+                <View style={styles.titleLine}>
+                    <View>
+                        <Text style={{fontWeight: "bold", fontSize: 20}}>{title}</Text>
+                    </View>
+                    <View>
+                        <AirbnbRating defaultRating={starsNum} showRating={false} isDisabled size={14} selectedColor="#713200"/>
+                    </View>
+                </View>
+                <View>
+                    <Text style={{fontWeight: "200"}}>{reviewer} | {time}</Text>
+                </View>
+            </View>
+            <View style={styles.reviewSectionContainer}>
+                <Text style={{fontSize: 16}}>{content}</Text>
+            </View>
+            <View style={styles.reviewSectionContainer}>
+                <Text style={{fontWeight: "bold", marginBottom: 16}}>{businessName} is...</Text>
+                <View style={{flex: 1}}>
+                    <ScrollView horizontal={true} style={{flex: 1}}>
+                        {
+                            tags.map((tag) => {
+                                return (
+                                    <View style={styles.tagContainer}>
+                                        <Text style={styles.tagText}>{tag}</Text>
+                                    </View>
+                                )
+                            })
+                        }
+                        </ScrollView>
+                </View>
+            </View>
+        </View>
+    )
+}
 // picture is a url to the profile picture
 // pricepoint is $, $$, $$$
-const Profile = ({picture, pricePoint, tags, businessHours, services, businessName, description}) => {
+const Profile = ({_id, picture, pricePoint, tags, businessHours, services, businessName, description, reviews, navigation}) => {
+
+    const handlePress = () => {
+        navigation.navigate("ReviewFormScreen", {_id});
+    }
 
     const INDEXES = [0, 1, 2, 3, 4, 5, 6];
     const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -90,7 +179,7 @@ const Profile = ({picture, pricePoint, tags, businessHours, services, businessNa
 
             <View style={styles.bigSectionContainer}>
                 <View>
-                    <ScrollView horizontal={true} >
+                    <ScrollView horizontal={true} style={{flex: 1}}>
                         {
 
                         tags.map((tag) => {
@@ -143,8 +232,32 @@ const Profile = ({picture, pricePoint, tags, businessHours, services, businessNa
                             </View>
                         </TabScreen>
                         <TabScreen label="Reviews">
-                            <View style={{flex: 1}}>
-                                <Text>Reviews</Text>
+                            <View style={styles.reviewsContainer}>
+                                <View style={styles.addReviewButtonContainer}>
+                                    <Pressable style={styles.addReviewButton} onPress={handlePress}>
+                                        <Text style={styles.addReviewText}>+ Add a review!</Text>
+                                    </Pressable>
+
+                                </View>
+                                <View>
+                                    <ScrollView>
+                                        <View>
+                                            {reviews.map((review) => {
+                                                return (
+                                                    <Review
+                                                        title={review.title}
+                                                        starsNum={review.starsNum}
+                                                        reviewer={review.reviewer}
+                                                        time={review.time}
+                                                        content={review.content}
+                                                        businessName={review.businessName}
+                                                        tags={review.tags}
+                                                    />
+                                                )
+                                            })}
+                                        </View>
+                                    </ScrollView>
+                                </View>
                             </View>
                         </TabScreen>
                     </Tabs>
@@ -184,12 +297,13 @@ const styles = StyleSheet.create({
     },
 
     tagContainer: {
+        flex: 1,
         backgroundColor: '#E3A387',
         borderRadius: 10,
         alignContent: 'center',
-        marginHorizontal: 5,
         paddingHorizontal: 7,
-        paddingVertical: 4
+        paddingVertical: 4,
+        marginRight: 8,
     },
 
     tagText: {
@@ -255,7 +369,48 @@ const styles = StyleSheet.create({
 
     sectionContainer: {
         marginVertical: 7,
+    },
+
+    reviewsContainer: {
+        flex: 1
+    },
+
+    addReviewButtonContainer: {
+        alignItems: "flex-end"
+    },
+
+    addReviewButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 16,
+        borderRadius: 16,
+        borderColor: "#472415",
+        borderWidth: 2,
+        marginTop: 16,
+        marginBottom: 16
+      },
+
+      addReviewText: {
+        fontSize: 16,
+        lineHeight: 21,
+        letterSpacing: 0.25,
+        color: '#472415',
+      },
+
+    titleLine: {
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+
+    reviewSectionContainer: {
+        flex: 1,
+        marginBottom: 8
+    },
+
+    reviewContainer: {
+        marginBottom: 8
     }
+
 })
 
 export default StylistProfile;

@@ -24,12 +24,14 @@ import BookAppointment from './screens/BookAppointment';
 import ChooseDate from './screens/ChooseDate';
 import SendAppointment from './screens/SendAppointment';
 import Inspo from './screens/Inspo.js';
+import ReviewFormScreen from './screens/ReviewFormScreen';
 
 
 
 
 
 
+import ReviewFormScreen from './screens/ReviewFormScreen';
 
 const Stack = createStackNavigator();
 
@@ -135,6 +137,11 @@ export default function App() {
         <Stack.Screen
           name="InHouseStylists"
           component={InHouseStylists}
+        />
+
+        <Stack.Screen
+          name="ReviewFormScreen"
+          component={ReviewFormScreen}
         />
         <Stack.Screen
         name="Inspo"
