@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput, Image } from 'react-native';
 import { Avatar, Button, Card, Text } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from './User';
 import * as Location from 'expo-location';
@@ -70,7 +71,7 @@ const InHouseStylists = ({navigation}) => {
             </Text>
             
             <Card.Actions style={{ top: -20, marginBottom: -10 }}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('BookAppointment', { business: business })}>
                 <View style={styles.BAContainer}>
                   <Text style={styles.BookAppointment}>  Book an appointment  </Text>
                 </View>
@@ -300,7 +301,7 @@ const InHouseStylists = ({navigation}) => {
           
 
 
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 290 }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 0 }}>
               <View style={styles.Bottonline}> 
                 <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
                 <Image
