@@ -19,6 +19,7 @@ import Stylist from './screens/Stylist';
 import Article from './screens/Article'
 import StylistProfile from './screens/StylistProfile';
 import InHouseStylists from './screens/InHouseStylists.js';
+import ReviewFormScreen from './screens/ReviewFormScreen';
 
 const Stack = createStackNavigator();
 
@@ -124,6 +125,11 @@ export default function App() {
         <Stack.Screen
           name="InHouseStylists"
           component={InHouseStylists}
+        />
+
+        <Stack.Screen
+          name="ReviewFormScreen"
+          component={ReviewFormScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
