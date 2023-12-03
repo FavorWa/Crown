@@ -25,13 +25,7 @@ import ChooseDate from './screens/ChooseDate';
 import SendAppointment from './screens/SendAppointment';
 import Inspo from './screens/Inspo.js';
 import ReviewFormScreen from './screens/ReviewFormScreen';
-
-
-
-
-
-
-import ReviewFormScreen from './screens/ReviewFormScreen';
+import ChatBox from './screens/ChatBox';
 
 const Stack = createStackNavigator();
 
@@ -171,6 +165,11 @@ export default function App() {
         <Stack.Screen
           name="SendAppointment"
           component={SendAppointment}
+        />
+        
+         <Stack.Screen
+          name="ChatBox"
+          component={ChatBox}
         />
       </Stack.Navigator>
     </NavigationContainer>
