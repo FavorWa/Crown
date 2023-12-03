@@ -5,8 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
-
+import Icon from 'react-native-vector-icons/Ionicons';
 
 
 export default function HairQuizQuestion({ navigation }) {
@@ -16,6 +15,8 @@ export default function HairQuizQuestion({ navigation }) {
   const [selectedAnswers, setSelectedAnswers] = useState({}); // To track selected answers for all questions
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0); // Track the current category
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupAnswers, setPopupAnswers] = useState([]);
   
  
    // Group questions by category
@@ -29,10 +30,46 @@ export default function HairQuizQuestion({ navigation }) {
   const currentQuestions = groupedQuestions[currentCategory];
 
 
-  const onPressHandler = () => {
-      // navigation.navigate('HomePage');
-      navigation.goBack();
-  }
+  const showNotSurePopup = (answers, index) => {
+    const details = currentQuestions[index].details;
+  
+    if (details) {
+      setPopupAnswers([...popupAnswers, { answers, details }]);
+      setShowPopup(true);
+    }
+  };
+
+  const hidePopup = () => {
+    setShowPopup(false);
+  };
+
+  const NotSurePopup = ({ answers, hidePopup, index }) => (
+    <View style={styles.popupBackground}>
+      <View style={styles.popupContainer}>
+        <ScrollView>
+          {answers.map((answerSet, setIndex) => (
+            <View key={setIndex} style={styles.popupAnswerContainer}>
+              <Text style={styles.popupAnswerText}>Answers:</Text>
+              {answerSet.answers.map((answer, answerIndex) => (
+                <Text key={answerIndex} style={styles.popupAnswerText}>
+                  - {answer}
+                </Text>
+              ))}
+              <Text style={styles.popupAnswerText}>Details:</Text>
+              {answerSet.details.map((detail, detailIndex) => (
+                <Text key={detailIndex} style={styles.popupDescriptionText}>
+                  - {detail}
+                </Text>
+              ))}
+            </View>
+          ))}
+        </ScrollView>
+        <TouchableOpacity style={styles.closePopupButton} onPress={hidePopup}>
+          <Text style={styles.closePopupButtonText}>Close</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 
   const getUserEmail = async () => {
     try {
@@ -143,8 +180,9 @@ export default function HairQuizQuestion({ navigation }) {
         </View>
       ) : (
         <TouchableOpacity>
-          
-          <Text style={styles.categoryText}onPress={previousCategory}>{currentCategory}</Text>
+         
+          <Text style={styles.crownText}onPress={previousCategory}>
+          <Icon name="chevron-back-outline" size={30} color="black"/>{currentCategory}</Text>
         </TouchableOpacity>
       )}
 
@@ -152,18 +190,30 @@ export default function HairQuizQuestion({ navigation }) {
         <View key={index} style={styles.QuestionBox}>
           <Text style={styles.questionText}>{item.question}</Text>
           <Text style={styles.miniText}>{item.description}</Text>
-          <View style={{ ...styles.imageRow, marginTop: 25 }}>
+          {item.details && (
+          <TouchableOpacity
+            style={styles.notSureButton}
+            onPress={() => showNotSurePopup(item.answers, currentQuestionIndex)}
+          >
+          <Text style={styles.notSureButtonText}>NOT SURE?</Text>
+          
+          </TouchableOpacity>
+          
+)}
+        <View style={{ ...styles.imageRow, marginTop: 25 }}>
         {item.answers.map((answer, answerIndex) => (
           <TouchableOpacity
             key={answerIndex}
             style={{
-              ...styles.rectangle2,
+              ...styles.answerBox,
+              
               borderWidth: selectedAnswers[item.question] === answer ? 3 : 1,
             }}
             onPress={() => handleResponse(item.question, answer)}
           >
-            <Image source={require('../assets/Rectangle4.png')} style={styles.rectangle2} />
+            
             <Text style={styles.answerText}>{answer}</Text>
+            
           </TouchableOpacity>
         ))}
 </View>
@@ -188,6 +238,9 @@ export default function HairQuizQuestion({ navigation }) {
           Start Over
         </Text>
       </TouchableOpacity>
+      {showPopup && (
+            <NotSurePopup answers={popupAnswers} hidePopup={hidePopup} index={currentQuestionIndex} />
+          )}
     </ScrollView>
   )
 }
@@ -203,7 +256,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: 'black',
     marginTop: 64,
-    marginLeft: 40,
+    marginLeft: 10,
+    flexDirection:'row',
   },
   secondLine:{
     textAlign: 'left',
@@ -273,28 +327,28 @@ const styles = StyleSheet.create({
       marginHorizontal: 15,
   },
   QuestionBox: {
-    margin: 10, // Set equal left and right margins
+    marginHorizontal: 20, // Set equal left and right margins
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
     width: 400, // Set a specific width for the container
     maxWidth:'100%',
   },
-  rectangle2: {
-    tintColor: `rgba(237, 224, 212, 1)`,
+  answerBox: {
+    backgroundColor: '#EDE0D4',
     width: 91,
     height: 95,
     marginHorizontal: 15,
-    borderWidth: 2,
     borderColor: '#472415',
     alignItems: 'center', //Center items horizontally
+    marginVertical: 10,
     
   },
   imageRow: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap', // Allow items to wrap to the next row
-    justifyContent: 'center',
+    //justifyContent: 'center',
   },
   rectangleContainer: {
     alignItems: 'center', // Center items horizontally
@@ -303,7 +357,7 @@ const styles = StyleSheet.create({
   },
   answerText: {
     textAlign: 'center',
-    top: -55,
+    top: 40,
     fontSize: 14, // Adjust the font size as needed
     maxWidth: 80, // Set a maximum width for the text
     overflow: 'hidden', // Hide overflow text
@@ -333,7 +387,12 @@ const styles = StyleSheet.create({
     color: '#713200',
     marginBottom: 20,
   },
-
+  notSureButton:{
+    marginLeft:250,
+  },
+  notSureButtonText:{
+    color:'#472415',
+  },
   categoryText:{
     fontSize: 24,
     fontWeight: 500,

@@ -4,6 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Box from '../components/Box';
 import { selectableImages } from './User';
 import callApi from '../functions/callApi';
+import axios from 'axios'; 
+
 
 export default function Homepage({ navigation }) {
 
@@ -69,13 +71,64 @@ export default function Homepage({ navigation }) {
 
     return blogsBoxes;
   }
-
+  
+  
+  
   useEffect(() => {
     fetchUserAvatar();
     fetchBlogs();
   }, []);
+  
+  const axiosInstance = axios.create({
+    baseURL: 'http://127.0.0.1:8000/',
+    // Add other configurations as needed
+  });
 
+  const ImageGallery = () => {
+    const [imageUrls, setImageUrls] = useState([]);
+
+    useEffect(() => {
+      const fetchImages = async () => {
+        try {
+          const response = await axiosInstance.get('/get_images');
+          setImageUrls(response.data.image_urls || []);  // Assuming the response.data is an array of image URLs
+        } catch (error) {
+          console.error('Error fetching images:', error);
+        }
+      };
+
+      fetchImages();
+    }, []);
+
+    return (
+      <ScrollView horizontal>
+      {imageUrls.map((imageUrl, index) => (
+        <Image
+        key={index}
+        source={{ uri: imageUrl }}
+        style={{
+          width: 120,
+          height: 160,
+          borderRadius: 15,
+          marginRight: 10,
+          borderWidth: 1, // Border width
+          borderColor: '#3E2723', // Brown color
+        }}
+        indicatorProps={{
+          size: 40,
+          borderWidth: 2,
+          color: 'rgba(150, 150, 150, 1)',
+          unfilledColor: 'rgba(200, 200, 200, 0.2)',
+        }}
+      />
+    ))}
+    </ScrollView>
+    );
+  };
+
+  
   return(
+    <ScrollView style={styles.scrollContainer}>
     <SafeAreaView style={styles.container}>
       <Text style={styles.hairquiz}>
         Hair Quiz
@@ -111,51 +164,27 @@ export default function Homepage({ navigation }) {
         <Text style={styles.productPage}> See more </Text>
       </TouchableOpacity>
       
-      
-      <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
-        <Text style={styles.productPage}> In House Stylists </Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Inspo')}>
         <Text style={styles.Inspiration}>
           Inspiration
         </Text>
       </TouchableOpacity>
 
       <View style={styles.InspirationScrollContainer}>
-        <ScrollView horizontal={true} >
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-        </ScrollView>
+      <View>
+      <ImageGallery />
+    </View>
       </View>
-
+      
+      <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
+        <Text style={styles.productPage}> In House Stylists </Text>
+      </TouchableOpacity>
+      
       <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
         <Text style={styles.productPage}> Products </Text>
-      </TouchableOpacity>
+      </TouchableOpacity>    
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 0 }}>
         <View style={styles.Bottonline}> 
             <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
             <Image
@@ -194,6 +223,7 @@ export default function Homepage({ navigation }) {
         </View>
       </View>
     </SafeAreaView>
+    </ScrollView>
   )
 }
 
@@ -202,6 +232,9 @@ const styles = StyleSheet.create({
     flex: 1,
     top: 50,
   },
+  scrollContainer:{
+    flex: 1
+  },
   hairquiz: {
     textAlign: 'left',
     fontWeight: '400',
@@ -209,6 +242,12 @@ const styles = StyleSheet.create({
     color: 'black',
     left: 28,
     top: 5,
+  },
+  image: {
+    width: 100, // Set the width of each image as needed
+    height: 100, // Set the height of each image as needed
+    margin: 5,
+    borderRadius: 10,
   },
   takeTheQuiz: {
     textAlign: 'center', // Center the text horizontally within the container
@@ -286,14 +325,16 @@ const styles = StyleSheet.create({
   },
 
   Bottonline: {
-    width: 430,
-    height: 210,
+    width: '100%',
+    height: 110,
     flexShrink: 0,
     borderRadius: 39,
     borderWidth: 1,
     borderColor: '#472415',
     marginHorizontal: 30,
-    marginBottom: -140,
+    backgroundColor:"white",
+    position:'absolute',
+    bottom: -110,
   },
   avatar: {
     width: 55,
@@ -313,6 +354,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginRight: 10,
   },
+  
   Inspiration: {
     textAlign: 'left',
     fontWeight: '400',
@@ -324,6 +366,7 @@ const styles = StyleSheet.create({
     top: 15,
     height: 160,
     marginHorizontal: 28,
+    marginBottom: 0
   },
 });
 

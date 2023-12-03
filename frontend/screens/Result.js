@@ -50,7 +50,7 @@ export default function Result({ navigation }) {
       <Text style={styles.hairType}>{hairType}</Text>
       <Text style={styles.hairDescription}> <Text style={{ fontWeight: 'bold' }}>Your hair type is {hairType}</Text>. {hairDescription}</Text>
 
-      <TouchableOpacity style={styles.productsButton} onPress={navigation.navigate('ProductsPage')}>
+      <TouchableOpacity style={styles.productsButton} onPress={() => navigation.navigate('ProductsPage')}>
         <Text style={styles.buttonText}>Products</Text>
       </TouchableOpacity>
     </View>
@@ -67,9 +67,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Rig Sans',
     fontSize: 24,
     fontWeight: "500",
-    margin: 20
-
-
+    marginTop: 50,
+    marginLeft:20
   },
   header2:{
     fontSize: 16,
