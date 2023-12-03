@@ -4,6 +4,7 @@ import { View, Button, StyleSheet, Pressable} from 'react-native';
 import { TextInput, Text } from 'react-native-paper';
 import callApi from '../functions/callApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AirbnbRating } from 'react-native-ratings';
 
 const ReviewFormScreen = ({ route, navigation }) => {
   const { _id } = route.params;
@@ -20,6 +21,10 @@ const ReviewFormScreen = ({ route, navigation }) => {
     }
     setStarsNum(validatedText)
   } 
+
+  const handleFinishRating = (value: number) => {
+    setStarsNum(value.toString());
+  }
 
   const handleSubmit = async () => {
     const email = await AsyncStorage.getItem('userEmail');
@@ -57,7 +62,7 @@ const ReviewFormScreen = ({ route, navigation }) => {
       />
     
       <TextInput
-        label="Contentt"
+        label="Content"
         value={content}
         onChangeText={(text) => setContent(text)}
         multiline
@@ -75,16 +80,8 @@ const ReviewFormScreen = ({ route, navigation }) => {
 
       />
 
-        <TextInput
-            label="How many stars would you give it (0-5)? "
-            value={starsNum}
-            onChangeText={validateStarsNum}
-            keyboardType="numeric"
-            maxLength={1}
-            style={styles.textInput}
-            theme={{colors: {primary: "black"}}}
-
-        />
+      <Text style={{marginTop: 16, fontSize: 28, textAlign: "center"}}>How many stars would you give this stylist?</Text>
+      <AirbnbRating showRating={false} onFinishRating={handleFinishRating} size={60} selectedColor="#713200"/>
 
         <View style={styles.addReviewButtonContainer}>
             <Pressable style={styles.addReviewButton} onPress={handleSubmit}>
