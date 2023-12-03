@@ -3,7 +3,7 @@ import { StyleSheet, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput
 import { Text } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native';
 import { BACKEND_BASE_ANDROID, BACKEND_BASE_IOS } from '../secrets';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
 
@@ -12,6 +12,16 @@ const BookAppointment = ({navigation}) => {
     const route = useRoute();
     const { business } = route.params;
     const stylistEmail = business.email;
+
+    const [userName, setUserName] = useState('');
+    const [userAvatar, setUserAvatar] = useState('');
+    const fetchUserAvatar = async () => {
+      const avatar = await AsyncStorage.getItem('userAvatar');
+      const userName = await AsyncStorage.getItem('userName');
+      setUserAvatar(avatar);
+      setUserName(userName);
+    };
+
 
     const [serviceNames, setServiceNames] = useState([]);
     const [serviceSizes, setServiceSizes] = useState([]);
@@ -43,6 +53,7 @@ const BookAppointment = ({navigation}) => {
 
     useEffect(() => {
       getServices();
+      fetchUserAvatar();
     }, []);
 
     
@@ -142,6 +153,11 @@ const BookAppointment = ({navigation}) => {
 
             {/* <Text style={{ top: 0 }}>{`Received parameters: ${stylistEmail}`}</Text> */}
 
+            <TouchableOpacity onPress={() => navigation.navigate('ChatBox', { stylistName: business.stylistName, stylistAvatar: business.avatar, userName: userName, userAvatar: userAvatar })}>
+              <Text style={{ alignSelf: 'center', top: -200, fontSize: 20, fontWeight: '500', color: '#E3A387'}}>Talk to stylist?</Text>
+            </TouchableOpacity>
+
+            
         </SafeAreaView>
     )
 }
