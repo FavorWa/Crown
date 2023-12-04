@@ -138,6 +138,13 @@ export default function Homepage({ navigation }) {
         style={styles.rectangle4}
       ></Image>
 
+      <TouchableOpacity onPress={() => isLoggedIn('Communication')}>
+        <Image
+          source={require('../assets/MessageIcon.png')}
+          style={{width: 20, height: 20, top: -15, left: 350}}
+        ></Image>
+      </TouchableOpacity>
+
       <TouchableOpacity onPress={() => navigation.navigate('HairQuizQuestion')}>
         <Image
           source={require('../assets/Rectangle4.png')}
@@ -257,7 +264,7 @@ const styles = StyleSheet.create({
     width: 110,
     height: 24,
     marginLeft: 260,
-    marginTop: 150,
+    marginTop: 125,
   },
   hairQuizRectangle: {
     tintColor: '#C9A227',
@@ -265,7 +272,7 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12, 
     left: 250,
-    top: 175,
+    top: 150,
   },
   rectangle4: {
     backgroundColor: 'rgba(217, 217, 217, 1)',

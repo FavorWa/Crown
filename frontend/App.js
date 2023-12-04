@@ -26,6 +26,8 @@ import SendAppointment from './screens/SendAppointment';
 import Inspo from './screens/Inspo.js';
 import ReviewFormScreen from './screens/ReviewFormScreen';
 import ChatBox from './screens/ChatBox';
+import Communication from './screens/Communication';
+
 
 const Stack = createStackNavigator();
 
@@ -167,9 +169,14 @@ export default function App() {
           component={SendAppointment}
         />
         
-         <Stack.Screen
+        <Stack.Screen
           name="ChatBox"
           component={ChatBox}
+        />
+
+        <Stack.Screen
+          name="Communication"
+          component={Communication}
         />
       </Stack.Navigator>
     </NavigationContainer>
