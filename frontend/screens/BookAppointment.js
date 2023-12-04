@@ -15,11 +15,14 @@ const BookAppointment = ({navigation}) => {
 
     const [userName, setUserName] = useState('');
     const [userAvatar, setUserAvatar] = useState('');
+    const [userEmail, setUserEmail] = useState('');
     const fetchUserAvatar = async () => {
       const avatar = await AsyncStorage.getItem('userAvatar');
       const userName = await AsyncStorage.getItem('userName');
+      const currentUserEmail = await AsyncStorage.getItem('userEmail');
       setUserAvatar(avatar);
       setUserName(userName);
+      setUserEmail(currentUserEmail);
     };
 
 
@@ -153,7 +156,7 @@ const BookAppointment = ({navigation}) => {
 
             {/* <Text style={{ top: 0 }}>{`Received parameters: ${stylistEmail}`}</Text> */}
 
-            <TouchableOpacity onPress={() => navigation.navigate('ChatBox', { stylistName: business.stylistName, stylistAvatar: business.avatar, userName: userName, userAvatar: userAvatar })}>
+            <TouchableOpacity onPress={() => navigation.navigate('ChatBox', { stylistEmail: stylistEmail, stylistName: business.stylistName, stylistAvatar: business.avatar, userName: userName, userAvatar: userAvatar, userEmail: userEmail })}>
               <Text style={{ alignSelf: 'center', top: -200, fontSize: 20, fontWeight: '500', color: '#E3A387'}}>Talk to stylist?</Text>
             </TouchableOpacity>
 

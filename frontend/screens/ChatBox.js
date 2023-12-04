@@ -13,51 +13,100 @@ const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACK
 const BookAppointment = ({navigation}) => {
     const route = useRoute();
     // Accessing parameters from the route
+    const stylistEmail = route.params.stylistEmail;
     const stylistName = route.params.stylistName;
     const stylistAvatar = route.params.stylistAvatar;
     const userName = route.params.userName;
     const userAvatar = route.params.userAvatar;
+    const userEmail = route.params.userEmail;
     const selectedAvatarSource = selectableImages[userAvatar];
 
     const [messages, setMessages] = useState([])
+
     useEffect(() => {
-        setMessages([
-          {
-            _id: 1,
-            text: 'Hello Customer',
-            createdAt: new Date(),
-            user: {
-                _id: 2,
-                name: stylistName,
-                avatar: stylistAvatar,
-            },
-          },
-          {
-            _id: 2,
-            text: 'Hello Stylist',
-            createdAt: new Date(),
-            user: {
-              _id: 1,
-              name: userName,
-              avatar: selectedAvatarSource,
-            },
-          },
-        ])
-      }, [])
+        // Load conversation when component mounts or when users talk
+        fetch_conversation(userEmail, stylistEmail)
+          .then((conversation) => {
+            if (conversation) {
+                const reversedMessages = conversation.messages
+                    .map((message) => ({
+                    _id: message._id,
+                    text: message.text,
+                    createdAt: new Date(message.timestamp),
+                    user: {
+                        _id: message.sender === userEmail ? 1 : 2,
+                        name: message.sender === userEmail ? userName : stylistName,
+                        avatar: message.sender === userEmail ? selectedAvatarSource : stylistAvatar,
+                    },
+                    }))
+                    .reverse(); // Reverse the array
+        
+                setMessages([...reversedMessages]);
+            } else {
+              console.log('Conversation not found');
+              // Handle the case when the conversation is not found
+            }
+          });
+    }, [userEmail, stylistEmail, userName, selectedAvatarSource, stylistName, stylistAvatar]);
+    
     
     const onSend = useCallback((messages = []) => {
-    setMessages(previousMessages =>
-        GiftedChat.append(previousMessages, messages),
-    )
+        // Send the new message to MongoDB
+        sendMessageToMongoDB(messages[0].text);
+        setMessages(previousMessages =>
+            GiftedChat.append(previousMessages, messages),
+        )
     }, [])
 
+    const sendMessageToMongoDB = async (messageText) => {
+        try {
+            const response = await fetch(`${backend_base_url}/send_message`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    currentUser: userEmail,
+                    otherUser: stylistEmail,
+                    text: messageText,
+                }),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to send message');
+            } else{
+                console.log('Message sent successfully');
+            }
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+    };
+    
+    const fetch_conversation = async (participant1, participant2) => {
+        try {
+          const response = await fetch(`${backend_base_url}/fetch_conversation?participant_1=${participant1}&participant_2=${participant2}`);
+      
+          if (!response.ok) {
+            throw new Error('Failed to load conversation');
+          }
+      
+          const conversationData = await response.json();
+          return conversationData;
+        } catch (error) {
+          console.error('Error loading conversation:', error);
+          // Handle the error appropriately in your application
+          return null;
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text>Stylist Name: {stylistName}</Text>
-            <Text>Stylist Avatar: {stylistAvatar}</Text>
-            <Text>User Name: {userName}</Text>
-            <Text>User Avatar: {userAvatar}</Text>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Image
+                source={require('../assets/gobackIcon.png')}
+                style={{ height: 30, width: 30, top: 0, left: 20}}
+              ></Image>
+            </TouchableOpacity>
+
             <GiftedChat
                 messages={messages}
                 showAvatarForEveryMessage={true}

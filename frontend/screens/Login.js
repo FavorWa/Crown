@@ -63,13 +63,13 @@ export default function Login({ navigation }) {
 
   return (
         <View style={styles.container}>
-            <Text style={styles.login}> Log in </Text>
+            <Image source={require('../assets/LoginImage.png')} style={{width: 200, height: 80, top: 60, left: 33, marginBottom: 60}} />
 
             <Text style={styles.secondLine}> Sign in with your data that you entered during your registration</Text>
 
             <Text style={styles.name}> Email </Text>
             <TextInput style={styles.input}
-            placeholder='name@example.com'
+            placeholder=' Email'
             keyboardType='web-search'
             keyboardAppearance='default'
             maxLength={40}
@@ -79,7 +79,7 @@ export default function Login({ navigation }) {
 
             <Text style={styles.name}> Password </Text>
             <TextInput style={styles.input}
-            placeholder='min. 8 characters'
+            placeholder=' Password'
             keyboardType='web-search'
             keyboardAppearance='default'
             maxLength={40}
@@ -97,9 +97,8 @@ export default function Login({ navigation }) {
                 <Text style={styles.keepsignin}> Keep me logged in </Text>
             </View>
             
-            <Image source={require('../assets/Rectangle4.png')} style={styles.signInBackground} />
             <TouchableOpacity onPress={userLogin}>
-                <Text style={styles.logIn}> Log in </Text>
+              <Image source={require('../assets/SignInImage.png')} style={{ height: 50, width: 220, alignSelf: 'center', top: 80 }} />
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.replace('SignUp')}> 
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '400',
     letterSpacing: 0.1,
-    marginTop: 20,
+    marginTop: 50,
     marginLeft: 30,
   },
   secondLine: {
@@ -195,7 +194,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '300',
     letterSpacing: 0.1,
-    bottom: -180,
+    top: 320,
     alignSelf: 'center',
   },
   boldText: {
