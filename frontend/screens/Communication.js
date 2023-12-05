@@ -61,18 +61,17 @@ export default function Communication({ navigation }) {
     return (
         <View>
             <Text style={{ top: 50, left: 33, fontSize: 28, fontWeight: '500' }}>{userName}</Text>
-            {participantPairs.map((pair, index) => {
+            {/* {participantPairs.map((pair, index) => {
                 const otherUser = pair[0] === userEmail ? pair[1] : pair[0];
 
                 return (
                     <TouchableOpacity>
-                    {/* <TouchableOpacity onPress={() => navigation.navigate('ChatBox', { stylistEmail: otherUser, stylistName: business.stylistName, stylistAvatar: business.avatar, userName: userName, userAvatar: userAvatar, userEmail: userEmail })}> */}
                         <View key={index}>
                             <Text style={{ top: 70, left: 33, marginBottom: 20 }}> {otherUser}</Text>
                         </View>
                     </TouchableOpacity>
                 );
-            })}
+            })} */}
 
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', top: 800 }}>
                 <View style={styles.Bottonline}>

@@ -122,14 +122,19 @@ def check_message(userEmail: str):
         for conversation in conversations:
             # Extract participants from each conversation
             participants = conversation["participants"]
-            
-            # Ensure uniqueness of participant pairs
-            result.add(tuple(participants))
 
-        # Convert set of tuples to a list
-        unique_participant_pairs = [list(pair) for pair in result]
+        # TODO: obtain name, email, isStylist, avatarNumber from each user, Caution: a stylist must be a user of Crown
+            theOther = participants[1] if participants[0] == userEmail else participants[0]
+            info = user_collection.find_one({"email": theOther})
+            if info:
+                info['_id'] = str(info['_id'])
+                result.add(info)
 
-        return {"participant_pairs": unique_participant_pairs}
+
+        # Convert set of dictionaries to a list for JSON response
+        result_list = list(result)
+
+        return {"participant_info": result_list}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
