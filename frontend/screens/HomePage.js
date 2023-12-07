@@ -201,7 +201,7 @@ export default function Homepage({ navigation }) {
             <Text style={styles.Compassword}>Discover</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity onPress={() => isLoggedIn('Stylist')}>
+          <TouchableOpacity onPress={() => isLoggedIn('InHouseStylists')}>
             <Image
               source={require('../assets/Barbershop.png')}
               style={styles.Barbershop}
