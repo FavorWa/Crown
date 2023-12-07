@@ -145,7 +145,13 @@ export default function Stylist({ navigation }) {
 
   return (
         <SafeAreaView style={styles.container}>
-          <Text style={styles.findastylist}> Find a Stylist </Text>
+          <View style={{ height: 50 }}>
+            <Text style={styles.findastylist}> Find a Salon</Text>
+            <Text style={{ top: -30, left: 220, color: 'green', fontSize: 35, fontWeight: 'bold' }}>/</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
+              <Text style={{ left: 240, fontSize: 34, color: 'red', top: -70 }}>Stylist </Text>
+            </TouchableOpacity>
+          </View>
           <Text style={styles.secondLine}> We'll help you find the perfect match. </Text>
           
           <Image

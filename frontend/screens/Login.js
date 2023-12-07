@@ -72,7 +72,7 @@ export default function Login({ navigation }) {
 
             <Text style={styles.secondLine}> Sign in with your data that you entered during your registration</Text>
 
-            <Text style={styles.name}> Email </Text>
+            <Text style={styles.name}></Text>
             <TextInput style={styles.input}
             placeholder=' Email'
             keyboardType='web-search'
@@ -82,7 +82,7 @@ export default function Login({ navigation }) {
             value={email}
             ></TextInput>
 
-            <Text style={styles.name}> Password </Text>
+            <Text style={styles.name}></Text>
             <TextInput style={styles.input}
             placeholder=' Password'
             keyboardType='web-search'
@@ -93,8 +93,10 @@ export default function Login({ navigation }) {
             secureTextEntry
             ></TextInput>
 
-            <Text style={styles.forgetPassword}> Forget Password </Text>
-
+            <TouchableOpacity>
+              <Text style={styles.forgetPassword}> Forget Password </Text>
+            </TouchableOpacity>
+            
             <View style={styles.rowContainer}>
                 <TouchableOpacity onPress={toggleKeepSignIn} style={styles.buttonContainer}>
                     <Text style={styles.buttonText}>{keepLoggedIn ? '✔️' : '◻️'}</Text>
@@ -103,7 +105,17 @@ export default function Login({ navigation }) {
             </View>
             
             <TouchableOpacity onPress={userLogin}>
-              <Image source={require('../assets/SignInImage.png')} style={{ height: 50, width: 220, alignSelf: 'center', top: 80 }} />
+              <View style={{alignItems: 'center', alignSelf: 'center',
+                  top: 80,
+                  backgroundColor: '#E3A387',
+                  borderWidth: 1.5,
+                  borderColor: '#472415',
+                  width: 200,
+                  height: 55,
+                  borderRadius: 12, 
+                  }}>
+                <Text style={{fontWeight: '600', fontSize: 30, top: 7,}}>Sign In</Text>
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.replace('SignUp')}> 
@@ -152,6 +164,7 @@ const styles = StyleSheet.create({
     borderColor: '#472415',
     borderRadius: 5,
     fontSize: 20,
+    backgroundColor: '#F9F3EE',
   },
   forgetPassword: {
     color: 'black',
@@ -200,7 +213,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '300',
     letterSpacing: 0.1,
-    top: 280,
+    top: 270,
     alignSelf: 'center',
   },
   boldText: {
