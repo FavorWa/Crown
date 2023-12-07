@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'reac
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage from the correct package
 import { BACKEND_BASE_ANDROID, BACKEND_BASE_IOS } from '../secrets';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 export default function Login({ navigation }) {
@@ -38,7 +39,7 @@ export default function Login({ navigation }) {
           await AsyncStorage.setItem('userPassword', password);
           await AsyncStorage.setItem('LoginStatus', 'true');
           if (keepLoggedIn == true){
-              await AsyncStorage.setItem('keepLogIn', 'true');
+            await AsyncStorage.setItem('keepLogIn', 'true');
           }else{
             await AsyncStorage.setItem('keepLogIn', 'false');
           }
@@ -63,6 +64,10 @@ export default function Login({ navigation }) {
 
   return (
         <View style={styles.container}>
+          <ScrollView>
+            <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
+              <Image source={require('../assets/gobackIcon.png')} style={{ left: 20, top: 40, height: 40, width: 40}} />
+            </TouchableOpacity>
             <Image source={require('../assets/LoginImage.png')} style={{width: 200, height: 80, top: 60, left: 33, marginBottom: 60}} />
 
             <Text style={styles.secondLine}> Sign in with your data that you entered during your registration</Text>
@@ -104,7 +109,8 @@ export default function Login({ navigation }) {
             <TouchableOpacity onPress={() => navigation.replace('SignUp')}> 
                 <Text style={styles.bottomText1}> Don't have an account? <Text style={styles.boldText}>Sign up</Text></Text>
             </TouchableOpacity>
-        </View>
+          </ScrollView>
+      </View>
     );
 }
 
@@ -194,7 +200,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '300',
     letterSpacing: 0.1,
-    top: 320,
+    top: 280,
     alignSelf: 'center',
   },
   boldText: {

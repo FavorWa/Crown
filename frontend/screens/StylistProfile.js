@@ -140,7 +140,7 @@ const Review = ({title, starsNum, reviewer, time, content, businessName, tags}) 
                                 )
                             })
                         }
-                        </ScrollView>
+                    </ScrollView>
                 </View>
             </View>
         </View>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Pressable } from 'react-native';
 
 export default function Cover({ navigation }) {
   // const [LoginStatus, setLoginStatus] = useState(false);
@@ -22,17 +22,23 @@ export default function Cover({ navigation }) {
         <SafeAreaView style={styles.container}>
 
           <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-            <ImageBackground
-              // source={require('./assets/Logo.png')}
-              source={require('../assets/new_cover.png')}
-              style={styles.new_cover}
-            >
-            </ImageBackground>
+            <Image 
+              source={require('../assets/CrownLogo.png')} 
+              style={{alignSelf: 'center'}} 
+            />
+            <Image 
+              source={require('../assets/CrownWord.png')} 
+              style={{height: 80, width: 400}} 
+            />
+            <Image 
+              source={require('../assets/CoverText.png')} 
+              style={{height: 60, width: 250, alignSelf: 'center'}} 
+            />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+          {/* <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
               <Text style={styles.signup}>SignUp/Login</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
     
           {/* {!LoginStatus && (
             <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>

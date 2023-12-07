@@ -47,6 +47,7 @@ export default function Homepage({ navigation }) {
         if (blogObj) {
           const blogBox = 
           <Box 
+            key={blogObj._id}
             image = {blogObj.image}
             title = {blogObj.title}
             link = {blogObj.link}
@@ -102,15 +103,16 @@ export default function Homepage({ navigation }) {
 
     return (
       <ScrollView horizontal>
-      {imageUrls.map((imageUrl, index) => (
+        <View style={{ width: 33 }}></View>
+        {imageUrls.map((imageUrl, index) => (
         <Image
         key={index}
         source={{ uri: imageUrl }}
         style={{
           width: 120,
-          height: 160,
+          height: 190,
           borderRadius: 15,
-          marginRight: 10,
+          marginRight: 20,
           borderWidth: 1, // Border width
           borderColor: '#3E2723', // Brown color
         }}
@@ -146,58 +148,56 @@ export default function Homepage({ navigation }) {
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('HairQuizQuestion')}>
-        <Image
-          source={require('../assets/Rectangle4.png')}
-          style={styles.hairQuizRectangle}
-        ></Image>
-        <Text style={styles.takeTheQuiz}>
-          Take the Quiz
-        </Text>
+        <View style={styles.hairQuizRectangle}>
+          <Text style={styles.takeTheQuiz}>
+            Take the Quiz
+          </Text>
+        </View>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Blogs')}>
-        <Text style={styles.blogs}>
-          Blogs
-        </Text>
-      </TouchableOpacity>
+      <Text style={styles.blogs}>
+        Blogs
+      </Text>
       
       <View style={styles.blogScrollContainer}>
         <ScrollView horizontal={true} >
+          <View style={{ width: 33 }}></View>
           {showBlogs()}
         </ScrollView>
       </View>
 
       <TouchableOpacity onPress={() => navigation.navigate('Blogs')}>
-        <Text style={styles.productPage}> See more </Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity onPress={() => navigation.navigate('Inspo')}>
-        <Text style={styles.Inspiration}>
-          Inspiration
-        </Text>
+        <Text style={{ color: '#472415', top: 30, marginBottom: 20, left: 350, fontSize: 16, fontWeight: '600'}}>See all</Text>
       </TouchableOpacity>
 
+      <Text style={styles.Inspiration}>
+        Inspiration
+      </Text>
+
       <View style={styles.InspirationScrollContainer}>
-      <View>
-      <ImageGallery />
-    </View>
+        <View>
+          <ImageGallery />
+          <TouchableOpacity onPress={() => navigation.navigate('Inspo')}>
+            <Text style={{ color: '#472415', top: 15, marginBottom: 20, left: 350, fontSize: 16, fontWeight: '600'}}>See all</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       
-      <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
+      {/* <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
         <Text style={styles.productPage}> In House Stylists </Text>
       </TouchableOpacity>
       
       <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
         <Text style={styles.productPage}> Products </Text>
-      </TouchableOpacity>    
+      </TouchableOpacity>     */}
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 0 }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', top: -15 }}>
         <View style={styles.Bottonline}> 
             <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-            <Image
-              source={require('../assets/Compass.png')}
-              style={styles.Compass}
-            ></Image>
+              <Image
+                source={require('../assets/Compass.png')}
+                style={styles.Compass}
+              ></Image>
             <Text style={styles.Compassword}>Discover</Text>
           </TouchableOpacity>
           
@@ -207,14 +207,6 @@ export default function Homepage({ navigation }) {
               style={styles.Barbershop}
             ></Image>
             <Text style={styles.Barbershopword}>Stylist</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => isLoggedIn('Friends')}>
-            <Image
-              source={require('../assets/Community.png')}
-              style={styles.Community}
-            ></Image>
-            <Text style={styles.Communityword}>Community</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => isLoggedIn('User')}>
@@ -236,16 +228,18 @@ export default function Homepage({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    color:'#FFFFFF',
     flex: 1,
     top: 50,
   },
   scrollContainer:{
+    color: '#FFFFFF',
     flex: 1
   },
   hairquiz: {
     textAlign: 'left',
-    fontWeight: '400',
-    fontSize: 20,
+    fontWeight: '500',
+    fontSize: 24,
     color: 'black',
     left: 28,
     top: 5,
@@ -257,22 +251,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   takeTheQuiz: {
-    textAlign: 'center', // Center the text horizontally within the container
-    lineHeight: 24, // Set the line height to match the height of the container
-    fontWeight: '400', // Use 'bold' instead of 400 for a bolder font weight
+    fontWeight: '600', // Use 'bold' instead of 400 for a bolder font weight
     fontSize: 18,
-    width: 110,
-    height: 24,
-    marginLeft: 260,
-    marginTop: 125,
+    top: 5,
   },
   hairQuizRectangle: {
-    tintColor: '#C9A227',
-    width: 130,
-    height: 24,
+    alignItems: 'center',
+    backgroundColor: '#E3A387',
+    borderWidth: 1,
+    borderColor: '#472415',
+    width: 160,
+    height: 35,
     borderRadius: 12, 
-    left: 250,
+    left: 220,
     top: 150,
+    marginBottom: 140,
   },
   rectangle4: {
     backgroundColor: 'rgba(217, 217, 217, 1)',
@@ -282,8 +275,8 @@ const styles = StyleSheet.create({
   },
   blogs: {
     textAlign: 'left',
-    fontWeight: '400',
-    fontSize: 20,
+    fontWeight: '500',
+    fontSize: 24,
     color: 'black',
     left: 33,
   },
@@ -297,37 +290,28 @@ const styles = StyleSheet.create({
   },
   Compass: {
     aspectRatio: 1.2,
-    marginLeft: 35,
+    marginLeft: 70,
     marginTop: 15,
   },
   Compassword: {
-    marginLeft: 30,
+    marginLeft: 65,
   },
   Barbershop: {
     aspectRatio: 1.2,
-    marginLeft: 135,
+    alignSelf: 'center',
     marginTop: -55,
   },
   Barbershopword: {
-    marginLeft: 135,
-    marginBottom: -40,
-  },
-  Community: {
-    aspectRatio: 1.2,
-    marginLeft: 235,
-    marginTop: -55,
-  },
-  Communityword: {
-    marginLeft: 225,
+    alignSelf: 'center',
     marginBottom: -40,
   },
   User: {
-    marginLeft: 335,
+    marginLeft: 300,
     marginTop: -55,
     aspectRatio: 1.2,
   },
   Userword: {
-    marginLeft: 338,
+    marginLeft: 303,
     marginBottom: -40,
   },
 
@@ -335,7 +319,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 110,
     flexShrink: 0,
-    borderRadius: 39,
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: '#472415',
     marginHorizontal: 30,
@@ -347,13 +331,12 @@ const styles = StyleSheet.create({
     width: 55,
     height: 55,
     borderRadius: 40,
-    marginLeft: 330,
+    marginLeft: 300,
     marginVertical: -55,
   },
   blogScrollContainer:{
     top: 15,
-    height: 160,
-    marginHorizontal: 28,
+    height: 190,
   },
   scrollObject: {
     height: 160,
@@ -364,43 +347,15 @@ const styles = StyleSheet.create({
   
   Inspiration: {
     textAlign: 'left',
-    fontWeight: '400',
-    fontSize: 20,
+    fontWeight: '500',
+    fontSize: 24,
     color: 'black',
     left: 33,
+    marginTop: 0,
   },
   InspirationScrollContainer:{
     top: 15,
-    height: 160,
-    marginHorizontal: 28,
-    marginBottom: 0
+    height: 190,
+    marginBottom: 70
   },
 });
-
-
-/*
-          <Image
-            source={require('../assets/blogM1.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/blogM2.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/blogM3.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.scrollObject}
-          ></Image>
-*/

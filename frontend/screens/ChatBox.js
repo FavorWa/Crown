@@ -2,8 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity, TextInput, Image } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { BACKEND_BASE_ANDROID, BACKEND_BASE_IOS } from '../secrets';
-import { GiftedChat } from 'react-native-gifted-chat'
-import { selectableImages } from './User';
+import { GiftedChat, Send, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -19,24 +18,22 @@ const BookAppointment = ({navigation}) => {
     const userName = route.params.userName;
     const userAvatar = route.params.userAvatar;
     const userEmail = route.params.userEmail;
-    const selectedAvatarSource = selectableImages[userAvatar];
-
     const [messages, setMessages] = useState([])
 
     useEffect(() => {
+
         // Load conversation when component mounts or when users talk
         fetch_conversation(userEmail, stylistEmail)
           .then((conversation) => {
             if (conversation) {
-                const reversedMessages = conversation.messages
-                    .map((message) => ({
+                const reversedMessages = conversation.messages.map((message) => ({
                     _id: message._id,
                     text: message.text,
                     createdAt: new Date(message.timestamp),
                     user: {
                         _id: message.sender === userEmail ? 1 : 2,
                         name: message.sender === userEmail ? userName : stylistName,
-                        avatar: message.sender === userEmail ? selectedAvatarSource : stylistAvatar,
+                        avatar: message.sender === userEmail ? userAvatar : stylistAvatar,
                     },
                     }))
                     .reverse(); // Reverse the array
@@ -47,7 +44,7 @@ const BookAppointment = ({navigation}) => {
               // Handle the case when the conversation is not found
             }
           });
-    }, [userEmail, stylistEmail, userName, selectedAvatarSource, stylistName, stylistAvatar]);
+    }, [userEmail, stylistEmail, userName, userAvatar, stylistName, stylistAvatar]);
     
     
     const onSend = useCallback((messages = []) => {
@@ -97,27 +94,64 @@ const BookAppointment = ({navigation}) => {
           return null;
         }
     };
+    
+    const CustomSendButton = (props) => {
+      return (
+        <Send {...props}>
+          <Image
+            source={require('../assets/SendMessageIcon.png')}
+            style={{ height: 40, width: 40, top: 0, left: -10}}
+          ></Image>
+        </Send>
+      );
+    };
 
+    
     return (
         <SafeAreaView style={styles.container}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Image
                 source={require('../assets/gobackIcon.png')}
-                style={{ height: 30, width: 30, top: 0, left: 20}}
+                style={{ height: 40, width: 40, top: 10, left: 20}}
               ></Image>
             </TouchableOpacity>
 
+            <Image
+              source={stylistAvatar}
+              style={{top: -30, left: 80, height: 50, width: 50, borderRadius: 40, borderWidth: 1, borderColor: '#431a38'}}
+            ></Image>
+            <Text style={{ fontSize: 30, top: -70, left: 140}}>{stylistName}</Text>
+
             <GiftedChat
-                messages={messages}
-                showAvatarForEveryMessage={true}
-                showUserAvatar={true}
-                onSend={onSend}
-                user={{
-                    _id: 1,
-                    name: userName, // You can set a default name if needed
-                    avatar: selectedAvatarSource,
-                }}
+              messages={messages}
+              showAvatarForEveryMessage={true}
+              showUserAvatar={true}
+              renderUsernameOnMessage={true}
+              onSend={onSend}
+              user={{
+                _id: 1,
+                name: userName,
+                avatar: userAvatar,
+              }}
+              placeholder='Begin your inquiry...'
+              textInputProps={{
+                style: {
+                  borderRadius: 30,
+                  backgroundColor: '#D9D9D9',
+                  marginLeft: 20,
+                  marginRight: 20,
+                  fontSize: 16,
+                  width: 320,
+                  height: 30,
+                  top: -5, 
+                },
+              }}
+              renderSend={(props) => <CustomSendButton {...props} />}
+              renderInputToolbar={(props) => (
+                <InputToolbar {...props} containerStyle={{borderTopWidth: 0}} />
+              )}
             />
+
         </SafeAreaView>
     )
 }
