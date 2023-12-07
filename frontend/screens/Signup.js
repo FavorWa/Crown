@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function SignUp() {
   const [name, setName] = useState('');
@@ -52,6 +53,7 @@ export default function SignUp() {
 
   return (
         <View style={styles.container}>
+          <ScrollView>
             <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
               <Image source={require('../assets/gobackIcon.png')} style={{ left: 20, top: 40, height: 40, width: 40}} />
             </TouchableOpacity>
@@ -128,7 +130,8 @@ export default function SignUp() {
             <TouchableOpacity onPress={() => navigation.replace('Login')}>    
                 <Text style={styles.bottomText1}> Have an account? <Text style={styles.boldText}>Login</Text></Text>
             </TouchableOpacity>
-        </View>
+          </ScrollView>
+      </View>
     );
 }
 

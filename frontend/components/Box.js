@@ -30,10 +30,10 @@ const Box = ({image, title, link, time, isArticle, _id, navigation}) => {
 
 const styles = StyleSheet.create({
     box: {
-        height: 160,
+        height: 190,
         width: 120,
         borderRadius: 15,
-        marginRight: 10,
+        marginRight: 20,
         resizeMode: "cover",
         overflow: "hidden"
     }, 

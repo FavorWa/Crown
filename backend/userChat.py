@@ -117,24 +117,26 @@ def check_message(userEmail: str):
         conversation_query = {"participants": userEmail}
         conversations = Conversation.find(conversation_query)
 
-        result = set()
+        result = []
 
         for conversation in conversations:
             # Extract participants from each conversation
             participants = conversation["participants"]
 
-        # TODO: obtain name, email, isStylist, avatarNumber from each user, Caution: a stylist must be a user of Crown
+            # TODO: obtain name, email, isStylist, avatarNumber from each user, Caution: a stylist must be a user of Crown
             theOther = participants[1] if participants[0] == userEmail else participants[0]
             info = user_collection.find_one({"email": theOther})
             if info:
                 info['_id'] = str(info['_id'])
-                result.add(info)
+                result.append((
+                    info['name'],
+                    info['email'],
+                    info['isStylist'],
+                    info['avatarNumber'],
+                ))
 
 
-        # Convert set of dictionaries to a list for JSON response
-        result_list = list(result)
-
-        return {"participant_info": result_list}
+        return result
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -23,6 +23,7 @@ const Row = ({blogBoxes}) => {
     )
 }
 
+
 const Blogs = ({navigation}) => {
     const sections = ["Today's Digest", "Styling 101", "The Latest on Products", "Hair Health", "Making an Impact"]
     const [blogs, setBlogs] = useState([]);
@@ -94,8 +95,8 @@ const Blogs = ({navigation}) => {
             <Text variant="headlineLarge" style={styles.heading}>Blogs</Text>
             <Text variant="headlineSmall" style={styles.subheading}>All the information you need in one place.</Text>
             {
-                blogs.length == 0 ? <ActivityIndicator /> : (
-                    sections.map((section) => {
+                blogs.length === 0 ? <ActivityIndicator /> : (
+                    sections.map((section, index) => {
 
                         const filteredBlogs = blogs.filter((blog) => {
                             return blog["tags"].includes(section);
@@ -103,14 +104,15 @@ const Blogs = ({navigation}) => {
         
                         const filteredBlogComponents = getBlogBoxes(filteredBlogs);
                         return (
-                            <View style={styles.section}>
+                            <View key={index} style={styles.section}>
                                 <Text variant="headlineMedium" style={styles.sectionHeading}>{section}</Text>
-                                <Row blogBoxes={filteredBlogComponents} />
+                                <Row blogBoxes={filteredBlogComponents} /> 
                             </View>
                         )
                     })
                 )
             }
+
                 
             </ScrollView>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 60 }}>
@@ -129,14 +131,6 @@ const Blogs = ({navigation}) => {
                     style={styles.Barbershop}
                     ></Image>
                     <Text style={styles.Barbershopword}>Stylist</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.replace('Friends')}>
-                    <Image
-                    source={require('../assets/Community.png')}
-                    style={styles.Community}
-                    ></Image>
-                    <Text style={styles.Communityword}>Community</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => navigation.replace('User')}>
