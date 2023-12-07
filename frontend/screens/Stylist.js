@@ -251,14 +251,6 @@ export default function Stylist({ navigation }) {
                 <Text style={styles.Barbershopword}>Stylist</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => navigation.replace('Friends')}>
-                <Image
-                  source={require('../assets/Community.png')}
-                  style={styles.Community}
-                ></Image>
-                <Text style={styles.Communityword}>Community</Text>
-              </TouchableOpacity>
-
               <TouchableOpacity onPress={() => navigation.replace('User')}>
                 {userAvatar ? (
                   <Image source={selectableImages[userAvatar]} style={styles.avatar} />

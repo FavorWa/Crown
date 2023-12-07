@@ -293,20 +293,12 @@ export default function DrawerExample({ navigation }) {
                   <Text style={styles.Compassword}>Discover</Text>
                 </TouchableOpacity>
               
-                <TouchableOpacity onPress={() => navigation.replace('Stylist')}>
+                <TouchableOpacity onPress={() => navigation.replace('InHouseStylists')}>
                   <Image
                     source={require('../assets/Barbershop.png')}
                     style={styles.Barbershop}
                   ></Image>
                   <Text style={styles.Barbershopword}>Stylist</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.replace('Friends')}>
-                  <Image
-                    source={require('../assets/Community.png')}
-                    style={styles.Community}
-                  ></Image>
-                  <Text style={styles.Communityword}>Community</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => navigation.replace('User')}>
@@ -321,37 +313,28 @@ export default function DrawerExample({ navigation }) {
 const styles = StyleSheet.create({
   Compass: {
     aspectRatio: 1.2,
-    marginLeft: 35,
+    marginLeft: 75,
     marginTop: 15,
   },
   Compassword: {
-    marginLeft: 30,
+    marginLeft: 70,
   },
   Barbershop: {
     aspectRatio: 1.2,
-    marginLeft: 135,
+    alignSelf: 'center',
     marginTop: -55,
   },
   Barbershopword: {
-    marginLeft: 135,
-    marginBottom: -40,
-  },
-  Community: {
-    aspectRatio: 1.2,
-    marginLeft: 235,
-    marginTop: -55,
-  },
-  Communityword: {
-    marginLeft: 225,
+    alignSelf: 'center',
     marginBottom: -40,
   },
   User: {
-    marginLeft: 335,
+    marginLeft: 305,
     marginTop: -55,
     aspectRatio: 1.2,
   },
   Userword: {
-    marginLeft: 338,
+    marginLeft: 308,
     marginBottom: -40,
   },
   Bottonline: {
@@ -368,7 +351,7 @@ const styles = StyleSheet.create({
     width: 55,
     height: 55,
     borderRadius: 40,
-    marginLeft: 330,
+    marginLeft: 300,
     marginVertical: -55,
   },
   container: {
