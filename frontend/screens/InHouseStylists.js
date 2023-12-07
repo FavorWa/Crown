@@ -27,9 +27,10 @@ const InHouseStylists = ({navigation}) => {
         setStylists(stylistsData);
     }
 
+    // to do
     const handleSearch = async () => {
 
-      }
+    }
 
 
     useEffect(() => {
