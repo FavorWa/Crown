@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput, Image } from 'react-native';
-import { Avatar, Button, Card, Text } from 'react-native-paper';
+import { Avatar, Button, Card, Text, Searchbar} from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from './User';
@@ -9,9 +9,12 @@ import * as Location from 'expo-location';
 import RNPickerSelect from 'react-native-picker-select';
 import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 import callApi from '../functions/callApi';
+import { AirbnbRating } from 'react-native-ratings';
 
 const InHouseStylists = ({navigation}) => {
     const [stylists, setStylists] = useState([]);
+    const [filteredStylists, setFilteredStylists] = useState([]);
+    const [selectedFilters, setSelectedFilters] = useState([]);
     const [Question, setQuestion] = useState('');
     const [userAvatar, setUserAvatar] = useState(null);
     const [location, setLocation] = useState(null);
@@ -19,18 +22,72 @@ const InHouseStylists = ({navigation}) => {
 
     const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
-
     
     const setInhouseStylists = async () => {
-        const stylistsData = await callApi('/stylists/inhouse');
-        console.log(stylistsData);
+        let stylistsData = await callApi('/stylists/inhouse');
+        stylistsData = await Promise.all(
+          stylistsData.map(async (stylist) => {
+            const reviews = await callApi(`/stylists/inhouse/${stylist._id}/reviews`);
+            const totalRating = reviews.reduce((sum, review) => sum + review.starsNum, 0);
+            const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+            return {
+              ...stylist,
+              numReviews: reviews.length,
+              averageRating: averageRating
+            }
+          })
+        )
         setStylists(stylistsData);
+        setFilteredStylists(stylistsData);
     }
 
-    // to do
-    const handleSearch = async () => {
+    const handleSearch = () => {
+    }
+
+    const handleFilterPress = (filter) => {
+      if (selectedFilters.includes(filter)) {
+        setSelectedFilters(selectedFilters.filter((f) => f !== filter));
+      } 
+      else {
+        setSelectedFilters([...selectedFilters, filter]);
+      }
+    };
+
+    const filterStylists = () => {
+      let filteredList = [...stylists]
+      if (Question != "" && Question != null) {
+        filteredList = filteredList.filter((stylist) => stylist.businessName.includes(Question))
+      }
+
+      if (selectedFilters.length > 0) {
+        for (const filter of selectedFilters) {
+          if (filter == "Protective Styles") {
+            filteredList = filteredList.filter((stylist) => stylist.tags.includes("Protective Styles"))
+          }
+          if (filter == "1-3 Years of Experience") {
+            filteredList = filteredList.filter((stylist) => stylist.yoe && stylist.yoe <= 3)
+          }
+
+          if (filter == "3-5 Years of Experience") {
+            filteredList = filteredList.filter((stylist) => stylist.yoe && stylist.yoe > 3 && stylist.yoe <= 6)
+          }
+
+          if (filter == "7+ Years of Experience") {
+            filteredList = filteredList.filter((stylist) => stylist.yoe && stylist.yoe >= 7)
+          }
+
+          if (filter == "4+ Stars") {
+            filteredList = filteredList.filter((stylist) => stylist.averageRating >= 4)
+          }
+        }
+      }
+
+      return filteredList
+
 
     }
+
+    const filterOptions = ["Protective Styles", "0-3 Years of Experience", "4-6 Years of Experience", "7+ Years of Experience", "4+ Stars"]
 
 
     useEffect(() => {
@@ -39,312 +96,129 @@ const InHouseStylists = ({navigation}) => {
 
     const renderBusinessCard = (business) => {
         return (
-            <TouchableOpacity onPress={() => {navigation.navigate(`StylistProfile`, {"_id": business._id})}}>
-         <Card style={{ backgroundColor: '#EDE0D4', borderRadius: 15, marginBottom: 20 }}>
-            {/* <Card.Title titleStyle={styles.cardTitle} title={business.name} left={LeftContent} /> */}
-            <ScrollView horizontal style={{ width: 230 }}>
-              <Card.Title titleStyle={styles.cardTitle} title={business.name} left={LeftContent} />
-            </ScrollView>
-    
-            <Image source={require('../assets/fourStarReview.png')} style={{ width: 74, height: 15, top: -50, left: 250 }} />
-            {/* Add other information or customization for each business */}
-            <Card.Content>
-              <Text variant="bodyMedium">
-                {business.description}
-              </Text>
-            
-              <View style={{ height: 30, top: 10 }}>
-                <ScrollView horizontal={true} >
-                    {business.tags.map((tag) => {
-                        return (
-                            <View style={styles.stylistFeatureContainer}>
-                                <Text style={styles.stylistFeature}>{tag}</Text>
-                            </View>
-                        )
-                    })}
-                </ScrollView>
-              </View>
-            </Card.Content>
-    
-            <Text style={{ left: 24, top: 28 }}>{business.price}</Text>
-            <Text style={{ color: '#242424', top: 10, marginLeft: 60, }}>
-                {business.location ? business.location : null}
-            </Text>
-            
-            <Card.Actions style={{ top: -20, marginBottom: -10 }}>
-              <TouchableOpacity onPress={() => navigation.navigate('BookAppointment', { business: business })}>
-                <View style={styles.BAContainer}>
-                  <Text style={styles.BookAppointment}>  Book an appointment  </Text>
+              <View style={styles.businessCardContainer}>
+                <View style={styles.businessCardContent}>
+                  <TouchableOpacity onPress={() => {navigation.navigate(`StylistProfile`, {"_id": business._id})}}>
+                    <View style={styles.businessTitleLine}>
+                        <View style={styles.leftCornerTitle}>
+                          <Avatar.Image size={40} source={{uri: business.avatar}} />
+                          <Text style={{marginLeft: 10, fontSize: 20, fontWeight: "bold"}}>{business.businessName}</Text>
+                        </View>
+                        <View style={styles.rightCornerTitle}>
+                          <AirbnbRating defaultRating={business.averageRating} showRating={false} isDisabled size={14} selectedColor="#713200"/>
+                          <Text style={{fontSize: 20}}>{business.numReviews} reviews</Text>
+                        </View>
+                      </View>
+
+                      <View style={styles.businessBody}>
+                        <Text style={{fontSize: 20}}>
+                          {business.description}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                    <View>
+                      <ScrollView horizontal={true} >
+                          {business.tags.map((tag) => {
+                              return (
+                                  <View style={styles.stylistFeatureContainer}>
+                                      <Text style={styles.stylistFeature}>{tag}</Text>
+                                  </View>
+                              )
+                          })}
+                      </ScrollView>
+                    </View>
                 </View>
-              </TouchableOpacity>
-            </Card.Actions>
-          </Card>
-        
-            </TouchableOpacity>
+              </View>
         )
       };
     return (
         <SafeAreaView style={styles.container}>
-          <Text style={styles.findastylist}> Crown Stylists </Text>
-          <Text style={styles.secondLine}> We'll help you find the perfect match. </Text>
+          <View>
+            <Text style={styles.headline}>Crown Certified Stylists</Text>
+            <Text style={styles.subtitle}>Experienced Hairstylists Verified by Us</Text>
+          </View>
           
-          <Image
-            source={require('../assets/Rectangle4.png')}
-            style={styles.searchBox}
-          ></Image>
-          <Image
-            source={require('../assets/SearchIcon.png')}
-            style={styles.searchIcon}
-          ></Image>
-          <TextInput style={styles.SearchInput}
-            placeholder='Search for hairstylists and services'
-            placeholderTextColor='#111010'
-            keyboardType='web-search'
-            keyboardAppearance='default'
-            maxLength={120}
-            onChangeText={text => setQuestion(text)}
-            value={Question}
-            enterKeyHint='search'
-            onSubmitEditing={handleSearch}
-          ></TextInput>
-          <Text style={{ left: 350, top: -80, }}>Km</Text>
-          <View style={{ top: -65, left: 355 }}>
-            <RNPickerSelect
-              onValueChange={(value) => setRange(value)}
-              placeholder={{
-                label: '0',
-                value: 0, // or whatever value should be used for the placeholder
-              }}
-              items={Array.from({ length: 15 }, (_, index) => ({ label: `${index + 1}`, value: index + 1 }))}
-              style={{
-                inputIOS: {
-                  fontSize: 18,
-                  color: 'purple',
-                },
-                inputAndroid: {
-                  // Your Android styles here
-                },
-              }}
+          <View style={{marginTop: 32}}>
+            <Searchbar 
+              placeholder="Search stylists"
+              onChangeText={text => setQuestion(text)}
+              value={Question}
+              style={{backgroundColor: '#D9D9D9'}}
             />
           </View>
 
           <View style={styles.filterContainer}>
-            <ScrollView horizontal={true} >
-              <View style={styles.textContainer}>
-                <Text style={styles.NearMe}> Near Me </Text>
-              </View>
-              <View style={styles.textContainer}>
-                <Text style={styles.NearMe}> Protective Styles </Text>
-              </View>
-              <View style={styles.textContainer}>
-                <Text style={styles.NearMe}> 4 stars </Text>
-              </View>
-              <View style={styles.textContainer}>
-                <Text style={styles.NearMe}> Fair Pricing </Text>
-              </View>
-              <View style={styles.textContainer}>
-                <Text style={styles.NearMe}> Mask Required </Text>
-              </View>
-              <Image
-                source={require('../assets/Rectangle4.png')}
-                style={styles.emptyContainer}
-              ></Image>
+            <ScrollView horizontal={true}>
+              {
+                filterOptions.map((filter) => {
+                  return (
+                    <TouchableOpacity
+                    key={filter}
+                    onPress={() => handleFilterPress(filter)}
+                  >
+                    <View style={[[
+                      styles.textContainer,
+                      selectedFilters.includes(filter) && styles.selectedFilter,
+                    ]]}>
+                      <Text style={styles.NearMe}>{filter}</Text>
+  
+                    </View>
+                  </TouchableOpacity>
+                  )
+                })
+              }
             </ScrollView>
           </View>
 
           <View style={styles.StylistScroll}>
-            <ScrollView style={styles.mainScroll}>
+            <ScrollView>
             
-              {stylists.length > 0 ? stylists.map((stylist) => {
+              {stylists.length > 0 ? filterStylists().map((stylist) => {
                 return renderBusinessCard(stylist);
               }) : null}
-
-              {/* <Card style={{ backgroundColor: '#EDE0D4', borderRadius: 15, marginBottom: 20 }}>
-                  <Card.Title titleStyle={styles.cardTitle} title="Kiki's Salon"  left={LeftContent} />
-                  <Image source={require('../assets/fourStarReview.png')} style={{ width: 74, height: 15, top: -50, left: 250 }} />
-                
-                  <Card.Content>
-                    <Text variant="bodyMedium">
-                      Hello! My name is Kiki and I am an independent salon owner and professional stylist. 
-                      I specialize in chemical treatments including texturizing... see more
-                    </Text>
-                  
-                    <View style={{ height: 30, top: 10 }}>
-                      <ScrollView horizontal={true} >
-                        <View style={styles.stylistFeatureContainer}>
-                          <Text style={styles.stylistFeature}>  highly skilled  </Text>
-                        </View>
-                        <View style={styles.stylistFeatureContainer}>
-                          <Text style={styles.stylistFeature}>  fair price  </Text>
-                        </View>
-                        <View style={styles.stylistFeatureContainer}>
-                          <Text style={styles.stylistFeature}>  mask required  </Text>
-                        </View>
-                        <View style={styles.stylistFeatureContainer}>
-                          <Text style={styles.stylistFeature}>  5+ year of experience  </Text>
-                        </View>
-                      </ScrollView>
-                    </View>
-                  </Card.Content>
-
-                    <Image
-                      source={require('../assets/dollarSign.png')}
-                      style={styles.price}
-                    ></Image>
-                    <Text style={styles.distance}>
-                      2.6 miles away
-                    </Text>
-                    
-                    <Card.Actions style={{ top: -20, marginBottom: -10 }}>
-                      <TouchableOpacity>
-                        <View style={styles.BAContainer}>
-                          <Text style={styles.BookAppointment}>  Book an appointment  </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </Card.Actions>
-                  
-              </Card>
-
-              <Card style={{ backgroundColor: '#EDE0D4', borderRadius: 15, marginBottom: 20 }}>
-                  <Card.Title titleStyle={styles.cardTitle} title="Waves by Nisha"  left={LeftContent} />
-                  <Image source={require('../assets/fourStarReview.png')} style={{ width: 74, height: 15, top: -50, left: 250 }} />
-                
-                  <Card.Content>
-                    <Text variant="bodyMedium">
-                    Waves by Nisha is a beauty bar based in downtown Miami. We work with all hair types 
-                    and prioritize customer care! Get you hair styled by the best... see more
-                    </Text>
-                  
-                    <View style={{ height: 30, top: 10 }}>
-                      <ScrollView horizontal={true} >
-                        <View style={styles.stylistFeatureContainer}>
-                          <Text style={styles.stylistFeature}>  4c hair  </Text>
-                        </View>
-                        <View style={styles.stylistFeatureContainer}>
-                          <Text style={styles.stylistFeature}>  box braids  </Text>
-                        </View>
-                        <View style={styles.stylistFeatureContainer}>
-                          <Text style={styles.stylistFeature}>  passion twists  </Text>
-                        </View>
-                        <View style={styles.stylistFeatureContainer}>
-                          <Text style={styles.stylistFeature}>  3+ year of experience  </Text>
-                        </View>
-                      </ScrollView>
-                    </View>
-                  </Card.Content>
-
-                    <Image
-                      source={require('../assets/dollarSign.png')}
-                      style={styles.price}
-                    ></Image>
-                    <Text style={styles.distance}>
-                      3.0 miles away
-                    </Text>
-                    
-                    <Card.Actions style={{ top: -20, marginBottom: -10 }}>
-                      <TouchableOpacity>
-                        <View style={styles.BAContainer}>
-                          <Text style={styles.BookAppointment}>  Book an appointment  </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </Card.Actions>
-                  
-              </Card>
-              
-              <Card style={{ backgroundColor: '#EDE0D4', borderRadius: 15, marginBottom: 20 }}>
-                  <Card.Title titleStyle={styles.cardTitle} title="SaraJade"  left={LeftContent} />
-                  <Image source={require('../assets/threeStarReview.png')} style={{ width: 74, height: 15, top: -50, left: 250 }} />
-                
-                  <Card.Content>
-                    <Text variant="bodyMedium">
-                    Hi, I’m Jade and I own a beauty salon in Miami Gardens with my partner Sara. 
-                    We are licensed professionals and value customer service. Our... see more
-                    </Text>
-                  
-                    <View style={{ height: 30, top: 10 }}>
-                      <ScrollView horizontal={true} >
-                        <View style={styles.stylistFeatureContainer}>
-                          <Text style={styles.stylistFeature}>  4c hair  </Text>
-                        </View>
-                        <View style={styles.stylistFeatureContainer}>
-                          <Text style={styles.stylistFeature}>  box braids  </Text>
-                        </View>
-                        <View style={styles.stylistFeatureContainer}>
-                          <Text style={styles.stylistFeature}>  passion twists  </Text>
-                        </View>
-                        <View style={styles.stylistFeatureContainer}>
-                          <Text style={styles.stylistFeature}>  3+ year of experience  </Text>
-                        </View>
-                      </ScrollView>
-                    </View>
-                  </Card.Content>
-
-                    <Image
-                      source={require('../assets/dollarSign.png')}
-                      style={styles.price}
-                    ></Image>
-                    <Text style={styles.distance}>
-                      3.0 miles away
-                    </Text>
-                    
-                    <Card.Actions style={{ top: -20, marginBottom: -10 }}>
-                      <TouchableOpacity>
-                        <View style={styles.BAContainer}>
-                          <Text style={styles.BookAppointment}>  Book an appointment  </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </Card.Actions>
-                  
-              </Card> */}
             </ScrollView>
           </View>
 
           
 
 
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 0 }}>
-              <View style={styles.Bottonline}> 
-                <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-                <Image
-                  source={require('../assets/Compass.png')}
-                  style={styles.Compass}
-                ></Image>
-                <Text style={styles.Compassword}>Discover</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity onPress={() => navigation.navigate('Stylist')}>
-                <Image
-                  source={require('../assets/Barbershop.png')}
-                  style={styles.Barbershop}
-                ></Image>
-                <Text style={styles.Barbershopword}>Stylist</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => navigation.replace('Friends')}>
-                <Image
-                  source={require('../assets/Community.png')}
-                  style={styles.Community}
-                ></Image>
-                <Text style={styles.Communityword}>Community</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => navigation.replace('User')}>
-                {userAvatar ? (
-                  <Image source={selectableImages[userAvatar]} style={styles.avatar} />
-                ) : (
-                  <>
-                    <Image source={require('../assets/User.png')} style={styles.User} />
-                    <Text style={styles.Userword}>Profile</Text>
-                  </>
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
+  businessCardContainer: {
+    backgroundColor: '#EDE0D4', 
+    borderRadius: 15,
+    marginBottom: 20 
+  },
+
+  businessCardContent: {
+    margin: 20
+  },
+
+  businessTitleLine: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20
+  },
+
+  leftCornerTitle: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  rightCornerTitle: {
+    display: "flex",
+    alignItems: "center"
+  },
+
+  businessBody: {
+    marginBottom: 20
+  },
     Compass: {
       aspectRatio: 1.2,
       marginLeft: 35,
@@ -400,6 +274,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: 'white',
+      padding: 20
     },
     backgroundImage: {
       flex: 1,
@@ -409,19 +284,11 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
     },
-    findastylist: {
-      fontSize: 35,
-      width: 246,
-      height: 40,
-      top: 10,
-      left: 23,
+    headline: {
+      fontSize: 32,
     },
-    secondLine: {
+    subtitle: {
       fontSize: 18,
-      width: 317,
-      height: 20,
-      top: 15,
-      left: 25,
       color: '#713200',
     },
     searchBox: {
@@ -444,34 +311,35 @@ const styles = StyleSheet.create({
       width: 260,
       height: 40,
       borderRadius: 5,
-      fontSize: 14,
+      fontSize: 20,
     },
     filterContainer: {
-      left: 33,
-      top: -35,
-      height: 24,
+      marginTop: 32,
     },
     textContainer: {
       backgroundColor: '#E3A387', // Change this to your desired background color
       borderRadius: 10, // Border radius of the container
       alignContent: 'center',
       marginHorizontal: 5,
+      paddingHorizontal: 16
     },
     NearMe: {
-      top: 2,
-      fontSize: 16,
       color: 'black',
+      fontSize: 20
+    },
+
+    selectedFilter: {
+      borderColor: 'black',
+      borderWidth: 2,
     },
     emptyContainer: {
       tintColor: 'white', 
       width: 40,
     },
     StylistScroll: {
-      marginHorizontal: 33,
-      marginBottom: 80,
+      marginTop: 32
     },
     mainScroll: {
-      marginBottom: 210,
     },
     cardTitle: {
       fontSize: 20,
@@ -481,12 +349,11 @@ const styles = StyleSheet.create({
       backgroundColor: '#E3A387', // Change this to your desired background color
       borderRadius: 10, // Border radius of the container
       alignContent: 'center',
-      marginHorizontal: 5,
-      height: 20,
+      paddingHorizontal: 5,
+      marginRight: 5
     },
     stylistFeature: {
-      top: 2,
-      fontSize: 12,
+      fontSize: 20,
       color: 'black',
     },
     BAContainer: {

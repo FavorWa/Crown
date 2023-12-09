@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, ScrollView, View, Pressable, useIs} from 'react-native';
+import {StyleSheet, ScrollView, View, Pressable, TouchableOpacity} from 'react-native';
 import { Avatar, Text, ActivityIndicator, IconButton } from 'react-native-paper';
 import {Tabs, TabScreen, TabsProvider, useTabIndex, useTabNavigation, } from 'react-native-paper-tabs';
 import { useIsFocused } from '@react-navigation/native';
@@ -263,6 +263,22 @@ const Profile = ({_id, picture, pricePoint, tags, businessHours, services, busin
                     </Tabs>
                 </View>
             </TabsProvider>
+            <View style={styles.buttonsContainer}>
+                <View>
+                    <TouchableOpacity style={{alignItems: "center"}} onPress={() => navigation.navigate("BookAppointment", stylist)}>
+                        <View style={styles.sendAMessageButton}>
+                            <Text style={styles.sendAMessageText}>Send a message</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <TouchableOpacity style={{alignItems: "center"}} onPress={() => navigation.navigate("")}>
+                        <View style={styles.bookAppointmentButton}>
+                            <Text style={styles.bookAppointmentText}>Book Appointment</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
  
         </View>
     )
@@ -276,7 +292,7 @@ const styles = StyleSheet.create({
     },
 
     bigSectionContainer: {
-        marginBottom: 28
+        marginBottom: 12
     },
 
     titleText: {
@@ -409,6 +425,41 @@ const styles = StyleSheet.create({
 
     reviewContainer: {
         marginBottom: 8
+    },
+
+    sendAMessageButton: {
+        borderColor: "#472415",
+        borderWidth: 2,
+        borderRadius: 10,
+        paddingHorizontal: 7,
+        paddingVertical: 4,
+        maxWidth: 150
+    },
+
+    sendAMessageText: {
+        fontSize: 16,
+        textAlign: "center",
+        color: "#472415"
+    },
+
+    bookAppointmentButton: {
+        backgroundColor: "#E3A387",
+        borderRadius: 10,
+        paddingHorizontal: 7,
+        paddingVertical: 4,
+        maxWidth: 150
+    },
+
+    bookAppointmentText: {
+        fontSize: 16,
+        textAlign: "center"
+    },
+
+    buttonsContainer: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 12
     }
 
 })
