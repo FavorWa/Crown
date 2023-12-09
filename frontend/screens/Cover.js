@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable, Image, Text } from 'react-native';
 import { useEffect } from 'react';
 import {  } from 'react-native-paper';
-import Logo from '../assets/crownLogo.png'
+import Logo from '../assets/CrownLogo.png'
 
 function Cover({ navigation }) {
   // const [LoginStatus, setLoginStatus] = useState(false);

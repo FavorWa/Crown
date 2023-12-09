@@ -23,6 +23,7 @@ const Row = ({blogBoxes}) => {
     )
 }
 
+
 const Blogs = ({navigation}) => {
     const sections = ["Today's Digest", "Styling 101", "The Latest on Products", "Hair Health", "Making an Impact"]
     const [blogs, setBlogs] = useState([]);
@@ -94,8 +95,8 @@ const Blogs = ({navigation}) => {
             <Text variant="headlineLarge" style={styles.heading}>Blogs</Text>
             <Text variant="headlineSmall" style={styles.subheading}>All the information you need in one place.</Text>
             {
-                blogs.length == 0 ? <ActivityIndicator /> : (
-                    sections.map((section) => {
+                blogs.length === 0 ? <ActivityIndicator /> : (
+                    sections.map((section, index) => {
 
                         const filteredBlogs = blogs.filter((blog) => {
                             return blog["tags"].includes(section);
@@ -103,14 +104,15 @@ const Blogs = ({navigation}) => {
         
                         const filteredBlogComponents = getBlogBoxes(filteredBlogs);
                         return (
-                            <View style={styles.section}>
+                            <View key={index} style={styles.section}>
                                 <Text variant="headlineMedium" style={styles.sectionHeading}>{section}</Text>
-                                <Row blogBoxes={filteredBlogComponents} />
+                                <Row blogBoxes={filteredBlogComponents} /> 
                             </View>
                         )
                     })
                 )
             }
+
                 
             </ScrollView>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 60 }}>
@@ -129,14 +131,6 @@ const Blogs = ({navigation}) => {
                     style={styles.Barbershop}
                     ></Image>
                     <Text style={styles.Barbershopword}>Stylist</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.replace('Friends')}>
-                    <Image
-                    source={require('../assets/Community.png')}
-                    style={styles.Community}
-                    ></Image>
-                    <Text style={styles.Communityword}>Community</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => navigation.replace('User')}>
@@ -209,37 +203,28 @@ const styles = StyleSheet.create({
     },
     Compass: {
         aspectRatio: 1.2,
-        marginLeft: 35,
+        marginLeft: 75,
         marginTop: 15,
       },
       Compassword: {
-        marginLeft: 30,
+        marginLeft: 70,
       },
       Barbershop: {
         aspectRatio: 1.2,
-        marginLeft: 135,
+        alignSelf: 'center',
         marginTop: -55,
       },
       Barbershopword: {
-        marginLeft: 135,
-        marginBottom: -40,
-      },
-      Community: {
-        aspectRatio: 1.2,
-        marginLeft: 235,
-        marginTop: -55,
-      },
-      Communityword: {
-        marginLeft: 225,
+        alignSelf: 'center',
         marginBottom: -40,
       },
       User: {
-        marginLeft: 335,
+        marginLeft: 305,
         marginTop: -55,
         aspectRatio: 1.2,
       },
       Userword: {
-        marginLeft: 338,
+        marginLeft: 308,
         marginBottom: -40,
       },
       Bottonline: {
@@ -256,7 +241,7 @@ const styles = StyleSheet.create({
         width: 55,
         height: 55,
         borderRadius: 40,
-        marginLeft: 330,
+        marginLeft: 300,
         marginVertical: -55,
       },
 })

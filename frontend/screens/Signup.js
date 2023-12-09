@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function SignUp() {
   const [name, setName] = useState('');
@@ -52,6 +53,7 @@ export default function SignUp() {
 
   return (
         <View style={styles.container}>
+          <ScrollView>
             <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
               <Image source={require('../assets/gobackIcon.png')} style={{ left: 20, top: 40, height: 40, width: 40}} />
             </TouchableOpacity>
@@ -99,16 +101,25 @@ export default function SignUp() {
             secureTextEntry
             ></TextInput>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', top: 20, left: 20 }}>
-                <TouchableOpacity onPress={toggleStylist} style={{ backgroundColor: '#EDE0D4', padding: 1, borderRadius: 5, marginLeft: 15 }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 30 }}>{willbeStylist ? '✔️' : '◻️'}</Text>
-                    <Image source={require('../assets/registerAsAstylist.png')} style={{ left: 40, top: -35, height: 40, width: 300, marginBottom: 10}} />
+            <View style={{ top: 20 }}>
+                <TouchableOpacity onPress={toggleStylist} style={{ backgroundColor: '#EDE0D4', padding: 1, borderRadius: 5 }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 30, height: 40, left: 20, top: 5 }}>{willbeStylist ? '✔️' : ''}</Text>
+                    <Image source={require('../assets/registerAsAstylist.png')} style={{ alignSelf: 'center', top: -35, height: 40, width: 300, marginBottom: 10}} />
                 </TouchableOpacity>
-                {/* <Text style={{ color: '#00000099' }}> Do you want to register as a stylist? </Text> */}
             </View>
               
             <TouchableOpacity onPress={handleSignUp}>
-              <Image source={require('../assets/createAccountImage.png')} style={{ alignSelf: 'center', top: 40, height: 60, width: 240, marginBottom: 10}} />
+              <View style={{alignItems: 'center', alignSelf: 'center',
+                    top: 20,
+                    backgroundColor: '#E3A387',
+                    borderWidth: 1.5,
+                    borderColor: '#472415',
+                    width: 200,
+                    height: 55,
+                    borderRadius: 12, 
+              }}>
+                <Text style={{fontWeight: '600', fontSize: 30, top: 7,}}>Sign In</Text>
+              </View>
             </TouchableOpacity>
             
 
@@ -128,7 +139,8 @@ export default function SignUp() {
             <TouchableOpacity onPress={() => navigation.replace('Login')}>    
                 <Text style={styles.bottomText1}> Have an account? <Text style={styles.boldText}>Login</Text></Text>
             </TouchableOpacity>
-        </View>
+          </ScrollView>
+      </View>
     );
 }
 
@@ -163,6 +175,7 @@ const styles = StyleSheet.create({
     borderColor: '#472415',
     borderRadius: 5,
     fontSize: 20,
+    backgroundColor: '#F9F3EE'
   },
   signIn: {
     color: 'black',

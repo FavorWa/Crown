@@ -3,10 +3,12 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'reac
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage from the correct package
 import { BACKEND_BASE_ANDROID, BACKEND_BASE_IOS } from '../secrets';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 export default function Login({ navigation }) {
 
+  const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
@@ -18,7 +20,7 @@ export default function Login({ navigation }) {
 
   const userLogin = () => {
 
-    fetch('http://localhost:8000/log_in', {
+    fetch(`${backend_base_url}/log_in`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -38,7 +40,7 @@ export default function Login({ navigation }) {
           await AsyncStorage.setItem('userPassword', password);
           await AsyncStorage.setItem('LoginStatus', 'true');
           if (keepLoggedIn == true){
-              await AsyncStorage.setItem('keepLogIn', 'true');
+            await AsyncStorage.setItem('keepLogIn', 'true');
           }else{
             await AsyncStorage.setItem('keepLogIn', 'false');
           }
@@ -51,7 +53,7 @@ export default function Login({ navigation }) {
           await AsyncStorage.setItem('userIdentity', userObject.isStylist);
           await AsyncStorage.setItem('userEmail', userObject.email);
           await AsyncStorage.setItem('userPassword', userObject.password);
-          navigation.replace('Homepage'); // Navigate to the login screen
+          navigation.goBack(); // Navigate to the login screen
           console.clear();
         }
       })
@@ -63,11 +65,15 @@ export default function Login({ navigation }) {
 
   return (
         <View style={styles.container}>
+          <ScrollView>
+            <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
+              <Image source={require('../assets/gobackIcon.png')} style={{ left: 20, top: 40, height: 40, width: 40}} />
+            </TouchableOpacity>
             <Image source={require('../assets/LoginImage.png')} style={{width: 200, height: 80, top: 60, left: 33, marginBottom: 60}} />
 
             <Text style={styles.secondLine}> Sign in with your data that you entered during your registration</Text>
 
-            <Text style={styles.name}> Email </Text>
+            <Text style={styles.name}></Text>
             <TextInput style={styles.input}
             placeholder=' Email'
             keyboardType='web-search'
@@ -77,7 +83,7 @@ export default function Login({ navigation }) {
             value={email}
             ></TextInput>
 
-            <Text style={styles.name}> Password </Text>
+            <Text style={styles.name}></Text>
             <TextInput style={styles.input}
             placeholder=' Password'
             keyboardType='web-search'
@@ -88,8 +94,10 @@ export default function Login({ navigation }) {
             secureTextEntry
             ></TextInput>
 
-            <Text style={styles.forgetPassword}> Forget Password </Text>
-
+            <TouchableOpacity>
+              <Text style={styles.forgetPassword}> Forget Password </Text>
+            </TouchableOpacity>
+            
             <View style={styles.rowContainer}>
                 <TouchableOpacity onPress={toggleKeepSignIn} style={styles.buttonContainer}>
                     <Text style={styles.buttonText}>{keepLoggedIn ? '✔️' : '◻️'}</Text>
@@ -98,13 +106,23 @@ export default function Login({ navigation }) {
             </View>
             
             <TouchableOpacity onPress={userLogin}>
-              <Image source={require('../assets/SignInImage.png')} style={{ height: 50, width: 220, alignSelf: 'center', top: 80 }} />
+              <View style={{alignItems: 'center', alignSelf: 'center',
+                  backgroundColor: '#E3A387',
+                  borderWidth: 1.5,
+                  borderColor: '#472415',
+                  width: 200,
+                  height: 55,
+                  borderRadius: 12, 
+                  }}>
+                <Text style={{fontWeight: '600', fontSize: 30, top: 7,}}>Sign In</Text>
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.replace('SignUp')}> 
                 <Text style={styles.bottomText1}> Don't have an account? <Text style={styles.boldText}>Sign up</Text></Text>
             </TouchableOpacity>
-        </View>
+          </ScrollView>
+      </View>
     );
 }
 
@@ -146,6 +164,7 @@ const styles = StyleSheet.create({
     borderColor: '#472415',
     borderRadius: 5,
     fontSize: 20,
+    backgroundColor: '#F9F3EE',
   },
   forgetPassword: {
     color: 'black',
@@ -194,7 +213,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '300',
     letterSpacing: 0.1,
-    top: 320,
+    top: 270,
     alignSelf: 'center',
   },
   boldText: {

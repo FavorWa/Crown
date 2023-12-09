@@ -40,20 +40,12 @@ export default function Friends({ navigation }) {
                   <Text style={styles.Compassword}>Discover</Text>
                 </TouchableOpacity>
               
-                <TouchableOpacity onPress={() => navigation.replace('Stylist')}>
+                <TouchableOpacity onPress={() => navigation.replace('InHouseStylists')}>
                   <Image
                     source={require('../assets/Barbershop.png')}
                     style={styles.Barbershop}
                   ></Image>
                   <Text style={styles.Barbershopword}>Stylist</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                  <Image
-                    source={require('../assets/Community.png')}
-                    style={styles.Community}
-                  ></Image>
-                  <Text style={styles.Communityword}>Community</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => navigation.replace('User')}>

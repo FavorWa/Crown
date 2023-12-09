@@ -22,6 +22,14 @@ const InHouseStylists = ({navigation}) => {
 
     const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
+    const fetchUserAvatar = async () => {
+      const avatar = await AsyncStorage.getItem('userAvatar');
+      setUserAvatar(avatar);
+    };
+
+    useEffect(() => {
+      fetchUserAvatar();
+    }, []);
     
     const setInhouseStylists = async () => {
         let stylistsData = await callApi('/stylists/inhouse');
@@ -182,6 +190,36 @@ const InHouseStylists = ({navigation}) => {
           
 
 
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 0 }}>
+              <View style={styles.Bottonline}> 
+                <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
+                <Image
+                  source={require('../assets/Compass.png')}
+                  style={styles.Compass}
+                ></Image>
+                <Text style={styles.Compassword}>Discover</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
+                <Image
+                  source={require('../assets/Barbershop.png')}
+                  style={styles.Barbershop}
+                ></Image>
+                <Text style={styles.Barbershopword}>Stylist</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => navigation.replace('User')}>
+                {userAvatar ? (
+                  <Image source={selectableImages[userAvatar]} style={styles.avatar} />
+                ) : (
+                  <>
+                    <Image source={require('../assets/User.png')} style={styles.User} />
+                    <Text style={styles.Userword}>Profile</Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
         </SafeAreaView>
     )
 }
@@ -221,19 +259,19 @@ const styles = StyleSheet.create({
   },
     Compass: {
       aspectRatio: 1.2,
-      marginLeft: 35,
+      marginLeft: 75,
       marginTop: 15,
     },
     Compassword: {
-      marginLeft: 30,
+      marginLeft: 70,
     },
     Barbershop: {
       aspectRatio: 1.2,
-      marginLeft: 135,
+      alignSelf: 'center',
       marginTop: -55,
     },
     Barbershopword: {
-      marginLeft: 135,
+      alignSelf: 'center',
       marginBottom: -40,
     },
     Community: {
@@ -246,12 +284,12 @@ const styles = StyleSheet.create({
       marginBottom: -40,
     },
     User: {
-      marginLeft: 335,
+      marginLeft: 305,
       marginTop: -55,
       aspectRatio: 1.2,
     },
     Userword: {
-      marginLeft: 338,
+      marginLeft: 308,
       marginBottom: -40,
     },
     Bottonline: {
@@ -268,7 +306,7 @@ const styles = StyleSheet.create({
       width: 55,
       height: 55,
       borderRadius: 40,
-      marginLeft: 330,
+      marginLeft: 300,
       marginVertical: -55,
     },
     container: {
