@@ -8,6 +8,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 export default function Login({ navigation }) {
 
+  const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
@@ -19,7 +20,7 @@ export default function Login({ navigation }) {
 
   const userLogin = () => {
 
-    fetch('http://localhost:8000/log_in', {
+    fetch(`${backend_base_url}/log_in`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -52,7 +53,7 @@ export default function Login({ navigation }) {
           await AsyncStorage.setItem('userIdentity', userObject.isStylist);
           await AsyncStorage.setItem('userEmail', userObject.email);
           await AsyncStorage.setItem('userPassword', userObject.password);
-          navigation.replace('Homepage'); // Navigate to the login screen
+          navigation.goBack(); // Navigate to the login screen
           console.clear();
         }
       })
@@ -106,7 +107,6 @@ export default function Login({ navigation }) {
             
             <TouchableOpacity onPress={userLogin}>
               <View style={{alignItems: 'center', alignSelf: 'center',
-                  top: 80,
                   backgroundColor: '#E3A387',
                   borderWidth: 1.5,
                   borderColor: '#472415',

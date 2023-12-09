@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, ScrollView, View, Pressable, useIs} from 'react-native';
+import {StyleSheet, ScrollView, View, Pressable, TouchableOpacity} from 'react-native';
 import { Avatar, Text, ActivityIndicator, IconButton } from 'react-native-paper';
 import {Tabs, TabScreen, TabsProvider, useTabIndex, useTabNavigation, } from 'react-native-paper-tabs';
 import { useIsFocused } from '@react-navigation/native';
@@ -17,11 +17,26 @@ const StylistProfile = ({ navigation, route }) => {
     const [email, setEmail] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [userName, setUserName] = useState('');
+    const [userAvatar, setUserAvatar] = useState('');
+    const [userEmail, setUserEmail] = useState('');
+
+    const fetchUserAvatar = async () => {
+      const avatar = await AsyncStorage.getItem('userAvatar');
+      const userName = await AsyncStorage.getItem('userName');
+      const currentUserEmail = await AsyncStorage.getItem('userEmail');
+      setUserAvatar(avatar);
+      setUserName(userName);
+      setUserEmail(currentUserEmail);
+    };
     const {_id} = route.params; 
 
     const getStylist = async () => {
         const business = await callApi(`/stylists/inhouse/${_id}`);
-        setStylist(business);
+        const totalRating = reviews.reduce((sum, review) => sum + review.starsNum, 0);
+        const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+        const numReviews = reviews.length
+        setStylist({...business, averageRating, numReviews});
     }
 
     const getReviews = async () => {
@@ -55,8 +70,9 @@ const StylistProfile = ({ navigation, route }) => {
     const initPage = async () => {
         const email = await AsyncStorage.getItem("userEmail");
         setEmail(email);
-        await getReviews();
         await getStylist();
+        await getReviews();
+        await fetchUserAvatar();
         setIsLoading(false);
     }
 
@@ -69,7 +85,7 @@ const StylistProfile = ({ navigation, route }) => {
         return (
             <Profile
                 _id={_id}
-                picture={stylist.picture}
+                picture={stylist.avatar}
                 pricePoint={stylist.pricePoint}
                 tags={stylist["tags"]}
                 businessHours={stylist.businessHours}
@@ -77,7 +93,11 @@ const StylistProfile = ({ navigation, route }) => {
                 businessName={stylist.businessName}
                 description={stylist.description}
                 reviews={reviews}
+                stylist={stylist}
                 navigation={navigation}
+                userName={userName}
+                userAvatar={userAvatar}
+                userEmail={userEmail}
             />
         )
     }
@@ -125,7 +145,7 @@ const Review = ({title, starsNum, reviewer, time, content, businessName, tags}) 
                 </View>
             </View>
             <View style={styles.reviewSectionContainer}>
-                <Text style={{fontSize: 16}}>{content}</Text>
+                <Text style={{fontSize: 20}}>{content}</Text>
             </View>
             <View style={styles.reviewSectionContainer}>
                 <Text style={{fontWeight: "bold", marginBottom: 16}}>{businessName} is...</Text>
@@ -148,135 +168,173 @@ const Review = ({title, starsNum, reviewer, time, content, businessName, tags}) 
 }
 // picture is a url to the profile picture
 // pricepoint is $, $$, $$$
-const Profile = ({_id, picture, pricePoint, tags, businessHours, services, businessName, description, reviews, navigation}) => {
-
+const Profile = ({_id, picture, pricePoint, tags, businessHours, services, businessName, description, reviews, navigation, stylist, userName, userAvatar, userEmail}) => {
     const handlePress = () => {
         navigation.navigate("ReviewFormScreen", {_id});
+    }
+
+    const handleSendMessagePress = () => {
+        if (userEmail) {
+            navigation.navigate('ChatBox', { stylistEmail: stylist.email, stylistName: businessName, stylistAvatar: picture, userName: userName, userAvatar: userAvatar, userEmail: userEmail })
+        }
+        else {
+            navigation.navigate("Login")
+        }
+    }
+
+    const handleBookAptPress = () => {
+        if (userEmail) {
+            navigation.navigate("BookAppointment", { business: stylist})
+        }
+        else {
+            navigation.navigate("Login")
+        }
     }
 
     const INDEXES = [0, 1, 2, 3, 4, 5, 6];
     const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     return (
-        <View style={styles.container}>
-
-            <View style={styles.sectionContainer}>
-                <View style={styles.titleLine}>
-                    <Avatar.Image size={77} source={{uri: picture}} />
-                    <Text variant="headlineLarge" style={styles.titleText}>{businessName}</Text>
+        <View style={{backgroundColor: "white", flex: 1}}>
+            <View style={styles.container}>
+                
+                <View style={styles.sectionContainer}>
+                    <View style={styles.titleLine}>
+                        <Avatar.Image size={77} source={{uri: picture}} />
+                        <Text variant="headlineLarge" style={styles.titleText}>{businessName}</Text>
+                    </View>
                 </View>
-            </View>
 
-            <View style={styles.bigSectionContainer}>
-                <View style={styles.quickFacts}>
-                    <Text variant="bodyMedium">{pricePoint}</Text>
-                    <Text variant="bodyMedium">3.0 miles away</Text>
-                    <View style={{alignItems: "center"}}>
-                        <AirbnbRating defaultRating={5} showRating={false} isDisabled size={14} selectedColor="#713200"/>
-                        <Text>94 reviews</Text>
+                <View style={styles.bigSectionContainer}>
+                    <View style={styles.quickFacts}>
+                        <Text style={{fontSize: 20}}>{pricePoint}</Text>
+                        <Text style={{fontSize: 20}} variant="bodyMedium">3.0 miles away</Text>
+                        <View style={{alignItems: "center"}}>
+                            <AirbnbRating defaultRating={stylist.averageRating} showRating={false} isDisabled size={16} selectedColor="#713200"/>
+                            <Text style={{fontSize: 16}}>{stylist.numReviews} reviews</Text>
+                        </View>
+                    </View>
+                </View>
+
+                <View style={styles.bigSectionContainer}>
+                    <View style={{height: 32}}>
+                        <ScrollView horizontal={true} style={{flex: 1}}>
+                            {
+
+                            tags.map((tag) => {
+                                return (
+                                    <View style={styles.tagContainer}>
+                                        <Text style={styles.tagText}>{tag}</Text>
+                                    </View>
+                                )
+                            })
+                        }
+                        </ScrollView>
+                    </View>
+                </View>
+
+                <View style={styles.bigSectionContainer}>
+                    <View>
+                        <Text variant="bodyLarge" style={{fontSize: 20}}>{description}</Text>
+                    </View>
+                </View>
+
+                <View style={{height: 300}}>
+                    <TabsProvider defaultIndex={0}>
+                        <View style={{flex: 1}}>
+                            <Tabs theme={{colors: {primary: "#713200"}}}>
+                                <TabScreen label="Services">
+                                    <View style={{flex: 1}}>
+                                        <ScrollView>
+                                        <View style={styles.sectionContainer}>
+                                                <Text style={styles.sectionTitle}>Business Hours</Text>
+                                                <View>
+                                                    {
+                                                        INDEXES.map((index) => {
+                                                            return <HoursRow day={DAYS[index]} hours={businessHours[index]} />
+                                                        })
+                                                    }
+                                                </View>
+                                            </View>
+                                            <View style={styles.sectionContainer}>
+                                                <Text style={styles.sectionTitle}>All Services</Text>
+                                                <View style={styles.servicesContainer}>
+                                                    {
+                                                        services.map((service) => {
+                                                            return (
+                                                                <ServicesRow name={service[0]} descriptor={service[1]} price={service[2]} />
+                                                            )
+                                                        })
+                                                    }
+                                                </View>
+                                            </View>
+                                        </ScrollView>
+                                    </View>
+                                </TabScreen>
+                                <TabScreen label="Reviews">
+                                    <View style={styles.reviewsContainer}>
+                                        <View style={styles.addReviewButtonContainer}>
+                                            <Pressable style={styles.addReviewButton} onPress={handlePress}>
+                                                <Text style={styles.addReviewText}>+ Add a review!</Text>
+                                            </Pressable>
+
+                                        </View>
+                                        <View>
+                                            <ScrollView>
+                                                <View>
+                                                    {reviews.map((review) => {
+                                                        return (
+                                                            <Review
+                                                                title={review.title}
+                                                                starsNum={review.starsNum}
+                                                                reviewer={review.reviewer}
+                                                                time={review.time}
+                                                                content={review.content}
+                                                                businessName={review.businessName}
+                                                                tags={review.tags}
+                                                            />
+                                                        )
+                                                    })}
+                                                </View>
+                                            </ScrollView>
+                                        </View>
+                                    </View>
+                                </TabScreen>
+                            </Tabs>
+                        </View>
+                    </TabsProvider>
+                </View>
+
+                <View style={styles.buttonsContainer}>
+                    <View>
+                        <TouchableOpacity style={{alignItems: "center"}} onPress={handleSendMessagePress}>
+                            <View style={styles.sendAMessageButton}>
+                                <Text style={styles.sendAMessageText}>Send a message</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <TouchableOpacity style={{alignItems: "center"}} onPress={handleBookAptPress}>
+                            <View style={styles.bookAppointmentButton}>
+                                <Text style={styles.bookAppointmentText}>Book Appointment</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
-
-            <View style={styles.bigSectionContainer}>
-                <View>
-                    <ScrollView horizontal={true} style={{flex: 1}}>
-                        {
-
-                        tags.map((tag) => {
-                            return (
-                                <View style={styles.tagContainer}>
-                                    <Text style={styles.tagText}>{tag}</Text>
-                                </View>
-                            )
-                        })
-                    }
-                    </ScrollView>
-                </View>
-            </View>
-
-            <View style={styles.bigSectionContainer}>
-                <View>
-                    <Text variant="bodyLarge">{description}</Text>
-                </View>
-            </View>
-
-            <TabsProvider defaultIndex={0}>
-                <View style={{flex: 1}}>
-                    <Tabs theme={{colors: {primary: "#713200"}}}>
-                        <TabScreen label="Services">
-                            <View style={{flex: 1}}>
-                                <ScrollView>
-                                <View style={styles.sectionContainer}>
-                                        <Text style={styles.sectionTitle}>Business Hours</Text>
-                                        <View>
-                                            {
-                                                INDEXES.map((index) => {
-                                                    return <HoursRow day={DAYS[index]} hours={businessHours[index]} />
-                                                })
-                                            }
-                                        </View>
-                                    </View>
-                                    <View style={styles.sectionContainer}>
-                                        <Text style={styles.sectionTitle}>All Services</Text>
-                                        <View style={styles.servicesContainer}>
-                                            {
-                                                services.map((service) => {
-                                                    return (
-                                                        <ServicesRow name={service[0]} descriptor={service[1]} price={service[2]} />
-                                                    )
-                                                })
-                                            }
-                                        </View>
-                                    </View>
-                                </ScrollView>
-                            </View>
-                        </TabScreen>
-                        <TabScreen label="Reviews">
-                            <View style={styles.reviewsContainer}>
-                                <View style={styles.addReviewButtonContainer}>
-                                    <Pressable style={styles.addReviewButton} onPress={handlePress}>
-                                        <Text style={styles.addReviewText}>+ Add a review!</Text>
-                                    </Pressable>
-
-                                </View>
-                                <View>
-                                    <ScrollView>
-                                        <View>
-                                            {reviews.map((review) => {
-                                                return (
-                                                    <Review
-                                                        title={review.title}
-                                                        starsNum={review.starsNum}
-                                                        reviewer={review.reviewer}
-                                                        time={review.time}
-                                                        content={review.content}
-                                                        businessName={review.businessName}
-                                                        tags={review.tags}
-                                                    />
-                                                )
-                                            })}
-                                        </View>
-                                    </ScrollView>
-                                </View>
-                            </View>
-                        </TabScreen>
-                    </Tabs>
-                </View>
-            </TabsProvider>
- 
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: "white",
         flex: 1,
         paddingHorizontal: 28,
         marginTop: 40
     },
 
     bigSectionContainer: {
-        marginBottom: 28
+        marginBottom: 20
     },
 
     titleText: {
@@ -308,13 +366,14 @@ const styles = StyleSheet.create({
 
     tagText: {
         top: 2,
-        fontSize: 16,
+        fontSize: 20,
         color: 'black',
       },
 
     
     sectionTitle: {
         fontWeight: "bold",
+        fontSize: 24,
         marginBottom: 7,
     },
 
@@ -325,14 +384,14 @@ const styles = StyleSheet.create({
     },
 
     dayText: {
+        fontSize: 20,
         flex: 1,
         textAlign: 'left',
-        fontSize: 14,
     },
 
     hoursText: {
         textAlign: 'right',
-        fontSize: 14,
+        fontSize: 20,
     },
 
     //service row styles
@@ -351,7 +410,7 @@ const styles = StyleSheet.create({
 
     secondLine: {
         textAlign: 'left',
-        fontSize: 14,
+        fontSize: 20,
         fontStyle: 'italic',
         fontWeight: "bold"
     },
@@ -359,12 +418,12 @@ const styles = StyleSheet.create({
     serviceName: {
         flex: 1,
         textAlign: 'left',
-        fontSize: 14,
+        fontSize: 20,
     },
 
     servicePrice: {
         textAlign: 'right',
-        fontSize: 14,
+        fontSize: 20,
     },
 
     sectionContainer: {
@@ -391,7 +450,7 @@ const styles = StyleSheet.create({
       },
 
       addReviewText: {
-        fontSize: 16,
+        fontSize: 20,
         lineHeight: 21,
         letterSpacing: 0.25,
         color: '#472415',
@@ -409,6 +468,41 @@ const styles = StyleSheet.create({
 
     reviewContainer: {
         marginBottom: 8
+    },
+
+    sendAMessageButton: {
+        borderColor: "#472415",
+        borderWidth: 2,
+        borderRadius: 10,
+        paddingHorizontal: 7,
+        paddingVertical: 4,
+        maxWidth: 160
+    },
+
+    sendAMessageText: {
+        fontSize: 20,
+        textAlign: "center",
+        color: "#472415"
+    },
+
+    bookAppointmentButton: {
+        backgroundColor: "#E3A387",
+        borderRadius: 10,
+        paddingHorizontal: 7,
+        paddingVertical: 4,
+        maxWidth: 160
+    },
+
+    bookAppointmentText: {
+        fontSize: 20,
+        textAlign: "center"
+    },
+
+    buttonsContainer: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        marginBottom: 12
     }
 
 })

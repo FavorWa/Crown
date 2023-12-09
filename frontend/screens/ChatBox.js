@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity, TextInput, Image } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { BACKEND_BASE_ANDROID, BACKEND_BASE_IOS } from '../secrets';
-import { GiftedChat, Send, InputToolbar } from 'react-native-gifted-chat';
+import { GiftedChat, Send, InputToolbar, Bubble, Time } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -57,6 +57,9 @@ const BookAppointment = ({navigation}) => {
 
     const sendMessageToMongoDB = async (messageText) => {
         try {
+          console.log(userEmail);
+          console.log(stylistEmail)
+          console.log(messageText)
             const response = await fetch(`${backend_base_url}/send_message`, {
                 method: 'POST',
                 headers: {
@@ -106,6 +109,24 @@ const BookAppointment = ({navigation}) => {
       );
     };
 
+    const renderBubble = props => { 
+      return ( 
+        <Bubble 
+          {...props} 
+          textStyle={{
+            right: {color: "#1E1E1E"}
+          }}
+          wrapperStyle={{
+              right: { backgroundColor: '#E3A387', }, 
+          }} 
+        />
+      )}
+
+      const renderTime = props => {
+        return (
+          <Time {...props} timeTextStyle={{right: {color: "#1E1E1E"}, left: {color: "#1E1E1E"}}} color="black" />)
+      }
+
     
     return (
         <SafeAreaView style={styles.container}>
@@ -146,6 +167,8 @@ const BookAppointment = ({navigation}) => {
                   top: -5, 
                 },
               }}
+              renderBubble={renderBubble}
+              renderTime={renderTime}
               renderSend={(props) => <CustomSendButton {...props} />}
               renderInputToolbar={(props) => (
                 <InputToolbar {...props} containerStyle={{borderTopWidth: 0}} />
