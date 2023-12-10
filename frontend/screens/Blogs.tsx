@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Card, Surface, Text, Divider, ActivityIndicator,  } from 'react-native-paper';
+import { Card, Surface, Text, Divider, ActivityIndicator, Searchbar } from 'react-native-paper';
 import { StyleSheet, Image, View, ScrollView, TouchableOpacity, Platform} from 'react-native';
 import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 import openWebPage from "../functions/openWebPage";
@@ -23,12 +23,67 @@ const Row = ({blogBoxes}) => {
     )
 }
 
+const FilteredBlogsScreen = ({blogBoxes}) => {
+    const newBoxes = blogBoxes.map((box) => {
+        return (
+            <View style={{marginBottom: 16}}>
+                {box}
+            </View>
+        )
+    })
+    return (
+        <ScrollView style={{marginTop: 32}}>
+            <View style={styles.filteredBlogContainer}>
+                {newBoxes}
+            </View>
+        </ScrollView>
+    )
+}
+
 const Blogs = ({navigation}) => {
+    const handleProfileNavigation = async () => {
+        if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+          navigation.replace('Login');
+        } else {
+          if (await AsyncStorage.getItem('userIdentity') === 'true') {
+            navigation.replace('UserStylist');
+          } else {
+            navigation.replace('User');
+          }
+        }
+      };
+
     const sections = ["Today's Digest", "Styling 101", "The Latest on Products", "Hair Health", "Making an Impact"]
     const [blogs, setBlogs] = useState([]);
+    const [selectedFilters, setSelectedFilters] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
 
-    const getBlogBoxes = (blogs) => {
-        const NUM_BOXES = 6;
+    const filterOptions = ["New", "Styling", "Protective Styles", "Short Hair", "Medium Length Hair"]
+
+    const handleFilterPress = (filter) => {
+        if (selectedFilters.includes(filter)) {
+          setSelectedFilters(selectedFilters.filter((f) => f !== filter));
+        } 
+        else {
+          setSelectedFilters([...selectedFilters, filter]);
+        }
+    };
+
+    const filterBlogs = () => {
+        let filteredList = [...blogs]
+        if (searchQuery != "") {
+          filteredList = filteredList.filter((blog) => blog.title.includes(searchQuery))
+        }
+  
+        if (selectedFilters.length > 0) {
+          for (const filter of selectedFilters) {
+            filteredList = filteredList.filter((blog) => blog.tags.includes(filter))
+        }
+      }
+
+      return filteredList
+    }
+    const getBlogBoxes = (blogs, NUM_BOXES) => {
         const blogsBoxes = [];
 
         for (let index = 0; index < NUM_BOXES; index++) {
@@ -62,6 +117,47 @@ const Blogs = ({navigation}) => {
         return blogsBoxes;
     }
 
+    const blogsToBoxes = (blogs) => {
+        const blogBoxes = blogs.map((blog) => {
+            return (
+                <Box 
+                image = {blog.image}
+                title = {blog.title}
+                link = {blog.link}
+                time = {blog.time}
+                isArticle = {blog.isArticle}
+                _id = {blog._id}
+                navigation = {navigation}
+                />
+            )})
+        return blogBoxes
+    }
+
+    const FilteredBlogs = () => {
+        if (searchQuery != "" || selectedFilters.length > 0) {
+            const filteredList = filterBlogs()
+            const blogBoxes = blogsToBoxes(filteredList)
+            return <FilteredBlogsScreen blogBoxes={blogBoxes}/>
+        }
+    }
+
+    const AllBlogs = () => {
+        return sections.map((section, index) => {
+
+            const filteredBlogs = blogs.filter((blog) => {
+                return blog["tags"].includes(section);
+            })
+
+            const filteredBlogComponents = getBlogBoxes(filteredBlogs, 6);
+            return (
+                <View key={index} style={styles.section}>
+                    <Text variant="headlineMedium" style={styles.sectionHeading}>{section}</Text>
+                    <Row blogBoxes={filteredBlogComponents} /> 
+                </View>
+            )
+        })
+    }
+
     const getBlogs = async () => {
         let url = "/blogs/sections?"
 
@@ -89,28 +185,45 @@ const Blogs = ({navigation}) => {
     }, []);
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{paddingHorizontal: 20}}>
             <ScrollView style={{marginBottom: 50}}>
             <Text variant="headlineLarge" style={styles.heading}>Blogs</Text>
             <Text variant="headlineSmall" style={styles.subheading}>All the information you need in one place.</Text>
-            {
-                blogs.length == 0 ? <ActivityIndicator /> : (
-                    sections.map((section) => {
+            <View style={{marginTop: 32}}>
+            <Searchbar 
+              placeholder="Search stylists"
+              onChangeText={text => setSearchQuery(text)}
+              value={searchQuery}
+              style={{backgroundColor: '#D9D9D9'}}
+            />
+          </View>
 
-                        const filteredBlogs = blogs.filter((blog) => {
-                            return blog["tags"].includes(section);
-                        })
-        
-                        const filteredBlogComponents = getBlogBoxes(filteredBlogs);
-                        return (
-                            <View style={styles.section}>
-                                <Text variant="headlineMedium" style={styles.sectionHeading}>{section}</Text>
-                                <Row blogBoxes={filteredBlogComponents} />
-                            </View>
-                        )
-                    })
-                )
+          <View style={styles.filterContainer}>
+            <ScrollView horizontal={true}>
+              {
+                filterOptions.map((filter) => {
+                  return (
+                    <TouchableOpacity
+                    key={filter}
+                    onPress={() => handleFilterPress(filter)}
+                  >
+                    <View style={[[
+                      styles.textContainer,
+                      selectedFilters.includes(filter) && styles.selectedFilter,
+                    ]]}>
+                      <Text style={styles.filterText}>{filter}</Text>
+  
+                    </View>
+                  </TouchableOpacity>
+                  )
+                })
+              }
+            </ScrollView>
+          </View>
+            {
+                blogs.length === 0 ? <ActivityIndicator /> : (searchQuery != "" || selectedFilters.length > 0 ? <FilteredBlogs /> : AllBlogs())
             }
+
                 
             </ScrollView>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 60 }}>
@@ -131,15 +244,7 @@ const Blogs = ({navigation}) => {
                     <Text style={styles.Barbershopword}>Stylist</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.replace('Friends')}>
-                    <Image
-                    source={require('../assets/Community.png')}
-                    style={styles.Community}
-                    ></Image>
-                    <Text style={styles.Communityword}>Community</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.replace('User')}>
+                <TouchableOpacity onPress={() => handleProfileNavigation()}>
                     {userAvatar ? (
                     <Image source={selectableImages[userAvatar]} style={styles.avatar} />
                     ) : (
@@ -159,18 +264,15 @@ export default Blogs;
 
 const styles = StyleSheet.create({
     heading: {
-        marginHorizontal: 28,
     },
 
     subheading: {
         color: "#713200",
-        marginHorizontal: 28,
         fontSize: 14,
     },
 
     sectionHeading: {
         marginTop: 14,
-        marginHorizontal: 28,
     },
 
     container: {
@@ -184,7 +286,6 @@ const styles = StyleSheet.create({
     scrollContainer: {
         top: 15,
         height: 160,
-        marginHorizontal: 28,
     },
 
     scrollObject: {
@@ -209,37 +310,28 @@ const styles = StyleSheet.create({
     },
     Compass: {
         aspectRatio: 1.2,
-        marginLeft: 35,
+        marginLeft: 75,
         marginTop: 15,
       },
       Compassword: {
-        marginLeft: 30,
+        marginLeft: 70,
       },
       Barbershop: {
         aspectRatio: 1.2,
-        marginLeft: 135,
+        alignSelf: 'center',
         marginTop: -55,
       },
       Barbershopword: {
-        marginLeft: 135,
-        marginBottom: -40,
-      },
-      Community: {
-        aspectRatio: 1.2,
-        marginLeft: 235,
-        marginTop: -55,
-      },
-      Communityword: {
-        marginLeft: 225,
+        alignSelf: 'center',
         marginBottom: -40,
       },
       User: {
-        marginLeft: 335,
+        marginLeft: 305,
         marginTop: -55,
         aspectRatio: 1.2,
       },
       Userword: {
-        marginLeft: 338,
+        marginLeft: 308,
         marginBottom: -40,
       },
       Bottonline: {
@@ -256,7 +348,35 @@ const styles = StyleSheet.create({
         width: 55,
         height: 55,
         borderRadius: 40,
-        marginLeft: 330,
+        marginLeft: 300,
         marginVertical: -55,
       },
+
+      filterContainer: {
+        marginTop: 32,
+      },
+      textContainer: {
+        backgroundColor: '#E3A387', // Change this to your desired background color
+        borderRadius: 10, // Border radius of the container
+        alignContent: 'center',
+        marginHorizontal: 5,
+        paddingHorizontal: 16
+      },
+
+      filterText: {
+        color: 'black',
+        fontSize: 20
+      },
+  
+      selectedFilter: {
+        borderColor: 'black',
+        borderWidth: 2,
+      },
+
+      filteredBlogContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: "center",
+      }
 })

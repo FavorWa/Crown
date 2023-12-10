@@ -10,7 +10,6 @@ import BottomBar from '../components/BottomBar';
 
 
 export default function Homepage({ navigation }) {
-
   const [blogs, setBlogs] = useState([]);
 
   const isLoggedIn = async (web) => {
@@ -23,6 +22,18 @@ export default function Homepage({ navigation }) {
       }
     } catch (error) {
       console.log('Error checking login status:', error);
+    }
+  };
+
+  const handleProfileNavigation = async () => {
+    if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+      navigation.replace('Login');
+    } else {
+      if (await AsyncStorage.getItem('userIdentity') === 'true') {
+        navigation.replace('UserStylist');
+      } else {
+        navigation.replace('User');
+      }
     }
   };
 
@@ -49,6 +60,7 @@ export default function Homepage({ navigation }) {
         if (blogObj) {
           const blogBox = 
           <Box 
+            key={blogObj._id}
             image = {blogObj.image}
             title = {blogObj.title}
             link = {blogObj.link}
@@ -122,15 +134,16 @@ export default function Homepage({ navigation }) {
 
     return (
       <ScrollView horizontal>
-      {imageUrls.map((imageUrl, index) => (
+        <View style={{ width: 33 }}></View>
+        {imageUrls.map((imageUrl, index) => (
         <Image
         key={index}
         source={{ uri: imageUrl }}
         style={{
-          width: 150,
-          height: 200,
+          width: 120,
+          height: 190,
           borderRadius: 15,
-          marginRight: 10,
+          marginRight: 20,
           borderWidth: 1, // Border width
           borderColor: '#3E2723', // Brown color
         }}
@@ -160,23 +173,29 @@ export default function Homepage({ navigation }) {
         style={styles.HairQuizPhoto}
       ></Image>
 
-      <TouchableOpacity onPress={() => navigation.navigate('HairQuizQuestion')}>
+      <TouchableOpacity onPress={() => isLoggedIn('Communication')}>
         <Image
+          source={require('../assets/MessageIcon.png')}
+          style={{width: 20, height: 20, top: -15, left: 350}}
           style={styles.takeTheQuizContainer} 
         ></Image>
-        <Text style={styles.takeTheQuiz}>
-          Take the Quiz
-        </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Blogs')}>
-        <Text style={styles.blogs}>
-          Blogs
-        </Text>
+      <TouchableOpacity onPress={() => navigation.navigate('HairQuizQuestion')}>
+        <View style={styles.hairQuizRectangle}>
+          <Text style={styles.takeTheQuiz}>
+            Take the Quiz
+          </Text>
+        </View>
       </TouchableOpacity>
+
+      <Text style={styles.blogs}>
+        Blogs
+      </Text>
       
       <View style={styles.blogScrollContainer}>
         <ScrollView horizontal={true} >
+          <View style={{ width: 33 }}></View>
           {showBlogs()}
         </ScrollView>
       </View>
@@ -184,12 +203,11 @@ export default function Homepage({ navigation }) {
       <TouchableOpacity onPress={() => navigation.navigate('Blogs')}>
         <Text style={styles.seeAll}> See all </Text>
       </TouchableOpacity>
-      
-      <TouchableOpacity onPress={() => navigation.navigate('Inspo')}>
-        <Text style={styles.Inspiration}>
-          Inspiration
-        </Text>
-      </TouchableOpacity>
+
+      <Text style={styles.Inspiration}>
+        Inspiration
+      </Text>
+
       <View style={styles.InspirationScrollContainer}>
       <ImageGallery />
     </View>
@@ -205,15 +223,17 @@ export default function Homepage({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    color:'#FFFFFF',
     flex: 1,
   },
   scrollContainer:{
+    color: '#FFFFFF',
     flex: 1
   },
   hairquiz: {
     textAlign: 'left',
-    fontWeight: '400',
-    fontSize: 20,
+    fontWeight: '500',
+    fontSize: 24,
     color: 'black',
     left: 28,
     top: 5,
@@ -256,8 +276,8 @@ const styles = StyleSheet.create({
   },
   blogs: {
     textAlign: 'left',
-    fontWeight: '400',
-    fontSize: 20,
+    fontWeight: '500',
+    fontSize: 24,
     color: 'black',
     left: 33,
   },
@@ -271,19 +291,29 @@ const styles = StyleSheet.create({
   },
   Compass: {
     aspectRatio: 1.2,
-    marginLeft: 100,
+    marginLeft: 70,
     marginTop: 15,
   },
   Compassword: {
-    marginLeft: 100,
+    marginLeft: 30,
   },
   Barbershop: {
     aspectRatio: 1.2,
-    marginLeft: 200,
+    marginLeft: 135,
     marginTop: -55,
+    opacity: 0.4,
   },
   Barbershopword: {
-    marginLeft: 203,
+    marginLeft: 135,
+    marginBottom: -40,
+  },
+  Community: {
+    aspectRatio: 1.2,
+    marginLeft: 235,
+    marginTop: -55,
+  },
+  Communityword: {
+    marginLeft: 225,
     marginBottom: -40,
   },
   User: {
@@ -300,7 +330,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 110,
     flexShrink: 0,
-    borderRadius: 39,
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: '#472415',
     marginHorizontal: 30,
@@ -319,8 +349,7 @@ const styles = StyleSheet.create({
   },
   blogScrollContainer:{
     top: 15,
-    height: 160,
-    marginHorizontal: 28,
+    height: 190,
   },
   scrollObject: {
     height: 160,
@@ -328,13 +357,14 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginRight: 10,
   },
+  
   Inspiration: {
     textAlign: 'left',
-    fontWeight: '400',
-    fontSize: 20,
+    fontWeight: '500',
+    fontSize: 24,
     color: 'black',
     left: 33,
-    fontFamily: 'Rig Sans',
+    marginTop: 0,
   },
   InspirationScrollContainer:{
     top: 15,

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Cover from './screens/Cover.js';
+import Cover from './screens/Cover';
 import Homepage from './screens/HomePage';
 import Result from './screens/Result.js';
 import HairQuizQuestion from './screens/HairQuizQuestion'; 
@@ -22,7 +22,12 @@ import InHouseStylists from './screens/InHouseStylists.js';
 import UserStylist from './screens/UserStylist';
 import BookAppointment from './screens/BookAppointment';
 import ChooseDate from './screens/ChooseDate';
+import SendAppointment from './screens/SendAppointment';
 import Inspo from './screens/Inspo.js';
+import ReviewFormScreen from './screens/ReviewFormScreen';
+import ChatBox from './screens/ChatBox';
+import Communication from './screens/Communication';
+import StylistProfilePage from './screens/StylistProfilePage';
 
 const Stack = createStackNavigator();
 
@@ -129,6 +134,11 @@ export default function App() {
           name="InHouseStylists"
           component={InHouseStylists}
         />
+
+        <Stack.Screen
+          name="ReviewFormScreen"
+          component={ReviewFormScreen}
+        />
         <Stack.Screen
         name="Inspo"
         component={Inspo}
@@ -152,6 +162,26 @@ export default function App() {
         <Stack.Screen
           name="ChooseDate"
           component={ChooseDate}
+        />
+
+        <Stack.Screen
+          name="SendAppointment"
+          component={SendAppointment}
+        />
+        
+        <Stack.Screen
+          name="ChatBox"
+          component={ChatBox}
+        />
+
+        <Stack.Screen
+          name="Communication"
+          component={Communication}
+        />
+
+        <Stack.Screen
+          name="StylistProfilePage"
+          component={StylistProfilePage}
         />
       </Stack.Navigator>
     </NavigationContainer>

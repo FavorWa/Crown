@@ -33,8 +33,9 @@ const StylistItem = ({ stylistName, onSelect, isSelected }) => {
 
 const ChooseDate = ({navigation}) => {
     const route = useRoute();
-    const { business, selectedService } = route.params;
+    const { business, service, price } = route.params;
     const stylistEmail = business.email;
+    const selectedService = service;
     const stylistName = business.stylistName;
     const businessHours = business.businessHours;
 
@@ -65,8 +66,8 @@ const ChooseDate = ({navigation}) => {
       // Validate the user-entered time
       if (validateUserEnteredTime(userEnteredTime, businessHours[dayIndex])) {
         // Handle the logic to confirm the appointment with the selected date and time
-        // ...
-        console.log('Appointment confirmed for', userEnteredTime);
+        navigation.navigate('SendAppointment', {business: business, stylist: selectedStylist, service: selectedService, price: price, date: selectedDate, time: userEnteredTime});
+        console.log('Appointment confirmed for', userEnteredTime, 'service: ' + selectedService , price);
       } else {
         // Display an error message or handle the case where the time is not valid
         console.log('Invalid time entered.');
@@ -92,7 +93,7 @@ const ChooseDate = ({navigation}) => {
     return (
         <SafeAreaView style={styles.container}>
 
-            <Text style={{ fontSize: 28, fontWeight: '600', alignSelf: 'center'}}> Booking an Appointment </Text>
+            <Text style={{ fontSize: 28, fontWeight: '600', alignSelf: 'center'}}> Book an Appointment </Text>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Image
                 source={require('../assets/gobackIcon.png')}
@@ -137,7 +138,7 @@ const ChooseDate = ({navigation}) => {
 
             <CalendarList
               current={new Date()}
-              minDate={new Date()} // Set the minimum selectable date to today
+              minDate={new Date().toISOString().split('T')[0]} // Set the minimum selectable date to today
               pastScrollRange={0}
               futureScrollRange={2}
               horizontal

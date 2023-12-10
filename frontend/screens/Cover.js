@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
+import { StyleSheet, View, SafeAreaView, ImageBackground, TouchableOpacity, Pressable, Image, Text } from 'react-native';
+import { useEffect } from 'react';
+import {  } from 'react-native-paper';
+import Logo from '../assets/crownLogo.png'
 
-export default function Cover({ navigation }) {
+function Cover({ navigation }) {
   // const [LoginStatus, setLoginStatus] = useState(false);
   // const _retriveData = async() => {
   //   try{
@@ -18,33 +21,31 @@ export default function Cover({ navigation }) {
 
   // useEffect(() => {
   //   _retriveData();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      navigation.navigate('Homepage');
+    }, 3000);
+        return () => clearTimeout(timeout);
+  }, [navigation]);
+
+  
   return (
-        <SafeAreaView style={styles.container}>
-
-          <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-            <ImageBackground
-              // source={require('./assets/Logo.png')}
-              source={require('../assets/new_cover.png')}
-              style={styles.new_cover}
-            >
-            </ImageBackground>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-              <Text style={styles.signup}>SignUp/Login</Text>
-          </TouchableOpacity>
     
-          {/* {!LoginStatus && (
-            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-              <Text style={styles.signup}>SignUp/Login</Text>
-            </TouchableOpacity>
-          )} */}
-
-
-          {/* <StatusBar style="auto" /> */}
-        </SafeAreaView>
+        <View style={styles.container}>
+            <Image
+              source={Logo}
+              style={styles.new_cover}
+            />
+            <Text style={styles.crownText}>Crown</Text>
+            <Text style={styles.tagText}>The all-in-one resource for textured for</Text>
+            <Text style={styles.tagText}>textured hair care improvement</Text>
+        </View>
     );
 }
+
+export default Cover;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -53,33 +54,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  backgroundImage: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   new_cover: {
-    flex: 0,
-    width: '100%', 
-    aspectRatio: 1.2, 
-    resizeMode: 'cover',
-    marginLeft: 20,
-    marginRight: 20,
+    width: '60%', 
   },
   crownText: {
     textAlign: 'center',
     fontWeight: '500',
-    fontSize: 48,
+    fontSize: 80,
     color: 'black',
+    padding: 0,
+    lineHeight: 80
   },
-  crownTextMargin: {
-    marginTop: -200,
-  },
-  signup: {
-    margin: 40,
-    color: 'black',
-  },
+
+  tagText: {
+    fontSize: 20
+  }
 });

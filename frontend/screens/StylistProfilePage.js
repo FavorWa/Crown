@@ -4,9 +4,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Drawer } from 'react-native-drawer-layout';
 import Modal from 'react-native-modal';
 import * as Location from 'expo-location';
-import BottomBar from '../components/BottomBar';
-import { TEST_ID } from 'react-native-gifted-chat';
+import { useRoute } from '@react-navigation/native';
+import callApi from '../functions/callApi';
+import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 
+const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
 
 export const selectableImages = {
   'avatar1': require('../assets/avatar1.png'),
@@ -30,6 +32,21 @@ const Nums = [
 ];
 
 export default function DrawerExample({ navigation }) {
+    const handleProfileNavigation = async () => {
+        if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+          navigation.replace('Login');
+        } else {
+          if (await AsyncStorage.getItem('userIdentity') === 'true') {
+            navigation.replace('UserStylist');
+          } else {
+            navigation.replace('User');
+          }
+        }
+      };
+
+    const route = useRoute();
+    const { stylistTags } = route.params;
+    
     const [userName, setuserName] = useState('');
     const [userId, setuserId] = useState('');
 
@@ -104,6 +121,8 @@ export default function DrawerExample({ navigation }) {
       navigation.replace('Cover');
     };
 
+    
+
     return (
       <Drawer
         drawerPosition='right'
@@ -170,66 +189,105 @@ export default function DrawerExample({ navigation }) {
           </View>
         )}
       >
-          <ScrollView>
+        <ScrollView>
+            <View>
+            <Text style={{ fontSize: 34, fontWeight: '500', left: 33, top: 60}}>Profile</Text>
+            <Text style={{ fontSize: 14, fontWeight: '500', left: 33, top: 70, color: '#713200'}}>All the details, catered to you.</Text>
+            </View>
+            
+            <View style={{ top: -50, width: 70 }}>
+            <TouchableOpacity onPress={() => setOpen((prevOpen) => !prevOpen)} >
+                <Image
+                    source={require('../assets/content_list.png')}
+                    style={styles.Contentlist}
+                ></Image>
+            </TouchableOpacity>
+            </View>
+
+            <Text style={{fontSize: 24, left: 33, top: 30}}>Stylist Profile</Text>
+            <TouchableOpacity>
+                <Text style={{ color: '#472415', top: 10, marginBottom: 20, left: 320, fontSize: 16, fontWeight: '600'}}>Edit profile</Text>
+            </TouchableOpacity>
+
+            <View style={{ backgroundColor: '#EDE0D4', height: 240, borderRadius: 20, marginHorizontal: 30, top: 10}}>
+                <Image
+                    source={selectableImages[userAvatar]}
+                    style={{left: 20, height: 50, width: 50, borderRadius: 25, borderWidth: 1, borderColor: '#431a38', top: 20}}
+                ></Image>
+                <Text style={{fontSize: 26, left: 80, top: -20, fontWeight: '500'}}>{userName}</Text>
+                <Image
+                    source={require('../assets/fourStarReview.png')}
+                    style={{top: -50, left: 250}}
+                ></Image>
+                <Text style={{ fontSize: 14, lineHeight: 24, marginHorizontal: 20, top: -20 }}>Hello! My name is {userName} and I am an independent salon owner and professional stylist. I specialize in chemical treatments including texturizing... see more</Text>
+                <ScrollView horizontal={true} style={{left: 15, top: -15}}>
+                    {stylistTags.map((tag, index) => (
+                        <View key={index} style={{ marginHorizontal: 5 }}>
+                            <View style={{ backgroundColor: '#E3A387', borderRadius: 7, alignContent: 'center' }}>
+                                <Text style={{ marginHorizontal: 4, marginVertical: 2, fontSize: 12, color: '#000000', fontWeight: '500' }}>  {tag}  </Text>
+                            </View>
+                        </View>
+                    ))}
+                </ScrollView>
+                <Text style={{ color:'#9A9797', left: 30, top: 0, height: 15 }}>$$</Text>
+                <Text style={{ color:'#9A9797', left: 80, top: -15, height: 15 }}>2.2 miles away</Text>
+            </View>
+
+            <Text style={{fontSize: 24, left: 33, top: 30}}>Manage Appointments</Text>
+            <TouchableOpacity>
+                <Text style={{ color: '#472415', top: 8, marginBottom: 20, left: 320, fontSize: 16, fontWeight: '600'}}>See all</Text>
+            </TouchableOpacity>
+            <ScrollView horizontal style={{ height: 100 }}>
               <View>
-                <Text style={{ fontSize: 34, fontWeight: '500', left: 33, top: 60}}>Profile</Text>
-                <Text style={{ fontSize: 14, fontWeight: '500', left: 33, top: 70, color: '#713200'}}>All the details, catered to you.</Text>
+                
               </View>
-              
-              <View style={{ top: -50, width: 70 }}>
-                <TouchableOpacity onPress={() => setOpen((prevOpen) => !prevOpen)} >
+            </ScrollView>
+
+            <Text style={{fontSize: 24, left: 33, top: 30}}>Reviews</Text>
+            <TouchableOpacity>
+                <Text style={{ color: '#472415', top: 8, marginBottom: 20, left: 320, fontSize: 16, fontWeight: '600'}}>See all</Text>
+            </TouchableOpacity>
+            <ScrollView horizontal style={{ height: 250 }}>
+
+            </ScrollView>
+
+            <Modal isVisible={isModalVisible}>
+            <View style={styles.modalContent}>
+                <Image
+                source={selectableImages[userAvatar]}
+                style={styles.enlargedAvatar}
+                />
+                <TouchableOpacity onPress={changeAvatar}>
+                <Text style={styles.changeAvatarButton}>Change Avatar</Text>
+                </TouchableOpacity>
+                <Button title="Close" onPress={toggleModal} />
+            </View>
+            </Modal>
+
+        </ScrollView>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', top: 15 }}>
+              <View style={styles.Bottonline}> 
+                <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
                   <Image
-                      source={require('../assets/content_list.png')}
-                      style={styles.Contentlist}
+                    source={require('../assets/Compass.png')}
+                    style={styles.Compass}
                   ></Image>
+                  <Text style={styles.Compassword}>Discover</Text>
+                </TouchableOpacity>
+              
+                <TouchableOpacity onPress={() => navigation.replace('InHouseStylists')}>
+                  <Image
+                    source={require('../assets/Barbershop.png')}
+                    style={styles.Barbershop}
+                  ></Image>
+                  <Text style={styles.Barbershopword}>Stylist</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => handleProfileNavigation()}>
+                  <Image source={selectableImages[userAvatar]} style={styles.bottomAvatar} />
                 </TouchableOpacity>
               </View>
-
-              <Image
-                  source={require('../assets/profile_page.png')}
-                  style={{ alignSelf: 'center', height: 150, top: 10}}
-              ></Image>
-
-              <TouchableOpacity>
-                <View style={{ top: 25, backgroundColor: '#E3A387', borderRadius: 10, borderWidth: 1, alignItems: 'center', height: 30, marginHorizontal: 5, width: 200, left: 180 }}>
-                  <Text style={{ top: 3, fontSize: 18, fontWeight: '600' }}> See Your Quiz Results </Text>
-                </View>
-              </TouchableOpacity>
-
-              <Text style={{ fontSize: 24, left: 30, top: 40}}>Manage Appointments</Text>
-              <TouchableOpacity>
-                <Text style={{ color: '#472415', top: 20, marginBottom: 20, left: 350, fontSize: 16, fontWeight: '600'}}>See all</Text>
-              </TouchableOpacity>
-
-              <ScrollView horizontal>
-                <Text style={{ color: '#E3A387', fontSize: 20, left: 50, top: 20, height: 30}}>You don't have any appointments</Text>
-                <View style={{ height: 100 }}></View>
-              </ScrollView>
-
-              <Text style={{ fontSize: 24, left: 30, top: 40}}>You Recently Saved</Text>
-              <TouchableOpacity>
-                <Text style={{ color: '#472415', top: 20, marginBottom: 20, left: 350, fontSize: 16, fontWeight: '600'}}>See all</Text>
-              </TouchableOpacity>
-
-              <ScrollView horizontal>
-                <Text style={{ color: '#E3A387', fontSize: 20, left: 50, top: 20, height: 30}}>You didn't save anything</Text>
-                <View style={{ height: 100 }}></View>
-              </ScrollView>
-            
-              <Modal isVisible={isModalVisible}>
-                <View style={styles.modalContent}>
-                  <Image
-                    source={selectableImages[userAvatar]}
-                    style={styles.enlargedAvatar}
-                  />
-                  <TouchableOpacity onPress={changeAvatar}>
-                    <Text style={styles.changeAvatarButton}>Change Avatar</Text>
-                  </TouchableOpacity>
-                  <Button title="Close" onPress={toggleModal} />
-                </View>
-              </Modal>
-
-          </ScrollView>
+        </View>
       </Drawer>
     );
   }

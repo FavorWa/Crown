@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage from the correct package
 import { BACKEND_BASE_ANDROID, BACKEND_BASE_IOS } from '../secrets';
+import { ScrollView } from 'react-native-gesture-handler';
 
-
-const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
 
 export default function Login({ navigation }) {
 
+  const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
@@ -36,14 +36,16 @@ export default function Login({ navigation }) {
         if (data.detail) {
           console.error('Error:', data.detail); // Log the error if there is one
         } else {
+          await AsyncStorage.setItem('userEmail', email);
+          await AsyncStorage.setItem('userPassword', password);
+          await AsyncStorage.setItem('LoginStatus', 'true');
           if (keepLoggedIn == true){
-              await AsyncStorage.setItem('keepLogIn', 'true');
+            await AsyncStorage.setItem('keepLogIn', 'true');
           }else{
             await AsyncStorage.setItem('keepLogIn', 'false');
           }
           const userString = JSON.stringify(data.user);
           const userObject = JSON.parse(userString);
-          await AsyncStorage.setItem('LoginStatus', 'true');
           await AsyncStorage.setItem('userId', userObject._id);
           await AsyncStorage.setItem('userName', userObject.name);
           await AsyncStorage.setItem('userAvatar', userObject.avatarNumber);
@@ -51,7 +53,7 @@ export default function Login({ navigation }) {
           await AsyncStorage.setItem('userIdentity', userObject.isStylist);
           await AsyncStorage.setItem('userEmail', userObject.email);
           await AsyncStorage.setItem('userPassword', userObject.password);
-          navigation.replace('Homepage'); // Navigate to the login screen
+          navigation.navigate('Homepage'); // Navigate to the login screen
           console.clear();
         }
       })
@@ -63,16 +65,17 @@ export default function Login({ navigation }) {
 
   return (
         <View style={styles.container}>
+          <ScrollView>
             <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
               <Image source={require('../assets/gobackIcon.png')} style={{ left: 20, top: 40, height: 40, width: 40}} />
             </TouchableOpacity>
-            <Text style={styles.login}> Log in </Text>
+            <Image source={require('../assets/LoginImage.png')} style={{width: 200, height: 80, top: 60, left: 33, marginBottom: 60}} />
 
             <Text style={styles.secondLine}> Sign in with your data that you entered during your registration</Text>
 
-            <Text style={styles.name}> Email </Text>
+            <Text style={styles.name}></Text>
             <TextInput style={styles.input}
-            placeholder='name@example.com'
+            placeholder=' Email'
             keyboardType='web-search'
             keyboardAppearance='default'
             maxLength={40}
@@ -80,9 +83,9 @@ export default function Login({ navigation }) {
             value={email}
             ></TextInput>
 
-            <Text style={styles.name}> Password </Text>
+            <Text style={styles.name}></Text>
             <TextInput style={styles.input}
-            placeholder='min. 8 characters'
+            placeholder=' Password'
             keyboardType='web-search'
             keyboardAppearance='default'
             maxLength={40}
@@ -91,8 +94,10 @@ export default function Login({ navigation }) {
             secureTextEntry
             ></TextInput>
 
-            <Text style={styles.forgetPassword}> Forget Password </Text>
-
+            <TouchableOpacity>
+              <Text style={styles.forgetPassword}> Forget Password </Text>
+            </TouchableOpacity>
+            
             <View style={styles.rowContainer}>
                 <TouchableOpacity onPress={toggleKeepSignIn} style={styles.buttonContainer}>
                     <Text style={styles.buttonText}>{keepLoggedIn ? '✔️' : '◻️'}</Text>
@@ -100,16 +105,24 @@ export default function Login({ navigation }) {
                 <Text style={styles.keepsignin}> Keep me logged in </Text>
             </View>
             
-            <View style={{ backgroundColor: '#C9A227', top: 80, width: 204, alignSelf: 'center', alignItems: 'center', height: 50, borderRadius: 15}}>
-              <TouchableOpacity onPress={userLogin}>
-                  <Text style={styles.logIn}> Log in </Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity onPress={userLogin}>
+              <View style={{alignItems: 'center', alignSelf: 'center',
+                  backgroundColor: '#E3A387',
+                  borderWidth: 1.5,
+                  borderColor: '#472415',
+                  width: 200,
+                  height: 55,
+                  borderRadius: 12, 
+                  }}>
+                <Text style={{fontWeight: '600', fontSize: 30, top: 7,}}>Sign In</Text>
+              </View>
+            </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.replace('SignUp')}> 
                 <Text style={styles.bottomText1}> Don't have an account? <Text style={styles.boldText}>Sign up</Text></Text>
             </TouchableOpacity>
-        </View>
+          </ScrollView>
+      </View>
     );
 }
 
@@ -124,7 +137,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '400',
     letterSpacing: 0.1,
-    marginTop: 40,
+    marginTop: 50,
     marginLeft: 30,
   },
   secondLine: {
@@ -151,6 +164,7 @@ const styles = StyleSheet.create({
     borderColor: '#472415',
     borderRadius: 5,
     fontSize: 20,
+    backgroundColor: '#F9F3EE',
   },
   forgetPassword: {
     color: 'black',
@@ -182,6 +196,8 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: '400',
     letterSpacing: 0.2,
+    marginTop: 80,
+    alignSelf: 'center'
   },
   signInBackground: {
     width: 204,
@@ -197,7 +213,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '300',
     letterSpacing: 0.1,
-    top: 280,
+    top: 270,
     alignSelf: 'center',
   },
   boldText: {

@@ -3,7 +3,7 @@ import { StyleSheet, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput
 import { Text } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native';
 import { BACKEND_BASE_ANDROID, BACKEND_BASE_IOS } from '../secrets';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
 
@@ -12,6 +12,19 @@ const BookAppointment = ({navigation}) => {
     const route = useRoute();
     const { business } = route.params;
     const stylistEmail = business.email;
+
+    const [userName, setUserName] = useState('');
+    const [userAvatar, setUserAvatar] = useState('');
+    const [userEmail, setUserEmail] = useState('');
+    const fetchUserAvatar = async () => {
+      const avatar = await AsyncStorage.getItem('userAvatar');
+      const userName = await AsyncStorage.getItem('userName');
+      const currentUserEmail = await AsyncStorage.getItem('userEmail');
+      setUserAvatar(avatar);
+      setUserName(userName);
+      setUserEmail(currentUserEmail);
+    };
+
 
     const [serviceNames, setServiceNames] = useState([]);
     const [serviceSizes, setServiceSizes] = useState([]);
@@ -43,6 +56,7 @@ const BookAppointment = ({navigation}) => {
 
     useEffect(() => {
       getServices();
+      fetchUserAvatar();
     }, []);
 
     
@@ -85,10 +99,12 @@ const BookAppointment = ({navigation}) => {
       );
     };
 
+     
+
     return (
         <SafeAreaView style={styles.container}>
 
-            <Text style={{ fontSize: 28, fontWeight: '600', alignSelf: 'center'}}> Booking an Appointment </Text>
+            <Text style={{ fontSize: 28, fontWeight: '600', alignSelf: 'center'}}> Book an Appointment </Text>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Image
                 source={require('../assets/gobackIcon.png')}
@@ -131,7 +147,7 @@ const BookAppointment = ({navigation}) => {
             </ScrollView>
 
             {selectedService !== null && (
-              <TouchableOpacity onPress={() => navigation.navigate('ChooseDate', { business: business, service: selectedService })}>
+              <TouchableOpacity onPress={() => navigation.navigate('ChooseDate', { business: business, service: serviceNames[selectedService], price: servicePrices[selectedService] })}>
                 <View style={{backgroundColor: '#E3A387', borderRadius: 15, width: 70, height: 25, left: 320, top: -40, alignItems: 'center'}}>
                   <Text style={{fontSize: 20, top: 0}}>Next</Text>
                 </View>
@@ -140,6 +156,11 @@ const BookAppointment = ({navigation}) => {
 
             {/* <Text style={{ top: 0 }}>{`Received parameters: ${stylistEmail}`}</Text> */}
 
+            <TouchableOpacity onPress={() => navigation.navigate('ChatBox', { stylistEmail: stylistEmail, stylistName: business.stylistName, stylistAvatar: business.avatar, userName: userName, userAvatar: userAvatar, userEmail: userEmail })}>
+              <Text style={{ alignSelf: 'center', top: -200, fontSize: 20, fontWeight: '500', color: '#E3A387'}}>Talk to stylist?</Text>
+            </TouchableOpacity>
+
+            
         </SafeAreaView>
     )
 }

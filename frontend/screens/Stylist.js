@@ -25,6 +25,18 @@ export default function Stylist({ navigation }) {
     fetchUserAvatar();
   }, []);
 
+  const handleProfileNavigation = async () => {
+    if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+      navigation.replace('Login');
+    } else {
+      if (await AsyncStorage.getItem('userIdentity') === 'true') {
+        navigation.replace('UserStylist');
+      } else {
+        navigation.replace('User');
+      }
+    }
+  };
+
   const [Question, setQuestion] = useState('');
   const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
@@ -148,7 +160,13 @@ export default function Stylist({ navigation }) {
 
   return (
         <SafeAreaView style={styles.container}>
-          <Text style={styles.findastylist}> Find a Stylist </Text>
+          <View style={{ height: 50 }}>
+            <Text style={styles.findastylist}> Find a Salon</Text>
+            <Text style={{ top: -30, left: 220, color: 'green', fontSize: 35, fontWeight: 'bold' }}>/</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
+              <Text style={{ left: 240, fontSize: 34, color: 'red', top: -70 }}>Stylist </Text>
+            </TouchableOpacity>
+          </View>
           <Text style={styles.secondLine}> We'll help you find the perfect match. </Text>
           
           <Image
