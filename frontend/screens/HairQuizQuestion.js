@@ -213,25 +213,31 @@ export default function HairQuizQuestion({ navigation }) {
           </TouchableOpacity>
           
 )}
-        <View style={{ ...styles.answerRow}}>
-        {item.answers.map((answer, answerIndex) => (
-          <TouchableOpacity
-            key={answerIndex}
-            style={{
-              ...styles.answerBox,
-              
-              borderWidth: selectedAnswers[item.question] === answer ? 3 : 1,
-            }}
-            onPress={() => handleResponse(item.question, answer)}
-          >
-            
-            <Text style={styles.answerText}>{answer}</Text>
-            
-          </TouchableOpacity>
-        ))}
-</View>
-        </View>
-      ))}
+        <View style={{ ...styles.answerRow }}>
+                {item.answers.map((answer, answerIndex) => (
+                  <View key={answerIndex}>
+                    {item.image && item.image[answerIndex] && (
+                      <Image
+                        source={{ uri: item.image[answerIndex] }}
+                        style={styles.answerImage}
+                      />
+                    )}
+
+                    <TouchableOpacity
+                      style={{
+                        ...styles.answerBox,
+                        borderWidth:
+                          selectedAnswers[item.question] === answer ? 3 : 1,
+                      }}
+                      onPress={() => handleResponse(item.question, answer)}
+                    >
+                      <Text style={styles.answerText}>{answer}</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            </View>
+          ))}
 
 <TouchableOpacity
   style={styles.nextContainer}
@@ -476,4 +482,12 @@ const styles = StyleSheet.create({
     color: '#000000',
     marginBottom: 20,
   },
+  answerImage: {
+    width: 110,
+    height: 100,
+    marginBottom: 5,
+    marginLeft: 5,
+    borderWidth:1,
+    borderColor:'#472415',
+  }
 });

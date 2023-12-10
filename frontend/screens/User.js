@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Drawer } from 'react-native-drawer-layout';
 import Modal from 'react-native-modal';
 import * as Location from 'expo-location';
+import BottomBar from '../components/BottomBar';
 
 
 export const selectableImages = {

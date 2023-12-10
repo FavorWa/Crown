@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dropdown } from 'react-native-element-dropdown';
 import { TapGestureHandler, State } from 'react-native-gesture-handler';
 
+
 export const selectableImages = {
   'avatar1': require('../assets/avatar1.png'),
   'avatar2': require('../assets/avatar2.png'),
