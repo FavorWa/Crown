@@ -11,7 +11,21 @@ import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 import callApi from '../functions/callApi';
 import { AirbnbRating } from 'react-native-ratings';
 
+
 const InHouseStylists = ({navigation}) => {
+
+    const handleProfileNavigation = async () => {
+      if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+        navigation.replace('Login');
+      } else {
+        if (await AsyncStorage.getItem('userIdentity') === 'true') {
+          navigation.replace('UserStylist');
+        } else {
+          navigation.replace('User');
+        }
+      }
+    };
+
     const [stylists, setStylists] = useState([]);
     const [filteredStylists, setFilteredStylists] = useState([]);
     const [selectedFilters, setSelectedFilters] = useState([]);
@@ -208,7 +222,7 @@ const InHouseStylists = ({navigation}) => {
                 <Text style={styles.Barbershopword}>Stylist</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => navigation.replace('User')}>
+              <TouchableOpacity onPress={() => handleProfileNavigation()}>
                 {userAvatar ? (
                   <Image source={selectableImages[userAvatar]} style={styles.avatar} />
                 ) : (
@@ -261,9 +275,11 @@ const styles = StyleSheet.create({
       aspectRatio: 1.2,
       marginLeft: 75,
       marginTop: 15,
+      opacity: 0.4,
     },
     Compassword: {
       marginLeft: 70,
+      opacity: 0.4,
     },
     Barbershop: {
       aspectRatio: 1.2,

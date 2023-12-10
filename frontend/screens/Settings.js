@@ -23,7 +23,17 @@ export default function Friends({ navigation }) {
       fetchUserAvatar();
     }, []);
 
-    
+    const handleProfileNavigation = async () => {
+      if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+        navigation.replace('Login');
+      } else {
+        if (await AsyncStorage.getItem('userIdentity') === 'true') {
+          navigation.replace('UserStylist');
+        } else {
+          navigation.replace('User');
+        }
+      }
+    };
 
     return (
         <View>
@@ -48,7 +58,7 @@ export default function Friends({ navigation }) {
                   <Text style={styles.Barbershopword}>Stylist</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.replace('User')}>
+                <TouchableOpacity onPress={() => handleProfileNavigation()}>
                   <Image source={selectableImages[userAvatar]} style={styles.bottomAvatar} />
                 </TouchableOpacity>
               </View>
@@ -60,28 +70,19 @@ export default function Friends({ navigation }) {
 const styles = StyleSheet.create({
   Compass: {
     aspectRatio: 1.2,
-    marginLeft: 35,
+    marginLeft: 75,
     marginTop: 15,
   },
   Compassword: {
-    marginLeft: 30,
+    marginLeft: 70,
   },
   Barbershop: {
     aspectRatio: 1.2,
-    marginLeft: 135,
+    alignSelf: 'center',
     marginTop: -55,
   },
   Barbershopword: {
-    marginLeft: 135,
-    marginBottom: -40,
-  },
-  Community: {
-    aspectRatio: 1.2,
-    marginLeft: 235,
-    marginTop: -55,
-  },
-  Communityword: {
-    marginLeft: 225,
+    alignSelf: 'center',
     marginBottom: -40,
   },
   User: {
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     width: 55,
     height: 55,
     borderRadius: 40,
-    marginLeft: 330,
+    marginLeft: 300,
     marginVertical: -55,
   },
   container: {

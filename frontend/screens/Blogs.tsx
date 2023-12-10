@@ -25,6 +25,18 @@ const Row = ({blogBoxes}) => {
 
 
 const Blogs = ({navigation}) => {
+    const handleProfileNavigation = async () => {
+        if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+          navigation.replace('Login');
+        } else {
+          if (await AsyncStorage.getItem('userIdentity') === 'true') {
+            navigation.replace('UserStylist');
+          } else {
+            navigation.replace('User');
+          }
+        }
+      };
+
     const sections = ["Today's Digest", "Styling 101", "The Latest on Products", "Hair Health", "Making an Impact"]
     const [blogs, setBlogs] = useState([]);
 
@@ -133,7 +145,7 @@ const Blogs = ({navigation}) => {
                     <Text style={styles.Barbershopword}>Stylist</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.replace('User')}>
+                <TouchableOpacity onPress={() => handleProfileNavigation()}>
                     {userAvatar ? (
                     <Image source={selectableImages[userAvatar]} style={styles.avatar} />
                     ) : (

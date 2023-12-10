@@ -53,7 +53,7 @@ export default function Login({ navigation }) {
           await AsyncStorage.setItem('userIdentity', userObject.isStylist);
           await AsyncStorage.setItem('userEmail', userObject.email);
           await AsyncStorage.setItem('userPassword', userObject.password);
-          navigation.goBack(); // Navigate to the login screen
+          navigation.navigate('Homepage'); // Navigate to the login screen
           console.clear();
         }
       })
