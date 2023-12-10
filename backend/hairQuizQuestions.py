@@ -8,21 +8,21 @@ hairQuestions = [
         "question": "Which most closely resembles your hair type?",
         "description": "It’s okay if it’s not an exact match!",
         "answers": ['Wavy', 'Curly', 'Coily'],
-        "details": ["Think ocean waves before they break-this pattern is womewhere between straight and curly", "Unlike the wavy texture, your hair actually completes full loops-ranging from loose to tight spirals", "Coily hair texture is defined by its tightness forming a corkscrew shape or a zig-zag pattern."]
+        "details": ["Think ocean waves before they break-this pattern is somewhere between straight and curly.", "Unlike the wavy texture, your hair actually completes full loops-ranging from loose to tight spirals.", "Coily hair texture is defined by its tightness forming a corkscrew shape or a zig-zag pattern."]
 
     },
     {
         "category": "Hair Type",
         "question": "How tightly wounded are your curls naturally(based on the previous question)",
-        "description": "Would you say you are on the tighter or wider (looser?) side of wavy?",
+        "description": "Would you say you are on the tighter or wider side of wavy?",
         "answers": ['Wide', 'Medium', 'Tight'],
-        "details": ["When we says wide, we mean a pattern that's on the looser end of the spectrum", "Not distinctively wide and not distinctively tight- your hair is somewhere in the middle.", "It's wavy hair that's almost curly, curly hair that is almost coily, and coily hair that is very coily."]
+        "details": ["When we says wide, we mean a pattern that's on the looser end of the spectrum.", "Not distinctively wide and not distinctively tight- your hair is somewhere in the middle.", "It's wavy hair that's almost curly, curly hair that is almost coily, and coily hair that is very coily."]
     },
     {
         "category": "Hair Type",
         "question": "What is the thickness of your hair?",
         "description": "Just the thickness of a single strand.",
-        "answers": ["Fine", "Medium", "Thick"],
+        "answers": ["FINE", "MEDIUM", "THICK"],
         "details": ["You'll barely feel the hair when you rub a single strand between your fingers.", "You'll somewhat feel the hair when you rub a single stranf between your fingers.", "You'll clearly feel the hair when you rub a single strand between your fingers."]
     },
     {

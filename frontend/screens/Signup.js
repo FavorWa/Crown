@@ -30,7 +30,7 @@ export default function SignUp() {
         email: email,
         password: password,
         isStylist: willbeStylist.toString(),
-        hairType: "3A",
+        hairType: '',
         avatarNumber: "avatar1"
       })
     })

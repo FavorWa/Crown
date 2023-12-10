@@ -4,6 +4,7 @@ import { Avatar, Text, ActivityIndicator, List } from 'react-native-paper';
 import {Tabs, TabScreen, TabsProvider, useTabIndex, useTabNavigation, } from 'react-native-paper-tabs';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import callApi from '../functions/callApi';
+import BottomBar from '../components/BottomBar';
 
 import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 

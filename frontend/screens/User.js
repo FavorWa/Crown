@@ -282,38 +282,8 @@ export default function DrawerExample({ navigation }) {
               {/* <Text style={styles.username}> {userName} </Text>
 
               <Text style={styles.userId}> {userId} </Text> */}
-          </ScrollView>
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', top: 10 }}>
-              <View style={styles.Bottonline}> 
-                <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-                  <Image
-                    source={require('../assets/Compass.png')}
-                    style={styles.Compass}
-                  ></Image>
-                  <Text style={styles.Compassword}>Discover</Text>
-                </TouchableOpacity>
               
-                <TouchableOpacity onPress={() => navigation.replace('Stylist')}>
-                  <Image
-                    source={require('../assets/Barbershop.png')}
-                    style={styles.Barbershop}
-                  ></Image>
-                  <Text style={styles.Barbershopword}>Stylist</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.replace('Friends')}>
-                  <Image
-                    source={require('../assets/Community.png')}
-                    style={styles.Community}
-                  ></Image>
-                  <Text style={styles.Communityword}>Community</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.replace('User')}>
-                  <Image source={selectableImages[userAvatar]} style={styles.bottomAvatar} />
-                </TouchableOpacity>
-              </View>
-            </View>
+          </ScrollView>
       </Drawer>
     );
   }

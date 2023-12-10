@@ -33,6 +33,8 @@ const styles = StyleSheet.create({
         height: 160,
         width: 120,
         borderRadius: 15,
+        borderwidth: 1,
+        borderColor:'#3E2723',
         marginRight: 10,
         resizeMode: "cover",
         overflow: "hidden"

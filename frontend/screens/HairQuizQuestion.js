@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, SectionList, TouchableOpacity, Pressable, Input } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, TouchableWithoutFeedback} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function HairQuizQuestion({ navigation }) {
@@ -17,6 +18,7 @@ export default function HairQuizQuestion({ navigation }) {
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0); // Track the current category
   const [showPopup, setShowPopup] = useState(false);
   const [popupAnswers, setPopupAnswers] = useState([]);
+  const [selectedNotSureIndex, setSelectedNotSureIndex] = useState(null);
   
  
    // Group questions by category
@@ -31,45 +33,47 @@ export default function HairQuizQuestion({ navigation }) {
 
 
   const showNotSurePopup = (answers, index) => {
-    const details = currentQuestions[index].details;
-  
-    if (details) {
-      setPopupAnswers([...popupAnswers, { answers, details }]);
-      setShowPopup(true);
-    }
+    setPopupAnswers([{ answers, details: currentQuestions[index].details }]);
+    setSelectedNotSureIndex(index);
+    setShowPopup(true);
   };
 
   const hidePopup = () => {
     setShowPopup(false);
+    setSelectedNotSureIndex(null);
   };
 
-  const NotSurePopup = ({ answers, hidePopup, index }) => (
-    <View style={styles.popupBackground}>
-      <View style={styles.popupContainer}>
-        <ScrollView>
-          {answers.map((answerSet, setIndex) => (
-            <View key={setIndex} style={styles.popupAnswerContainer}>
-              <Text style={styles.popupAnswerText}>Answers:</Text>
-              {answerSet.answers.map((answer, answerIndex) => (
-                <Text key={answerIndex} style={styles.popupAnswerText}>
-                  - {answer}
+  const NotSurePopup = () => (
+    <Modal
+    transparent={true}
+    animationType="slide"
+    visible={showPopup}
+    onRequestClose={hidePopup}
+  >
+    <TouchableWithoutFeedback onPress={hidePopup}>
+      <View style={styles.modalOverlay} />
+    </TouchableWithoutFeedback>
+
+    <View style={styles.popupContainer}>
+      <ScrollView>
+        {popupAnswers.map((answerSet, setIndex) => (
+          <View key={setIndex} style={styles.popupAnswerContainer}>
+            {answerSet.answers.map((answer, answerIndex) => (
+              <View key={answerIndex}>
+                <Text style={styles.popupAnswerTextBold}>{answer}</Text>
+                <Text style={styles.popupDescriptionText}>
+                  {answerSet.details[answerIndex]}
                 </Text>
-              ))}
-              <Text style={styles.popupAnswerText}>Details:</Text>
-              {answerSet.details.map((detail, detailIndex) => (
-                <Text key={detailIndex} style={styles.popupDescriptionText}>
-                  - {detail}
-                </Text>
-              ))}
-            </View>
-          ))}
-        </ScrollView>
-        <TouchableOpacity style={styles.closePopupButton} onPress={hidePopup}>
-          <Text style={styles.closePopupButtonText}>Close</Text>
-        </TouchableOpacity>
-      </View>
+              </View>
+            ))}
+          </View>
+        ))}
+      </ScrollView>
     </View>
-  );
+  </Modal>
+);
+
+  
 
   const getUserEmail = async () => {
     try {
@@ -157,6 +161,7 @@ export default function HairQuizQuestion({ navigation }) {
   }, []);
   
   return(
+    <SafeAreaView style={styles.container}>
     <ScrollView>
       {currentCategoryIndex === 0 ? (
         <View>
@@ -187,20 +192,28 @@ export default function HairQuizQuestion({ navigation }) {
       )}
 
       {currentQuestions && currentQuestions.map((item, index) => (
-        <View key={index} style={styles.QuestionBox}>
-          <Text style={styles.questionText}>{item.question}</Text>
-          <Text style={styles.miniText}>{item.description}</Text>
+       <View key={index} style={styles.QuestionBox}>
+       <View style={styles.questionContainer}>
+         <View style={styles.questionNumberContainer}>
+           <Text style={styles.questionNumber}>{index + 1}</Text>
+         </View>
+         <View style={styles.questionTextContainer}>
+           <Text style={styles.questionText}>{item.question}</Text>
+           <Text style={styles.miniText}>{item.description}</Text>
+         </View>
+       </View>
+         
           {item.details && (
           <TouchableOpacity
             style={styles.notSureButton}
-            onPress={() => showNotSurePopup(item.answers, currentQuestionIndex)}
+            onPress={() => showNotSurePopup(item.answers, index)}
           >
           <Text style={styles.notSureButtonText}>NOT SURE?</Text>
           
           </TouchableOpacity>
           
 )}
-        <View style={{ ...styles.imageRow, marginTop: 25 }}>
+        <View style={{ ...styles.answerRow}}>
         {item.answers.map((answer, answerIndex) => (
           <TouchableOpacity
             key={answerIndex}
@@ -235,13 +248,12 @@ export default function HairQuizQuestion({ navigation }) {
         onPress={startOver}
       >
         <Text style={styles.startOverText}>
-          Start Over
+          START OVER
         </Text>
       </TouchableOpacity>
-      {showPopup && (
-            <NotSurePopup answers={popupAnswers} hidePopup={hidePopup} index={currentQuestionIndex} />
-          )}
+     <NotSurePopup/>
     </ScrollView>
+    </SafeAreaView>
   )
 }
 
@@ -255,9 +267,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 24,
     color: 'black',
-    marginTop: 64,
-    marginLeft: 10,
+    marginTop: 20,
+    marginVertical:10,
+    marginLeft: 30,
     flexDirection:'row',
+    alignItems: 'center',
   },
   secondLine:{
     textAlign: 'left',
@@ -265,11 +279,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#713200',
     marginBottom: 20,
-    marginLeft: 40,
+    marginLeft: 30,
+    alignItems: 'center',
   },
   TextContainer: {
-    width: 352,
-    height: 129,
+    width: 370,
+    height: 210,
     flexShrink: 0,
     borderRadius: 4,
     borderWidth: 0.5,
@@ -279,8 +294,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
   },
   textInsideContainer: {
-    color: '#472415',
-    marginHorizontal: 10,
+    color: '#000000',
+    marginHorizontal: 15,
+    marginVertical: 10,
+    lineHeight: 25,
+    fontSize: 15
   },
   line: {
     width: '95%',
@@ -291,23 +309,23 @@ const styles = StyleSheet.create({
   },
   gotit: {
     color: 'black',
-    fontSize: 20,
-    
+    fontSize: 15,
     marginLeft: 260,
   },
   questionText: {
     color: '#000000',
-    fontSize: 20,
+    fontSize: 16,
     marginTop: 10,
     textAlignVertical: 'center', // Center the text vertically
     alignSelf: 'flex-start', // Align the text to the start (left) horizontally
     fontFamily: '',
+    fontWeight: 'bold',
   },
   miniText: {
     color: '#000000',
     fontSize: 15,
-    fontStyle: 'italic',
     marginTop: 10,
+    marginRight:15,
     textAlignVertical: 'center', // Center the text vertically
     alignSelf: 'flex-start', // Align the text to the start (left) horizontally
   },
@@ -327,52 +345,52 @@ const styles = StyleSheet.create({
       marginHorizontal: 15,
   },
   QuestionBox: {
-    marginHorizontal: 20, // Set equal left and right margins
+    marginHorizontal: 10, // Set equal left and right margins
+    marginVertical:30,
     backgroundColor: 'transparent',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     width: 400, // Set a specific width for the container
     maxWidth:'100%',
   },
   answerBox: {
     backgroundColor: '#EDE0D4',
-    width: 91,
+    width: 110,
     height: 95,
-    marginHorizontal: 15,
+    marginHorizontal: 5,
     borderColor: '#472415',
     alignItems: 'center', //Center items horizontally
     marginVertical: 10,
     
   },
-  imageRow: {
+  answerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap', // Allow items to wrap to the next row
-    //justifyContent: 'center',
-  },
-  rectangleContainer: {
-    alignItems: 'center', // Center items horizontally
-    justifyContent: 'center', // Center items vertically
-    
+    marginTop: 25,
+    marginHorizontal: 15,
+    justifyContent: 'center',
   },
   answerText: {
     textAlign: 'center',
     top: 40,
     fontSize: 14, // Adjust the font size as needed
-    maxWidth: 80, // Set a maximum width for the text
+    maxWidth: 100, // Set a maximum width for the text
     overflow: 'hidden', // Hide overflow text
     whiteSpace: 'nowrap', // Prevent text from wrapping to the next line
     textOverflow: 'ellipsis', // Show an ellipsis (...) for overflow text
+    textTransform:'uppercase',
+    
   },
   next: {
     color: 'black',
-    fontSize: 14,
-    fontWeight: '400',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   nextContainer: {
-    backgroundColor: '#C9A227', // Orange background color
-    height: 26, // Height of the rectangle
-    width: 54, // Width of the rectangle
+    backgroundColor: '#E3A387', // Orange background color
+    height: 38, // Height of the rectangle
+    width: 75, // Width of the rectangle
     marginTop: 15,
     marginBottom: 50,
     left: 300,
@@ -384,19 +402,78 @@ const styles = StyleSheet.create({
   },
   startOverButton:{
     alignItems: 'center',
-    color: '#713200',
-    marginBottom: 20,
+    marginBottom: 50,
+  },
+  startOverText:{
+    color:'#713200'
   },
   notSureButton:{
-    marginLeft:250,
+    alignItems: 'flex-end',
+    marginLeft: 280,
+    marginVertical: 20,
   },
   notSureButtonText:{
     color:'#472415',
+    fontWeight:'bold',
   },
   categoryText:{
     fontSize: 24,
     fontWeight: 500,
     marginTop: 30,
     marginLeft: 30,
-  }
+  },
+  questionContainer: {
+    flexDirection: 'row', // Make it a row to position items horizontally
+    alignItems: 'center', // Align items vertically in the center
+    marginHorizontal: 5,
+  },
+  questionNumberContainer: {
+    width: 24,
+    height: 24,
+    borderRadius: 12, // half of the width and height to make it a circle
+    borderColor: '#713200', // or any other color you prefer
+    borderWidth:1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    
+    marginRight: 10, // adjust as needed
+  },
+  
+  questionNumber: {
+    color: 'black', // or any other color you prefer
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+
+  popupContainer: {
+    position: 'absolute',
+    top: '10%', // Adjust as needed to center the modal vertically
+    left: '5%', // Adjust as needed to center the modal horizontally
+    width: '90%',
+    maxHeight: '100%',
+    backgroundColor: '#EDE0D4',
+    borderRadius: 15,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#713200',
+    zIndex: 1,
+  },
+  popupAnswerContainer: {
+    marginVertical: 20,
+  },
+
+  popupAnswerTextBold: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#000000',
+  },
+  popupDescriptionText: {
+    fontSize: 18,
+    color: '#000000',
+    marginBottom: 20,
+  },
 });
