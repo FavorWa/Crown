@@ -6,9 +6,7 @@ import { selectableImages } from './User';
 import callApi from '../functions/callApi';
 import axios from 'axios'; 
 
-
 export default function Homepage({ navigation }) {
-
   const [blogs, setBlogs] = useState([]);
 
   const isLoggedIn = async (web) => {
@@ -21,6 +19,18 @@ export default function Homepage({ navigation }) {
       }
     } catch (error) {
       console.log('Error checking login status:', error);
+    }
+  };
+
+  const handleProfileNavigation = async () => {
+    if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+      navigation.replace('Login');
+    } else {
+      if (await AsyncStorage.getItem('userIdentity') === 'true') {
+        navigation.replace('UserStylist');
+      } else {
+        navigation.replace('User');
+      }
     }
   };
 
@@ -209,7 +219,7 @@ export default function Homepage({ navigation }) {
             <Text style={styles.Barbershopword}>Stylist</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => isLoggedIn('User')}>
+          <TouchableOpacity onPress={() => handleProfileNavigation()}>
             {userAvatar ? (
               <Image source={selectableImages[userAvatar]} style={styles.avatar} />
             ) : (
@@ -300,10 +310,12 @@ const styles = StyleSheet.create({
     aspectRatio: 1.2,
     alignSelf: 'center',
     marginTop: -55,
+    opacity: 0.4,
   },
   Barbershopword: {
     alignSelf: 'center',
     marginBottom: -40,
+    opacity: 0.4,
   },
   User: {
     marginLeft: 300,

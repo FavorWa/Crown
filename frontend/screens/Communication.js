@@ -11,6 +11,18 @@ const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACK
 
 
 export default function Communication({ navigation }) {
+    const handleProfileNavigation = async () => {
+      if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+        navigation.replace('Login');
+      } else {
+        if (await AsyncStorage.getItem('userIdentity') === 'true') {
+          navigation.replace('UserStylist');
+        } else {
+          navigation.replace('User');
+        }
+      }
+    };
+
     const [userName, setuserName] = useState('');
     const [userId, setuserId] = useState('');
     const [userAvatar, setUserAvatar] = useState(null);
@@ -95,7 +107,7 @@ export default function Communication({ navigation }) {
                         <Text style={styles.Barbershopword}>Stylist</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => navigation.replace('User')}>
+                    <TouchableOpacity onPress={() => handleProfileNavigation()}>
                         <Image source={selectableImages[userAvatar]} style={styles.bottomAvatar} />
                     </TouchableOpacity>
                 </View>
@@ -109,18 +121,22 @@ const styles = StyleSheet.create({
     aspectRatio: 1.2,
     marginLeft: 75,
     marginTop: 15,
+    opacity: 0.4,
   },
   Compassword: {
     marginLeft: 70,
+    opacity: 0.4,
   },
   Barbershop: {
     aspectRatio: 1.2,
     marginLeft: 200,
     marginTop: -55,
+    opacity: 0.4,
   },
   Barbershopword: {
     marginLeft: 203,
     marginBottom: -40,
+    opacity: 0.4,
   },
   Bottonline: {
     width: 430,

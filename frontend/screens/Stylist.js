@@ -22,6 +22,18 @@ export default function Stylist({ navigation }) {
     fetchUserAvatar();
   }, []);
 
+  const handleProfileNavigation = async () => {
+    if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+      navigation.replace('Login');
+    } else {
+      if (await AsyncStorage.getItem('userIdentity') === 'true') {
+        navigation.replace('UserStylist');
+      } else {
+        navigation.replace('User');
+      }
+    }
+  };
+
   const [Question, setQuestion] = useState('');
   const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
@@ -251,7 +263,7 @@ export default function Stylist({ navigation }) {
                 <Text style={styles.Barbershopword}>Stylist</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => navigation.replace('User')}>
+              <TouchableOpacity onPress={() => handleProfileNavigation()}>
                 {userAvatar ? (
                   <Image source={selectableImages[userAvatar]} style={styles.avatar} />
                 ) : (

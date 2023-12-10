@@ -27,7 +27,7 @@ import Inspo from './screens/Inspo.js';
 import ReviewFormScreen from './screens/ReviewFormScreen';
 import ChatBox from './screens/ChatBox';
 import Communication from './screens/Communication';
-
+import StylistProfilePage from './screens/StylistProfilePage';
 
 const Stack = createStackNavigator();
 
@@ -177,6 +177,11 @@ export default function App() {
         <Stack.Screen
           name="Communication"
           component={Communication}
+        />
+
+        <Stack.Screen
+          name="StylistProfilePage"
+          component={StylistProfilePage}
         />
       </Stack.Navigator>
     </NavigationContainer>
