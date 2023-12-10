@@ -105,8 +105,6 @@ const InHouseStylists = ({navigation}) => {
       }
 
       return filteredList
-
-
     }
 
     const filterOptions = ["Protective Styles", "0-3 Years of Experience", "4-6 Years of Experience", "7+ Years of Experience", "4+ Stars"]
