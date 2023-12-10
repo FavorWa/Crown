@@ -148,6 +148,7 @@ const BookAppointment = ({navigation}) => {
               showAvatarForEveryMessage={true}
               showUserAvatar={true}
               renderUsernameOnMessage={true}
+              renderUsername={renderUsername}
               onSend={onSend}
               user={{
                 _id: 1,
