@@ -13,6 +13,7 @@ import BottomBar from '../components/BottomBar';
 
 const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
 
+
 export default function Stylist({ navigation }) {
 
   const [userAvatar, setUserAvatar] = useState(null);

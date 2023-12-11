@@ -3,12 +3,13 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button, Scr
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
 import { selectableImages } from './User';
-import { BACKEND_BASE_ANDROID, BACKEND_BASE_IOS } from '../secrets';
+import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
 import { useRoute } from '@react-navigation/native';
+import BottomBar from '../components/BottomBar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
-const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
-
+const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
 
 export default function Communication({ navigation }) {
     const handleProfileNavigation = async () => {
@@ -66,7 +67,7 @@ export default function Communication({ navigation }) {
     }, [userEmail]);
 
     return (
-        <View>
+        <SafeAreaView>
             <Text style={{ top: 50, left: 33, fontSize: 28, fontWeight: '500' }}>{userName}</Text>
 
             <ScrollView style={{ top: 80, height: 700 }}>
@@ -88,31 +89,8 @@ export default function Communication({ navigation }) {
                 );
               })}
             </ScrollView>
-
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 175 }}>
-                <View style={styles.Bottonline}>
-                    <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-                        <Image
-                            source={require('../assets/Compass.png')}
-                            style={styles.Compass}
-                        ></Image>
-                        <Text style={styles.Compassword}>Discover</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => navigation.replace('Stylist')}>
-                        <Image
-                            source={require('../assets/Barbershop.png')}
-                            style={styles.Barbershop}
-                        ></Image>
-                        <Text style={styles.Barbershopword}>Stylist</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => handleProfileNavigation()}>
-                        <Image source={selectableImages[userAvatar]} style={styles.bottomAvatar} />
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
+            <BottomBar navigation={navigation} />
+        </SafeAreaView>
     );
   }
 
