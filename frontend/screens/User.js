@@ -230,6 +230,7 @@ export default function DrawerExample({ navigation }) {
               </Modal>
 
           </ScrollView>
+          <BottomBar navigation={navigation} />
       </Drawer>
     );
   }

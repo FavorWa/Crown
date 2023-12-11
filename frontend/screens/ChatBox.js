@@ -1,12 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity, TextInput, Image } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import { BACKEND_BASE_ANDROID, BACKEND_BASE_IOS } from '../secrets';
+import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
 import { GiftedChat, Send, InputToolbar, Bubble, Time } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
-
+const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
 
 const BookAppointment = ({navigation}) => {
     const route = useRoute();
@@ -147,7 +146,6 @@ const BookAppointment = ({navigation}) => {
               showAvatarForEveryMessage={true}
               showUserAvatar={true}
               renderUsernameOnMessage={true}
-              renderUsername={renderUsername}
               onSend={onSend}
               user={{
                 _id: 1,
