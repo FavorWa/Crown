@@ -9,7 +9,7 @@ import callApi from "../functions/callApi";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from './User';
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
 
@@ -41,7 +41,9 @@ const FilteredBlogsScreen = ({blogBoxes}) => {
 }
 
 const Blogs = ({navigation}) => {
-    const sections = ["Today's Digest", "Styling 101", "The Latest on Products", "Hair Health", "Making an Impact"]
+    //const sections = ["Today's Digest", "Styling 101", "The Latest on Products", "Hair Health", "Making an Impact"]
+    const sections = ["Today's Digest", "Styling 101"]
+
     const [blogs, setBlogs] = useState([]);
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -93,12 +95,14 @@ const Blogs = ({navigation}) => {
             }
 
             else {
+                /*
                 blogsBoxes.push(
                     <Image
                     source={require('../assets/Rectangle4.png')}
                     style={styles.scrollObject}
                     />
                 )
+                */
             }
             }
         
@@ -173,9 +177,15 @@ const Blogs = ({navigation}) => {
     }, []);
 
     return (
-        <SafeAreaView style={{paddingHorizontal: 20}}>
-            <ScrollView style={{marginBottom: 50}}>
-            <Text variant="headlineLarge" style={styles.heading}>Blogs</Text>
+        
+        <SafeAreaView>
+            <ScrollView style={{marginBottom: 50, paddingHorizontal: 20}}>
+            <View style={{flexDirection: "row", alignItems: "center"}}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Icon name="chevron-back-outline" size={30} color="black"/>
+                </TouchableOpacity>
+                <Text variant="headlineLarge" style={styles.heading}>Blogs</Text>
+            </View>
             <Text variant="headlineSmall" style={styles.subheading}>All the information you need in one place.</Text>
             <View style={{marginTop: 32}}>
             <Searchbar 
@@ -273,7 +283,6 @@ const styles = StyleSheet.create({
 
     scrollContainer: {
         top: 15,
-        height: 160,
     },
 
     scrollObject: {
