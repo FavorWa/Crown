@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dropdown } from 'react-native-element-dropdown';
 import { TapGestureHandler, State } from 'react-native-gesture-handler';
 
+
 export const selectableImages = {
   'avatar1': require('../assets/avatar1.png'),
   'avatar2': require('../assets/avatar2.png'),
@@ -197,11 +198,15 @@ export default function DrawerExample({ navigation }) {
     return (
         <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
             <ScrollView>
-                <TouchableOpacity onPress={() => navigation.replace('User')} style={{ marginTop: 40, marginLeft: 33 }}>
-                <Image source={require('../assets/gobackIcon.png')} style={{ width: 40, height: 40 }} />
+                <TouchableOpacity onPress={() => navigation.replace('Homepage')} style={{ marginTop: 40, marginLeft: 33 }}>
+                    <Image source={require('../assets/gobackIcon.png')} style={{ width: 40, height: 40 }} />
                 </TouchableOpacity>
             
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, marginLeft: 40 }}>
+                <TouchableOpacity onPress={() => navigation.navigate('StylistProfilePage', { stylistTags: stylistTags })}>
+                    <Text style={{fontSize: 16, color: '#1E1E1E99', top: -30, left: 300}}>View Profile</Text>
+                </TouchableOpacity>
+
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 0, marginLeft: 40 }}>
                 <Image source={selectableImages[userAvatar]} style={{ width: 75, height: 75, borderRadius: 40 }} />
                 <View style={{ marginLeft: 20 }}>
                     <ScrollView horizontal>

@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage from the correct package
-import { BACKEND_BASE_ANDROID, BACKEND_BASE_IOS } from '../secrets';
+import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
 import { ScrollView } from 'react-native-gesture-handler';
 
 
 export default function Login({ navigation }) {
 
-  const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
+  const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
@@ -53,7 +53,7 @@ export default function Login({ navigation }) {
           await AsyncStorage.setItem('userIdentity', userObject.isStylist);
           await AsyncStorage.setItem('userEmail', userObject.email);
           await AsyncStorage.setItem('userPassword', userObject.password);
-          navigation.goBack(); // Navigate to the login screen
+          navigation.navigate('Homepage'); // Navigate to the login screen
           console.clear();
         }
       })

@@ -7,8 +7,12 @@ import { selectableImages } from './User';
 import * as Location from 'expo-location';
 import RNPickerSelect from 'react-native-picker-select';
 import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
+import BottomBar from '../components/BottomBar';
+
+
 
 const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
+
 
 export default function Stylist({ navigation }) {
 
@@ -21,6 +25,18 @@ export default function Stylist({ navigation }) {
   useEffect(() => {
     fetchUserAvatar();
   }, []);
+
+  const handleProfileNavigation = async () => {
+    if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+      navigation.replace('Login');
+    } else {
+      if (await AsyncStorage.getItem('userIdentity') === 'true') {
+        navigation.replace('UserStylist');
+      } else {
+        navigation.replace('User');
+      }
+    }
+  };
 
   const [Question, setQuestion] = useState('');
   const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
@@ -229,40 +245,7 @@ export default function Stylist({ navigation }) {
               
             </ScrollView>
           </View>
-
-          
-
-
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 290 }}>
-              <View style={styles.Bottonline}> 
-                <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-                <Image
-                  source={require('../assets/Compass.png')}
-                  style={styles.Compass}
-                ></Image>
-                <Text style={styles.Compassword}>Discover</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity onPress={() => navigation.navigate('Stylist')}>
-                <Image
-                  source={require('../assets/Barbershop.png')}
-                  style={styles.Barbershop}
-                ></Image>
-                <Text style={styles.Barbershopword}>Stylist</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => navigation.replace('User')}>
-                {userAvatar ? (
-                  <Image source={selectableImages[userAvatar]} style={styles.avatar} />
-                ) : (
-                  <>
-                    <Image source={require('../assets/User.png')} style={styles.User} />
-                    <Text style={styles.Userword}>Profile</Text>
-                  </>
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
+          <BottomBar navigation={navigation} />
         </SafeAreaView>
     );
 }

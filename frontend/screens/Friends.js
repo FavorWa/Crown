@@ -26,6 +26,19 @@ const Nums = [
 ];
 
 export default function Friends({ navigation }) {
+
+    const handleProfileNavigation = async () => {
+      if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+        navigation.replace('Login');
+      } else {
+        if (await AsyncStorage.getItem('userIdentity') === 'true') {
+          navigation.replace('UserStylist');
+        } else {
+          navigation.replace('User');
+        }
+      }
+    };
+
     const [userName, setuserName] = useState('');
     const [userId, setuserId] = useState('');
     const [isModalVisible, setModalVisible] = useState(false);
@@ -118,7 +131,7 @@ export default function Friends({ navigation }) {
                   <Text style={styles.Compassword}>Discover</Text>
                 </TouchableOpacity>
               
-                <TouchableOpacity onPress={() => navigation.replace('Stylist')}>
+                <TouchableOpacity onPress={() => navigation.replace('InHouseStylists')}>
                   <Image
                     source={require('../assets/Barbershop.png')}
                     style={styles.Barbershop}
@@ -126,15 +139,7 @@ export default function Friends({ navigation }) {
                   <Text style={styles.Barbershopword}>Stylist</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                  <Image
-                    source={require('../assets/Community.png')}
-                    style={styles.Community}
-                  ></Image>
-                  <Text style={styles.Communityword}>Community</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.replace('User')}>
+                <TouchableOpacity onPress={() => handleProfileNavigation()}>
                   <Image source={selectableImages[userAvatar]} style={styles.bottomAvatar} />
                 </TouchableOpacity>
               </View>

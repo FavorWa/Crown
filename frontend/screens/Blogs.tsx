@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, Surface, Text, Divider, ActivityIndicator, Searchbar } from 'react-native-paper';
 import { StyleSheet, Image, View, ScrollView, TouchableOpacity, Platform} from 'react-native';
-import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
+import {BACKEND_DEV_IOS, BACKEND_DEV_AND, BACKEND_PROD, isProd} from '../secrets';
 import openWebPage from "../functions/openWebPage";
 import Homepage from "./HomePage";
 import Box from "../components/Box";
@@ -9,9 +9,10 @@ import callApi from "../functions/callApi";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from './User';
 import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Ionicons';import BottomBar from "../components/BottomBar";
 
-const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
+
+
 
 const Row = ({blogBoxes}) => {
     return (
@@ -41,9 +42,19 @@ const FilteredBlogsScreen = ({blogBoxes}) => {
 }
 
 const Blogs = ({navigation}) => {
-    //const sections = ["Today's Digest", "Styling 101", "The Latest on Products", "Hair Health", "Making an Impact"]
-    const sections = ["Today's Digest", "Styling 101"]
+    const handleProfileNavigation = async () => {
+        if (await AsyncStorage.getItem('LoginStatus') !== 'true') {
+          navigation.replace('Login');
+        } else {
+          if (await AsyncStorage.getItem('userIdentity') === 'true') {
+            navigation.replace('UserStylist');
+          } else {
+            navigation.replace('User');
+          }
+        }
+      };
 
+    const sections = ["Today's Digest", "Styling 101", "The Latest on Products", "Hair Health", "Making an Impact"]
     const [blogs, setBlogs] = useState([]);
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -151,7 +162,7 @@ const Blogs = ({navigation}) => {
     }
 
     const getBlogs = async () => {
-        let url = "/blogs/sections?"
+        let url = "blogs/sections?"
 
         for (const section of sections) {
             url += `&sections=${section}`;
@@ -242,7 +253,7 @@ const Blogs = ({navigation}) => {
                     <Text style={styles.Barbershopword}>Stylist</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.replace('User')}>
+                <TouchableOpacity onPress={() => handleProfileNavigation()}>
                     {userAvatar ? (
                     <Image source={selectableImages[userAvatar]} style={styles.avatar} />
                     ) : (

@@ -4,6 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Drawer } from 'react-native-drawer-layout';
 import Modal from 'react-native-modal';
 import * as Location from 'expo-location';
+import BottomBar from '../components/BottomBar';
+import { TEST_ID } from 'react-native-gifted-chat';
 
 
 export const selectableImages = {
@@ -169,21 +171,10 @@ export default function DrawerExample({ navigation }) {
         )}
       >
           <ScrollView>
-              {isStylist ? (
-                <View>
-                  <TouchableOpacity onPress={() => navigation.navigate('UserStylist')}>
-                    <Text style={{ fontSize: 34, fontWeight: '500', left: 33, top: 60, color:'#d32e05'}}>Stylist</Text>
-                    <Text style={{ fontSize: 14, fontWeight: '500', left: 33, top: 70, color: '#713200'}}>Master skill, time to show</Text>
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                <View>
-                  <Text style={{ fontSize: 34, fontWeight: '500', left: 33, top: 60}}>Profile</Text>
-                  <Text style={{ fontSize: 14, fontWeight: '500', left: 33, top: 70, color: '#713200'}}>All the details, catered to you.</Text>
-                </View>
-              )}
-              
-              
+              <View>
+                <Text style={{ fontSize: 34, fontWeight: '500', left: 33, top: 60}}>Profile</Text>
+                <Text style={{ fontSize: 14, fontWeight: '500', left: 33, top: 70, color: '#713200'}}>All the details, catered to you.</Text>
+              </View>
               
               <View style={{ top: -50, width: 70 }}>
                 <TouchableOpacity onPress={() => setOpen((prevOpen) => !prevOpen)} >
@@ -200,39 +191,30 @@ export default function DrawerExample({ navigation }) {
               ></Image>
 
               <TouchableOpacity>
-                <View style={{ top: 20, backgroundColor: '#C9A227', borderRadius: 15, alignItems: 'center', height: 30, marginHorizontal: 5, width: 170, left: 200 }}>
-                  <Text style={{ top: 2, fontSize: 20 }}> See Your Results </Text>
+                <View style={{ top: 25, backgroundColor: '#E3A387', borderRadius: 10, borderWidth: 1, alignItems: 'center', height: 30, marginHorizontal: 5, width: 200, left: 180 }}>
+                  <Text style={{ top: 3, fontSize: 18, fontWeight: '600' }}> See Your Quiz Results </Text>
                 </View>
               </TouchableOpacity>
 
-              <Text style={{ fontSize: 24, left: 30, top: 40}}>Set Your Hair Goals</Text>
+              <Text style={{ fontSize: 24, left: 30, top: 40}}>Manage Appointments</Text>
+              <TouchableOpacity>
+                <Text style={{ color: '#472415', top: 20, marginBottom: 20, left: 350, fontSize: 16, fontWeight: '600'}}>See all</Text>
+              </TouchableOpacity>
 
-              <View style={{ top: 50, backgroundColor: '#EDE0D4', borderRadius: 20, height: 70, marginHorizontal: 30, }}>
-                <TouchableOpacity>
-                  <Image
-                      source={require('../assets/Plus.png')}
-                      style={{top: 20, left: 10, height: 30, width: 30}}
-                  ></Image>
-                </TouchableOpacity>
-              </View>
+              <ScrollView horizontal>
+                <Text style={{ color: '#E3A387', fontSize: 20, left: 50, top: 20, height: 30}}>You don't have any appointments</Text>
+                <View style={{ height: 100 }}></View>
+              </ScrollView>
 
-              <View style={{ top: 60, backgroundColor: '#EDE0D4', borderRadius: 20, height: 70, marginHorizontal: 30, }}>
-                <TouchableOpacity>
-                  <Image
-                      source={require('../assets/Plus.png')}
-                      style={{top: 20, left: 10, height: 30, width: 30}}
-                  ></Image>
-                </TouchableOpacity>
-              </View>
+              <Text style={{ fontSize: 24, left: 30, top: 40}}>You Recently Saved</Text>
+              <TouchableOpacity>
+                <Text style={{ color: '#472415', top: 20, marginBottom: 20, left: 350, fontSize: 16, fontWeight: '600'}}>See all</Text>
+              </TouchableOpacity>
 
-              <View style={{ top: 70, backgroundColor: '#EDE0D4', borderRadius: 20, height: 70, marginHorizontal: 30, }}>
-                <TouchableOpacity>
-                  <Image
-                      source={require('../assets/Plus.png')}
-                      style={{top: 20, left: 10, height: 30, width: 30}}
-                  ></Image>
-                </TouchableOpacity>
-              </View>
+              <ScrollView horizontal>
+                <Text style={{ color: '#E3A387', fontSize: 20, left: 50, top: 20, height: 30}}>You didn't save anything</Text>
+                <View style={{ height: 100 }}></View>
+              </ScrollView>
             
               <Modal isVisible={isModalVisible}>
                 <View style={styles.modalContent}>
@@ -247,65 +229,7 @@ export default function DrawerExample({ navigation }) {
                 </View>
               </Modal>
 
-              <Text style={{fontSize: 24, left: 230, top: 80}}>Notifications</Text>
-              <ScrollView style={{ top: 90, left: 200 }}>
-                <View style={{ backgroundColor: '#E3A387', borderRadius: 20, alignItems: 'center', marginHorizontal: 5, marginBottom: 10, width: 180 }}>
-                  <Text style={{ marginVertical: 8, fontSize: 12, marginHorizontal: 5 }}>You have an upcoming appointment with Chantelle on Nov. 6</Text>
-                </View>
-                <View style={{ backgroundColor: '#E3A387', borderRadius: 20, alignItems: 'center', marginHorizontal: 5, marginBottom: 10, width: 180 }}>
-                  <Text style={{ marginVertical: 8, fontSize: 12, marginHorizontal: 5 }}>Sara M. wants to share their hair journey with you!</Text>
-                </View>
-                <View style={{ backgroundColor: '#E3A387', borderRadius: 20, alignItems: 'center', marginHorizontal: 5, marginBottom: 10, width: 180 }}>
-                  <Text style={{ marginVertical: 8, fontSize: 12, marginHorizontal: 5 }}>Set your hair goals for this month.</Text>
-                </View>
-              </ScrollView>
-
-              <View style={{width: 150, height: 200, top: -90, left: 33}}>
-                <Image  
-                    source={require('../assets/Rectangle4.png')}
-                    style={{ borderRadius: 20, width: 150, height: 200, tintColor: '#E9B8A9' }}
-                ></Image>
-                <Text style={{ top: -190, fontSize: 20, }}> November </Text>
-                <TouchableOpacity>
-                  <Image  
-                      source={require('../assets/leftArrow.png')}
-                      style={{ left: 110,top: -205, width: 10, height: 10 }}
-                  ></Image>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Image  
-                      source={require('../assets/rightArrow.png')}
-                      style={{ left: 130,top: -215, width: 10, height: 10 }}
-                  ></Image>
-                </TouchableOpacity>
-              </View>
-              {/* <Text style={styles.username}> {userName} </Text>
-
-              <Text style={styles.userId}> {userId} </Text> */}
           </ScrollView>
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', top: 10 }}>
-              <View style={styles.Bottonline}> 
-                <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-                  <Image
-                    source={require('../assets/Compass.png')}
-                    style={styles.Compass}
-                  ></Image>
-                  <Text style={styles.Compassword}>Discover</Text>
-                </TouchableOpacity>
-              
-                <TouchableOpacity onPress={() => navigation.replace('InHouseStylists')}>
-                  <Image
-                    source={require('../assets/Barbershop.png')}
-                    style={styles.Barbershop}
-                  ></Image>
-                  <Text style={styles.Barbershopword}>Stylist</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.replace('User')}>
-                  <Image source={selectableImages[userAvatar]} style={styles.bottomAvatar} />
-                </TouchableOpacity>
-              </View>
-            </View>
       </Drawer>
     );
   }
@@ -315,18 +239,22 @@ const styles = StyleSheet.create({
     aspectRatio: 1.2,
     marginLeft: 75,
     marginTop: 15,
+    opacity: 0.4,
   },
   Compassword: {
     marginLeft: 70,
+    opacity: 0.4,
   },
   Barbershop: {
     aspectRatio: 1.2,
     alignSelf: 'center',
     marginTop: -55,
+    opacity: 0.4,
   },
   Barbershopword: {
     alignSelf: 'center',
     marginBottom: -40,
+    opacity: 0.4,
   },
   User: {
     marginLeft: 305,
@@ -359,10 +287,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   Contentlist: {
-    left: 330,
+    left: 350,
     marginTop: 60,
-    height: 30,
-    width: 60,
+    height: 20,
+    width: 40,
   },
   avatar: {
     width: 80,

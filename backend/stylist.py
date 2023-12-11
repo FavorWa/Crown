@@ -21,7 +21,8 @@ router = APIRouter()
 CONNECTION_STRING = mongodb_uri  
 client = MongoClient(CONNECTION_STRING)
 db = client['crown']  # Replace 'crown' with your database name
-users_collection = db['UserInfo']  # Replace 'UserInfo' with your collection name
+users_collection = db['UserInfo']  
+review_collection = db['Reviews']
 
 class Request(BaseModel):
     email: str
@@ -116,3 +117,11 @@ async def saveProfile(profile: Stylist):
         return JSONResponse(content={"message": "Profile updated successfully.", "user": stored_user})
     else:
         raise HTTPException(status_code=401, detail="Something Failed!")
+
+@router.post('/getStylistReview')
+async def getStylistReview(businessName: str):
+    theReview = list(review_collection.find({"businessName": businessName}))
+    if theReview:
+        return {"reviews": theReview}
+    else:
+        raise HTTPException(status_code=404, detail="No reviews found for the specified businessName")
