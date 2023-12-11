@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView, Image, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from '../screens/User';
+
+
 const BottomBar = ({ navigation }) => {
   
   const isLoggedIn = async (web) => {

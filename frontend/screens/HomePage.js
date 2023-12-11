@@ -176,7 +176,7 @@ export default function Homepage({ navigation }) {
       <TouchableOpacity onPress={() => isLoggedIn('Communication')}>
         <Image
           source={require('../assets/MessageIcon.png')}
-          style={{width: 20, height: 20, top: -15, left: 350}}
+          // style={{width: 20, height: 20, top: -15, left: 350}}
           style={styles.takeTheQuizContainer} 
         ></Image>
       </TouchableOpacity>
