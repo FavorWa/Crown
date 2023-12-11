@@ -24,7 +24,7 @@ function Cover({ navigation }) {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      navigation.navigate('Homepage');
+      navigation.replace('Homepage');
     }, 3000);
         return () => clearTimeout(timeout);
   }, [navigation]);

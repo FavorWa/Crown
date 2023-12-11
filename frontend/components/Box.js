@@ -16,7 +16,7 @@ const Box = ({image, title, link, time, isArticle, _id, navigation}) => {
         <TouchableOpacity onPress={handlePress}>
             <ImageBackground source={source} style={styles.box}>
                 <View style={styles.title}>
-                    <Text style={{color: "white", fontWeight: "bold"}}>{title}</Text>
+                    <Text style={{color: "white", fontWeight: "bold"}} numberOfLines={1}>{title}</Text>
                     <Text style={{color: "white", fontWeight: "bold"}}>{minutesLine}</Text>
                 </View>
                 {!isArticle ? (
