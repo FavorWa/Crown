@@ -67,10 +67,9 @@ export default function Communication({ navigation }) {
     }, [userEmail]);
 
     return (
-        <SafeAreaView>
-            <Text style={{ top: 50, left: 33, fontSize: 28, fontWeight: '500' }}>{userName}</Text>
-
-            <ScrollView style={{ top: 80, height: 700 }}>
+      <SafeAreaView style={{flex: 1}}>
+        <ScrollView>
+        <Text style={{ top: 10, left: 33, fontSize: 28, fontWeight: '500', marginBottom: 40 }}>{userName}</Text>
               {conversationData.map((item, index) => {
                 let [name, email, status, avatar] = item;
                 if (avatar in selectableImages) {avatar = selectableImages[avatar]}
