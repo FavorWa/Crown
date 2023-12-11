@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, Surface, Text, Divider, ActivityIndicator, Searchbar } from 'react-native-paper';
 import { StyleSheet, Image, View, ScrollView, TouchableOpacity, Platform} from 'react-native';
-import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
+import {BACKEND_DEV_IOS, BACKEND_DEV_AND, BACKEND_PROD, isProd} from '../secrets';
 import openWebPage from "../functions/openWebPage";
 import Homepage from "./HomePage";
 import Box from "../components/Box";
@@ -9,9 +9,10 @@ import callApi from "../functions/callApi";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from './User';
 import { SafeAreaView } from "react-native-safe-area-context";
+import BottomBar from "../components/BottomBar";
 
 
-const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
+
 
 const Row = ({blogBoxes}) => {
     return (
@@ -159,7 +160,7 @@ const Blogs = ({navigation}) => {
     }
 
     const getBlogs = async () => {
-        let url = "/blogs/sections?"
+        let url = "blogs/sections?"
 
         for (const section of sections) {
             url += `&sections=${section}`;

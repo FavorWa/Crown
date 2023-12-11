@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigation, StackActions } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Swiper from 'react-native-swiper';
+import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
 
 
 export default function Inspo() {
@@ -14,8 +15,9 @@ export default function Inspo() {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
 
+  const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
   const axiosInstance = axios.create({
-    baseURL: 'http://127.0.0.1:8000/',
+    baseURL: backend_base_url,
   });
 
   useEffect(() => {
