@@ -4,7 +4,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Box from '../components/Box';
 import { selectableImages } from './User';
 import callApi from '../functions/callApi';
-import axios from 'axios'; 
+import axios from 'axios';
+import BottomBar from '../components/BottomBar';
+
+
 
 export default function Homepage({ navigation }) {
   const [blogs, setBlogs] = useState([]);
@@ -102,7 +105,8 @@ export default function Homepage({ navigation }) {
       const fetchImages = async () => {
         try {
           const response = await axiosInstance.get('/get_images');
-          setImageUrls(response.data.image_urls || []);  // Assuming the response.data is an array of image URLs
+          let shuffleImages = shuffle(response.data.image_urls || []);
+          setImageUrls(shuffleImages);  // Assuming the response.data is an array of image URLs
         } catch (error) {
           console.error('Error fetching images:', error);
         }
@@ -110,6 +114,23 @@ export default function Homepage({ navigation }) {
 
       fetchImages();
     }, []);
+
+    const shuffle = (array) => {
+      let currentIndex = array.length, randomIndex;
+
+      // While there remain elements to shuffle...
+      while (currentIndex !== 0) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+
+      return array;
+    };
 
     return (
       <ScrollView horizontal>
@@ -133,6 +154,7 @@ export default function Homepage({ navigation }) {
           unfilledColor: 'rgba(200, 200, 200, 0.2)',
         }}
       />
+      
     ))}
     </ScrollView>
     );
@@ -140,20 +162,22 @@ export default function Homepage({ navigation }) {
 
   
   return(
-    <ScrollView style={styles.scrollContainer}>
     <SafeAreaView style={styles.container}>
+    <ScrollView style={styles.scrollContainer}>
+    
       <Text style={styles.hairquiz}>
         Hair Quiz
       </Text>
       <Image
         source={require('../assets/profile_page.png')}
-        style={styles.rectangle4}
+        style={styles.HairQuizPhoto}
       ></Image>
 
       <TouchableOpacity onPress={() => isLoggedIn('Communication')}>
         <Image
           source={require('../assets/MessageIcon.png')}
           style={{width: 20, height: 20, top: -15, left: 350}}
+          style={styles.takeTheQuizContainer} 
         ></Image>
       </TouchableOpacity>
 
@@ -177,7 +201,7 @@ export default function Homepage({ navigation }) {
       </View>
 
       <TouchableOpacity onPress={() => navigation.navigate('Blogs')}>
-        <Text style={{ color: '#472415', top: 30, marginBottom: 20, left: 350, fontSize: 16, fontWeight: '600'}}>See all</Text>
+        <Text style={styles.seeAll}> See all </Text>
       </TouchableOpacity>
 
       <Text style={styles.Inspiration}>
@@ -185,54 +209,15 @@ export default function Homepage({ navigation }) {
       </Text>
 
       <View style={styles.InspirationScrollContainer}>
-        <View>
-          <ImageGallery />
-          <TouchableOpacity onPress={() => navigation.navigate('Inspo')}>
-            <Text style={{ color: '#472415', top: 15, marginBottom: 20, left: 350, fontSize: 16, fontWeight: '600'}}>See all</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      
-      {/* <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
-        <Text style={styles.productPage}> In House Stylists </Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity onPress={() => navigation.navigate('ProductsPage')}>
-        <Text style={styles.productPage}> Products </Text>
-      </TouchableOpacity>     */}
-
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', top: -15 }}>
-        <View style={styles.Bottonline}> 
-            <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-              <Image
-                source={require('../assets/Compass.png')}
-                style={styles.Compass}
-              ></Image>
-            <Text style={styles.Compassword}>Discover</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity onPress={() => isLoggedIn('InHouseStylists')}>
-            <Image
-              source={require('../assets/Barbershop.png')}
-              style={styles.Barbershop}
-            ></Image>
-            <Text style={styles.Barbershopword}>Stylist</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => handleProfileNavigation()}>
-            {userAvatar ? (
-              <Image source={selectableImages[userAvatar]} style={styles.avatar} />
-            ) : (
-              <>
-                <Image source={require('../assets/User.png')} style={styles.User} />
-                <Text style={styles.Userword}>Profile</Text>
-              </>
-            )}
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
+      <ImageGallery />
+    </View>
+  
+      <TouchableOpacity onPress={() => navigation.navigate('Inspo')}>
+      <Text style={styles.seeAll}> See all </Text>
+      </TouchableOpacity> 
     </ScrollView>
+    <BottomBar navigation={navigation} />
+    </SafeAreaView>
   )
 }
 
@@ -240,7 +225,6 @@ const styles = StyleSheet.create({
   container: {
     color:'#FFFFFF',
     flex: 1,
-    top: 50,
   },
   scrollContainer:{
     color: '#FFFFFF',
@@ -261,26 +245,33 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   takeTheQuiz: {
-    fontWeight: '600', // Use 'bold' instead of 400 for a bolder font weight
-    fontSize: 18,
-    top: 5,
+    textAlign: 'center', // Center the text horizontally within the container
+    lineHeight: 24, // Set the line height to match the height of the container
+    fontWeight: '400', // Use 'bold' instead of 400 for a bolder font weight
+    fontSize: 14,
+    marginTop: 170,
+    marginLeft: 190,
+    fontWeight: "bold",
+    
   },
-  hairQuizRectangle: {
-    alignItems: 'center',
+  takeTheQuizContainer: {
     backgroundColor: '#E3A387',
+    borderColor: '#000000',
     borderWidth: 1,
-    borderColor: '#472415',
-    width: 160,
-    height: 35,
-    borderRadius: 12, 
-    left: 220,
-    top: 150,
-    marginBottom: 140,
+    width: 120,
+    height: 30,
+    borderRadius: 10, 
+    left: 250,
+    top: 196,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent:'center'
   },
-  rectangle4: {
+  HairQuizPhoto: {
     backgroundColor: 'rgba(217, 217, 217, 1)',
-    height: 150,
+    height: 160,
     position: 'absolute',
+    width: '100%',
     top: 40,
   },
   blogs: {
@@ -290,13 +281,13 @@ const styles = StyleSheet.create({
     color: 'black',
     left: 33,
   },
-  productPage: {
-    backgroundColor: '#add8e6',
-    width: 100,
-    height: 30,
-    fontSize: 24,
-    left: 280,
+  seeAll: {
+    color:'#472415',
+    fontSize: 14,
+    left: 300,
     marginTop: 30,
+    fontWeight:'bold',
+    
   },
   Compass: {
     aspectRatio: 1.2,
@@ -304,18 +295,26 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   Compassword: {
-    marginLeft: 65,
+    marginLeft: 30,
   },
   Barbershop: {
     aspectRatio: 1.2,
-    alignSelf: 'center',
+    marginLeft: 135,
     marginTop: -55,
     opacity: 0.4,
   },
   Barbershopword: {
-    alignSelf: 'center',
+    marginLeft: 135,
     marginBottom: -40,
-    opacity: 0.4,
+  },
+  Community: {
+    aspectRatio: 1.2,
+    marginLeft: 235,
+    marginTop: -55,
+  },
+  Communityword: {
+    marginLeft: 225,
+    marginBottom: -40,
   },
   User: {
     marginLeft: 300,
@@ -337,7 +336,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
     backgroundColor:"white",
     position:'absolute',
-    bottom: -110,
+    bottom: -170,
+    flexDirection:'column',
+    flexGrow: 1,
   },
   avatar: {
     width: 55,
@@ -367,7 +368,7 @@ const styles = StyleSheet.create({
   },
   InspirationScrollContainer:{
     top: 15,
-    height: 190,
-    marginBottom: 70
+    marginHorizontal: 28,
+    marginBottom: 0
   },
 });

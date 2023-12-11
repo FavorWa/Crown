@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Drawer } from 'react-native-drawer-layout';
 import Modal from 'react-native-modal';
 import * as Location from 'expo-location';
+import BottomBar from '../components/BottomBar';
 import { TEST_ID } from 'react-native-gifted-chat';
 
 
@@ -229,29 +230,6 @@ export default function DrawerExample({ navigation }) {
               </Modal>
 
           </ScrollView>
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', top: 75 }}>
-              <View style={styles.Bottonline}> 
-                <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-                  <Image
-                    source={require('../assets/Compass.png')}
-                    style={styles.Compass}
-                  ></Image>
-                  <Text style={styles.Compassword}>Discover</Text>
-                </TouchableOpacity>
-              
-                <TouchableOpacity onPress={() => navigation.replace('InHouseStylists')}>
-                  <Image
-                    source={require('../assets/Barbershop.png')}
-                    style={styles.Barbershop}
-                  ></Image>
-                  <Text style={styles.Barbershopword}>Stylist</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.replace('User')}>
-                  <Image source={selectableImages[userAvatar]} style={styles.bottomAvatar} />
-                </TouchableOpacity>
-              </View>
-            </View>
       </Drawer>
     );
   }

@@ -5,6 +5,7 @@ import {Tabs, TabScreen, TabsProvider, useTabIndex, useTabNavigation, } from 're
 import { useIsFocused } from '@react-navigation/native';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import callApi from '../functions/callApi';
+import BottomBar from '../components/BottomBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';

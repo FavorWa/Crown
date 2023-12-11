@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, Text, View, Image, SectionList, TouchableOpacity, Pressable, Input } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import BottomBar from '../components/BottomBar';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function Result({ navigation }) {
   
@@ -44,37 +47,48 @@ export default function Result({ navigation }) {
   }, []);  // No dependencies, since we are only reading from AsyncStorage once
 
   return (
+    <SafeAreaView style={styles.container}>
     <View>
-      <Text style={styles.header}>Hair Type Results</Text>
-      <Text style={styles.header2}>Your Hair Type is...</Text>
+      <Text style={styles.resultsHeader}><Icon name="chevron-back-outline" size={30} color="black"/>Hair Type Results</Text>
+      <Text style={styles.resultsHeader2}>The results are in!</Text>
+      <Text style={styles.analysisHeader}>Our analysis shows that you have...</Text>
       <Text style={styles.hairType}>{hairType}</Text>
       <Text style={styles.hairDescription}> <Text style={{ fontWeight: 'bold' }}>Your hair type is {hairType}</Text>. {hairDescription}</Text>
 
       <TouchableOpacity style={styles.productsButton} onPress={() => navigation.navigate('ProductsPage')}>
-        <Text style={styles.buttonText}>Products</Text>
+        <Text style={styles.buttonText}>SHOW ME THE PRODUCTS!</Text>
       </TouchableOpacity>
     </View>
-   
+    <BottomBar navigation={navigation} />
+    </SafeAreaView>
  
   );
 }
 
 const styles = StyleSheet.create({
 
-  header:{
-    width: 245,
-    height: 29, 
+  container:{
+    flex:1,
+    backgroundColor:'white'
+  },
+
+  resultsHeader:{ 
     fontFamily: 'Rig Sans',
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "500",
-    marginTop: 50,
+    marginVertical: 20,
     marginLeft:20
   },
-  header2:{
+  resultsHeader2:{
+    marginVertical: 10,
     fontSize: 16,
-    marginLeft: 20,
-
-
+    marginLeft: 50,
+    color: '#713200'
+  },
+  analysisHeader:{
+    fontSize: 20,
+    marginVertical: 30,
+    marginHorizontal: 50,
   },
   hairType:{
     fontSize: 24,
@@ -88,21 +102,21 @@ const styles = StyleSheet.create({
     marginLeft:30,
     marginRight: 30,
     fontSize:15,
-    marginVertical: 200,
+    marginTop: 200,
     
   },
   productsButton: {
-    backgroundColor: '#C9A227', // Orange background color
+    backgroundColor: '#E3A387', // Orange background color
     height: 30, // Height of the rectangle
-    width: 70, // Width of the rectangle
-    marginTop: 15,
+    width: 200, // Width of the rectangle
+    marginTop: 100,
     marginBottom: 50,
-    left: 300,
+    left: 200,
     justifyContent: 'center', // Center content vertically inside the rectangle
     alignItems: 'center', // Center content horizontally inside the rectangle
     borderWidth: 1,
     borderColor: 'black',
-    borderRadius: 4, // Add border radius of 4
+    borderRadius: 12, // Add border radius of 4
     fontWeight: 'bold',
   },
 
