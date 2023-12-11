@@ -5,7 +5,6 @@ import { BACKEND_BASE_ANDROID, BACKEND_BASE_IOS } from '../secrets';
 import { GiftedChat, Send, InputToolbar, Bubble, Time } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
 
 
