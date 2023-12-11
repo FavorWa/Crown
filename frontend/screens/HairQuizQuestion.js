@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
 
 export default function HairQuizQuestion({ navigation }) {
   
@@ -19,6 +19,7 @@ export default function HairQuizQuestion({ navigation }) {
   const [showPopup, setShowPopup] = useState(false);
   const [popupAnswers, setPopupAnswers] = useState([]);
   const [selectedNotSureIndex, setSelectedNotSureIndex] = useState(null);
+  const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
   
  
    // Group questions by category
@@ -132,7 +133,7 @@ export default function HairQuizQuestion({ navigation }) {
       
       // Include user's email along with the responses
       axios
-        .post('http://127.0.0.1:8000/submit_response', {
+        .post(`${backend_base_url}/submit_response`, {
           userEmail: userEmail,
           answers: selectedAnswersArray,
         })
@@ -153,7 +154,7 @@ export default function HairQuizQuestion({ navigation }) {
   useEffect(() => {
     // Fetch questions from your backend API
     axios
-      .get('http://127.0.0.1:8000/questions')
+      .get(`${backend_base_url}/questions`)
       .then((response) => {
         setQuestions(response.data); // Assuming your API returns an array of questions
       })

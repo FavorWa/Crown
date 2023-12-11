@@ -6,10 +6,13 @@ import { selectableImages } from './User';
 import callApi from '../functions/callApi';
 import axios from 'axios';
 import BottomBar from '../components/BottomBar';
+import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
 
 
 
 export default function Homepage({ navigation }) {
+  
+  const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
   const [blogs, setBlogs] = useState([]);
 
   const isLoggedIn = async (web) => {
@@ -94,7 +97,7 @@ export default function Homepage({ navigation }) {
   }, []);
   
   const axiosInstance = axios.create({
-    baseURL: 'http://127.0.0.1:8000/',
+    baseURL: backend_base_url,
     // Add other configurations as needed
   });
 
@@ -106,7 +109,8 @@ export default function Homepage({ navigation }) {
         try {
           const response = await axiosInstance.get('/get_images');
           let shuffleImages = shuffle(response.data.image_urls || []);
-          setImageUrls(shuffleImages);  // Assuming the response.data is an array of image URLs
+          const limitedImages = shuffleImages.slice(0, 12);
+          setImageUrls(limitedImages);  // Assuming the response.data is an array of image URLs
         } catch (error) {
           console.error('Error fetching images:', error);
         }
@@ -176,24 +180,23 @@ export default function Homepage({ navigation }) {
       <TouchableOpacity onPress={() => isLoggedIn('Communication')}>
         <Image
           source={require('../assets/MessageIcon.png')}
-          // style={{width: 20, height: 20, top: -15, left: 350}}
+          style={{width: 20, height: 20, top: -15, left: 350}}
           style={styles.takeTheQuizContainer} 
         ></Image>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('HairQuizQuestion')}>
-        <View style={styles.hairQuizRectangle}>
+      <View style={styles.takeTheQuizContainer}>
           <Text style={styles.takeTheQuiz}>
             Take the Quiz
           </Text>
         </View>
       </TouchableOpacity>
-
+      
+      <View style={styles.blogScrollContainer}>
       <Text style={styles.blogs}>
         Blogs
       </Text>
-      
-      <View style={styles.blogScrollContainer}>
         <ScrollView horizontal={true} >
           <View style={{ width: 33 }}></View>
           {showBlogs()}
@@ -252,21 +255,18 @@ const styles = StyleSheet.create({
     marginTop: 170,
     marginLeft: 190,
     fontWeight: "bold",
+    color: 'black',
     
   },
   takeTheQuizContainer: {
-    backgroundColor: '#E3A387',
-    borderColor: '#000000',
-    borderWidth: 1,
-    width: 120,
-    height: 30,
-    borderRadius: 10, 
-    left: 250,
-    top: 196,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent:'center'
-  },
+  backgroundColor: '#E3A387',
+  width: 120,
+  height: 30,
+  marginTop: 170,
+  marginLeft: 190,
+  borderRadius: 10,
+  zIndex: -2,  // Ensure this box is behind the container
+},
   HairQuizPhoto: {
     backgroundColor: 'rgba(217, 217, 217, 1)',
     height: 160,
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
   },
   InspirationScrollContainer:{
     top: 15,
-    marginHorizontal: 28,
+    marginHorizontal: 0,
     marginBottom: 0
   },
 });

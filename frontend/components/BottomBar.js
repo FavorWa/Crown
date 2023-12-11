@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView, Image, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { selectableImages } from '../screens/User';
-
-
 const BottomBar = ({ navigation }) => {
   
+  const selectableImages = {
+    'avatar1': require('../assets/avatar1.png'),
+    'avatar2': require('../assets/avatar2.png'),
+    'avatar3': require('../assets/avatar3.png'),
+    'avatar4': require('../assets/avatar4.png'),
+    'avatar5': require('../assets/avatar5.png'),
+    'avatar6': require('../assets/avatar6.png'),
+    'avatar7': require('../assets/avatar7.png'),
+    'avatar8': require('../assets/avatar8.png')
+  };
   const isLoggedIn = async (web) => {
     try {
       const login = await AsyncStorage.getItem('LoginStatus');
