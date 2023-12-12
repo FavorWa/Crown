@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, TouchableWithoutFeedback} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, TouchableWithoutFeedback, Dimensions, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,10 +9,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
 
+
+const screenWidth = Dimensions.get('window').width;
 export default function HairQuizQuestion({ navigation }) {
-  
   const[questions, setQuestions] = useState([]);
-  const [responses, setResponses] = useState({});
   const [selectedAnswers, setSelectedAnswers] = useState({}); // To track selected answers for all questions
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0); // Track the current category
@@ -21,7 +21,6 @@ export default function HairQuizQuestion({ navigation }) {
   const [selectedNotSureIndex, setSelectedNotSureIndex] = useState(null);
   const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
   
- 
    // Group questions by category
    const groupedQuestions = questions.reduce((acc, question) => {
     acc[question.category] = acc[question.category] || [];
@@ -124,7 +123,21 @@ export default function HairQuizQuestion({ navigation }) {
     const userEmail = await getUserEmail();
 
     if (!userEmail) {
-      alert('Unable to retrieve user email.');
+      Alert.alert(
+        'Sign Up Required',
+        'To see the results, please sign up first.',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Sign Up',
+            onPress: () => navigation.navigate('SignUp'), // Navigate to signup page
+          },
+        ],
+        { cancelable: false }
+      );
       return;
     }
 
@@ -213,7 +226,7 @@ export default function HairQuizQuestion({ navigation }) {
           
           </TouchableOpacity>
           
-)}
+        )}
         <View style={{ ...styles.answerRow }}>
                 {item.answers.map((answer, answerIndex) => (
                   <View key={answerIndex}>
@@ -268,6 +281,7 @@ export default function HairQuizQuestion({ navigation }) {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
+    
   },
   crownText: {
     textAlign: 'left',
@@ -327,6 +341,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start', // Align the text to the start (left) horizontally
     fontFamily: '',
     fontWeight: 'bold',
+    
+    
+  },
+  questionTextContainer:{
+    maxWidth: '85%'
   },
   miniText: {
     color: '#000000',
@@ -358,7 +377,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
     width: 400, // Set a specific width for the container
-    maxWidth:'100%',
+    
   },
   answerBox: {
     backgroundColor: '#EDE0D4',
@@ -375,8 +394,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap', // Allow items to wrap to the next row
     marginTop: 25,
-    marginHorizontal: 15,
     justifyContent: 'center',
+    maxWidth:'95%',
   },
   answerText: {
     textAlign: 'center',
@@ -433,6 +452,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', // Make it a row to position items horizontally
     alignItems: 'center', // Align items vertically in the center
     marginHorizontal: 5,
+    
   },
   questionNumberContainer: {
     width: 24,
