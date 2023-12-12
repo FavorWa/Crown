@@ -4,11 +4,14 @@ import { StyleSheet, Text, View, Image, SectionList, TouchableOpacity, Pressable
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomBar from '../components/BottomBar';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function Result({ navigation }) {
   
   const [hairType, setHairType] = useState(null);
   const [hairDescription, setHairDescription] = useState(null);
+  const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,7 +25,7 @@ export default function Result({ navigation }) {
           return;
         }
 
-        const response = await fetch('http://127.0.0.1:8000/getHairType', {
+        const response = await fetch(`${backend_base_url}/getHairType`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -48,17 +51,23 @@ export default function Result({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-    <View>
-      <Text style={styles.resultsHeader}><Icon name="chevron-back-outline" size={30} color="black"/>Hair Type Results</Text>
+    <ScrollView>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Text style={styles.resultsHeader}><Icon name="chevron-back-outline" size={30} color="black"/>Hair Type Results</Text>
+      </TouchableOpacity>
       <Text style={styles.resultsHeader2}>The results are in!</Text>
       <Text style={styles.analysisHeader}>Our analysis shows that you have...</Text>
       <Text style={styles.hairType}>{hairType}</Text>
+      <Image
+        source={require('../assets/hairTypeChart.png')}
+        style={styles.hairTypeChart}
+      ></Image>
       <Text style={styles.hairDescription}> <Text style={{ fontWeight: 'bold' }}>Your hair type is {hairType}</Text>. {hairDescription}</Text>
 
       <TouchableOpacity style={styles.productsButton} onPress={() => navigation.navigate('ProductsPage')}>
         <Text style={styles.buttonText}>SHOW ME THE PRODUCTS!</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
     <BottomBar navigation={navigation} />
     </SafeAreaView>
  
@@ -73,27 +82,24 @@ const styles = StyleSheet.create({
   },
 
   resultsHeader:{ 
-    fontFamily: 'Rig Sans',
     fontSize: 28,
     fontWeight: "500",
     marginVertical: 20,
     marginLeft:20
   },
   resultsHeader2:{
-    marginVertical: 10,
     fontSize: 16,
     marginLeft: 50,
     color: '#713200'
   },
   analysisHeader:{
     fontSize: 20,
-    marginVertical: 30,
+    marginVertical: 20,
     marginHorizontal: 50,
   },
   hairType:{
     fontSize: 24,
     textAlign: 'center',
-    margin: 20,
     fontWeight:"bold",
 
 
@@ -102,22 +108,28 @@ const styles = StyleSheet.create({
     marginLeft:30,
     marginRight: 30,
     fontSize:15,
-    marginTop: 200,
+    marginTop: 20,
     
   },
   productsButton: {
     backgroundColor: '#E3A387', // Orange background color
     height: 30, // Height of the rectangle
     width: 200, // Width of the rectangle
-    marginTop: 100,
-    marginBottom: 50,
-    left: 200,
+    marginTop: 20,
+    marginBottom: 200,
+    left: '40%',
     justifyContent: 'center', // Center content vertically inside the rectangle
     alignItems: 'center', // Center content horizontally inside the rectangle
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 12, // Add border radius of 4
     fontWeight: 'bold',
+  },
+  hairTypeChart:{
+    width: '90%',
+  height: '30%',
+  resizeMode: 'contain', // Add resizeMode property
+  alignSelf:'center',
   },
 
 });

@@ -184,13 +184,12 @@ export default function Homepage({ navigation }) {
         ></Image>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('HairQuizQuestion')}>
-      <View style={styles.takeTheQuizContainer}>
-          <Text style={styles.takeTheQuiz}>
-            Take the Quiz
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <TouchableOpacity
+          onPress={() => navigation.navigate('HairQuizQuestion')}
+          style={styles.takeTheQuizContainer}
+        >
+          <Text style={styles.takeTheQuiz}>Take the Quiz</Text>
+        </TouchableOpacity>
       
       <View style={styles.blogScrollContainer}>
       <Text style={styles.blogs}>
@@ -203,7 +202,7 @@ export default function Homepage({ navigation }) {
       </View>
 
       <TouchableOpacity onPress={() => navigation.navigate('Blogs')}>
-        <Text style={styles.seeAll}> See all </Text>
+        <Text style={styles.seeAllBlogs}> See all </Text>
       </TouchableOpacity>
 
       <Text style={styles.Inspiration}>
@@ -215,7 +214,7 @@ export default function Homepage({ navigation }) {
     </View>
   
       <TouchableOpacity onPress={() => navigation.navigate('Inspo')}>
-      <Text style={styles.seeAll}> See all </Text>
+      <Text style={styles.seeAllInspo}> See all </Text>
       </TouchableOpacity> 
     </ScrollView>
     <BottomBar navigation={navigation} />
@@ -249,23 +248,23 @@ const styles = StyleSheet.create({
   takeTheQuiz: {
     textAlign: 'center', // Center the text horizontally within the container
     lineHeight: 24, // Set the line height to match the height of the container
-    fontWeight: '400', // Use 'bold' instead of 400 for a bolder font weight
     fontSize: 14,
-    marginTop: 170,
-    marginLeft: 190,
     fontWeight: "bold",
     color: 'black',
     
   },
   takeTheQuizContainer: {
-  backgroundColor: '#E3A387',
-  width: 120,
-  height: 30,
-  marginTop: 170,
-  marginLeft: 190,
-  borderRadius: 10,
-  zIndex: -2,  // Ensure this box is behind the container
-},
+    backgroundColor: '#E3A387',
+    width: 120,
+    height: 30,
+    marginTop: 170,
+    marginLeft: '60%',
+    borderRadius: 10,
+    borderWidth:1,
+    borderColor:'black',
+    justifyContent: 'center', // Center content vertically inside the box
+    alignItems: 'center', // Center content horizontally inside the box
+  },
   HairQuizPhoto: {
     backgroundColor: 'rgba(217, 217, 217, 1)',
     height: 160,
@@ -280,76 +279,23 @@ const styles = StyleSheet.create({
     color: 'black',
     left: 33,
   },
-  seeAll: {
+  seeAllBlogs: {
     color:'#472415',
     fontSize: 14,
     left: 300,
     marginTop: 30,
     fontWeight:'bold',
+  },
+  seeAllInspo: {
+    color:'#472415',
+    fontSize: 14,
+    left: 300,
+    marginTop: 30,
+    fontWeight:'bold',
+    marginBottom:100,
     
   },
-  Compass: {
-    aspectRatio: 1.2,
-    marginLeft: 70,
-    marginTop: 15,
-  },
-  Compassword: {
-    marginLeft: 30,
-  },
-  Barbershop: {
-    aspectRatio: 1.2,
-    marginLeft: 135,
-    marginTop: -55,
-    opacity: 0.4,
-  },
-  Barbershopword: {
-    marginLeft: 135,
-    marginBottom: -40,
-  },
-  Community: {
-    aspectRatio: 1.2,
-    marginLeft: 235,
-    marginTop: -55,
-  },
-  Communityword: {
-    marginLeft: 225,
-    marginBottom: -40,
-  },
-  User: {
-    marginLeft: 300,
-    marginTop: -55,
-    aspectRatio: 1.2,
-  },
-  Userword: {
-    marginLeft: 303,
-    marginBottom: -40,
-  },
-
-  Bottonline: {
-    width: '100%',
-    height: 110,
-    flexShrink: 0,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#472415',
-    marginHorizontal: 30,
-    backgroundColor:"white",
-    position:'absolute',
-    bottom: -170,
-    flexDirection:'column',
-    flexGrow: 1,
-  },
-  avatar: {
-    width: 55,
-    height: 55,
-    borderRadius: 40,
-    marginLeft: 300,
-    marginVertical: -55,
-  },
-  blogScrollContainer:{
-    top: 15,
-    height: 190,
-  },
+  
   scrollObject: {
     height: 160,
     width: 120,

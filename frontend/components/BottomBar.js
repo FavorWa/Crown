@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView, Image, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const { width } = Dimensions.get('window');
+
 const BottomBar = ({ navigation }) => {
+  
   
   const selectableImages = {
     'avatar1': require('../assets/avatar1.png'),
@@ -74,28 +78,28 @@ const BottomBar = ({ navigation }) => {
 const styles = StyleSheet.create({
   Compass: {
     aspectRatio: 1.2,
-    marginLeft: 100,
+    marginLeft: '21%',
     marginTop: 15,
   },
   Compassword: {
-    marginLeft: 100,
+    marginLeft: '20%',
   },
   Barbershop: {
     aspectRatio: 1.2,
-    marginLeft: 200,
+    marginLeft: '46%',
     marginTop: -55,
   },
   Barbershopword: {
-    marginLeft: 203,
+    marginLeft: '47%',
     marginBottom: -40,
   },
   User: {
-    marginLeft: 300,
+    marginLeft: '70%',
     marginTop: -55,
     aspectRatio: 1.2,
   },
   Userword: {
-    marginLeft: 303,
+    marginLeft: '71%',
     marginBottom: -40,
   },
 
@@ -117,7 +121,7 @@ const styles = StyleSheet.create({
     width: 55,
     height: 55,
     borderRadius: 40,
-    marginLeft: 300,
+    marginLeft: '70%',
     marginVertical: -55,
   },
 });

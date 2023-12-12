@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, StatusBar, TouchableOpacity, ScrollView, Image,TextInput, Modal } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, StatusBar, TouchableOpacity, ScrollView, Image,TextInput, Modal, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'; 
 import { useNavigation, StackActions } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Swiper from 'react-native-swiper';
 import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
 
+const screenWidth = Dimensions.get('window').width;
 
 export default function Inspo() {
   const [imageUrls, setImageUrls] = useState([]);
@@ -14,6 +15,7 @@ export default function Inspo() {
   const [selectedImageUrl, setSelectedImageUrl] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
+  const screenWidth = Dimensions.get('window').width;
 
   const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
   const axiosInstance = axios.create({
@@ -124,7 +126,7 @@ export default function Inspo() {
         <TouchableOpacity onPress={() => handleTermClick('Locs')} style={styles.termButton}>
           <Text style={styles.termButtonText}>Locs</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleTermClick('Protective Styles')} style={styles.termButton}>
+        <TouchableOpacity onPress={() => handleTermClick('Protective')} style={styles.termButton}>
           <Text style={styles.termButtonText}>Protective Styles</Text>
         </TouchableOpacity>
       </View>
@@ -155,7 +157,7 @@ export default function Inspo() {
               <View style={styles.modalImageContainer}>
                 <Image source={{ uri: imageUrl }} style={styles.modalImage} />
               </View>
-              <TouchableOpacity onPress={saveImage} style={styles.saveButtonContainer}>
+              <TouchableOpacity style={styles.saveButtonContainer}>
                 <Text style={styles.saveButton}>Save</Text>
               </TouchableOpacity>
             </View>
@@ -173,7 +175,6 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 32,
     fontWeight: 'bold',
-    fontFamily: 'Righteous',
     textAlign: 'left',
     marginLeft: 20,
     marginTop: 10,
@@ -212,8 +213,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   image: {
-    width: '48%',
-    aspectRatio: 1,
+    width: (screenWidth - 30) / 2,
     height: 200,
     borderRadius: 15,
     marginVertical: 5,
@@ -282,6 +282,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     maxWidth: '100%',
     flexWrap:'wrap',
+    alignSelf:'center',
   },
   termButton: {
     backgroundColor: '#E3A387',

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
 
 export default function SignUp() {
   const [name, setName] = useState('');
@@ -10,6 +11,7 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation();
   const [willbeStylist, setwillbeStylist] = useState(false);
+  const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
 
   const toggleStylist = () => {
     setwillbeStylist(!willbeStylist);
@@ -21,7 +23,7 @@ export default function SignUp() {
       return;
     }
 
-    fetch('http://localhost:8000/sign_up', {
+    fetch(`${backend_base_url}/sign_up`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
