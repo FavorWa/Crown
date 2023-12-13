@@ -95,7 +95,7 @@ const Article = ({ route, navigation }) => {
   
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.replace('Blogs')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image source={require('../assets/gobackIcon.png')} style={{ left: 20, top: 20, height: 40, width: 40, marginVertical: 20}} />
         </TouchableOpacity>
         <Text style={styles.articleText} onPress={() => openWebPage(link)}>{link}</Text>
