@@ -185,12 +185,12 @@ export default function Homepage({ navigation }) {
       </TouchableOpacity>
 
       <TouchableOpacity
-          onPress={() => navigation.navigate('HairQuizQuestion')}
-          style={styles.takeTheQuizContainer}
-        >
-          <Text style={styles.takeTheQuiz}>Take the Quiz</Text>
-        </TouchableOpacity>
-      
+        onPress={() => navigation.navigate('HairQuizQuestion')}
+        style={styles.takeTheQuizContainer}
+      >
+        <Text style={styles.takeTheQuiz}>Take the Quiz</Text>
+      </TouchableOpacity>
+
       <View style={styles.blogScrollContainer}>
       <Text style={styles.blogs}>
         Blogs
@@ -251,14 +251,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: 'black',
-    
   },
   takeTheQuizContainer: {
     backgroundColor: '#E3A387',
     width: 120,
     height: 30,
     marginTop: 170,
-    marginLeft: '60%',
+    marginHorizontal: 230,
     borderRadius: 10,
     borderWidth:1,
     borderColor:'black',
@@ -282,14 +281,16 @@ const styles = StyleSheet.create({
   seeAllBlogs: {
     color:'#472415',
     fontSize: 14,
-    left: 300,
+    marginLeft: 'auto', // This will push the component to the right
+    paddingRight: 20,
     marginTop: 30,
     fontWeight:'bold',
   },
   seeAllInspo: {
     color:'#472415',
     fontSize: 14,
-    left: 300,
+    marginLeft: 'auto', // This will push the component to the right
+    paddingRight: 20,
     marginTop: 30,
     fontWeight:'bold',
     marginBottom:100,

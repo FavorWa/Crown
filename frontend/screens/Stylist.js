@@ -10,11 +10,8 @@ import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets'
 import BottomBar from '../components/BottomBar';
 
 
-
-const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
-
-
 export default function Stylist({ navigation }) {
+  const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
 
   const [userAvatar, setUserAvatar] = useState(null);
   const fetchUserAvatar = async () => {
@@ -84,8 +81,10 @@ export default function Stylist({ navigation }) {
       body: JSON.stringify({
         email: email,
         request: Question,
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
+        // latitude: location.coords.latitude,
+        // longitude: location.coords.longitude,
+        latitude: 42.361145, // Boston location
+        longitude: -71.057083, // Boston location
         range: range,
       })
     })
