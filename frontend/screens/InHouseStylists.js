@@ -7,7 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from './User';
 import * as Location from 'expo-location';
 import RNPickerSelect from 'react-native-picker-select';
-import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 import callApi from '../functions/callApi';
 import { AirbnbRating } from 'react-native-ratings';
 import BottomBar from '../components/BottomBar';
@@ -201,10 +200,6 @@ const InHouseStylists = ({navigation}) => {
               }) : null}
             </ScrollView>
           </View>
-
-          
-
-
           <BottomBar navigation={navigation} />
         </SafeAreaView>
     )
@@ -311,10 +306,12 @@ const styles = StyleSheet.create({
     },
     headline: {
       fontSize: 32,
+      marginLeft: '5%'
     },
     subtitle: {
       fontSize: 18,
       color: '#713200',
+      marginLeft: '5%'
     },
     searchBox: {
       tintColor: '#D9D9D9',
