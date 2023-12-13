@@ -6,15 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from './User';
 import * as Location from 'expo-location';
 import RNPickerSelect from 'react-native-picker-select';
-import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
+import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
 import BottomBar from '../components/BottomBar';
 
 
-
-const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
-
-
 export default function Stylist({ navigation }) {
+  const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
 
   const [userAvatar, setUserAvatar] = useState(null);
   const fetchUserAvatar = async () => {
@@ -84,8 +81,10 @@ export default function Stylist({ navigation }) {
       body: JSON.stringify({
         email: email,
         request: Question,
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
+        // latitude: location.coords.latitude,
+        // longitude: location.coords.longitude,
+        latitude: 42.361145, // Boston location
+        longitude: -71.057083, // Boston location
         range: range,
       })
     })

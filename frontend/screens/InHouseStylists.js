@@ -10,6 +10,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 import callApi from '../functions/callApi';
 import { AirbnbRating } from 'react-native-ratings';
+import BottomBar from '../components/BottomBar';
 
 
 const InHouseStylists = ({navigation}) => {
@@ -153,12 +154,12 @@ const InHouseStylists = ({navigation}) => {
       };
     return (
         <SafeAreaView style={styles.container}>
-          <View>
+          <View style={{ paddingHorizontal: 20}}>
             <Text style={styles.headline}>Crown Certified Stylists</Text>
             <Text style={styles.subtitle}>Experienced Hairstylists Verified by Us</Text>
           </View>
           
-          <View style={{marginTop: 32}}>
+          <View style={{marginTop: 32, paddingHorizontal: 20}}>
             <Searchbar 
               placeholder="Search stylists"
               onChangeText={text => setQuestion(text)}
@@ -167,8 +168,9 @@ const InHouseStylists = ({navigation}) => {
             />
           </View>
 
-          <View style={styles.filterContainer}>
+          <View style={styles.filterContainer}>          
             <ScrollView horizontal={true}>
+              <View style={{width: 20}}></View>
               {
                 filterOptions.map((filter) => {
                   return (
@@ -202,36 +204,7 @@ const InHouseStylists = ({navigation}) => {
           
 
 
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 0 }}>
-              <View style={styles.Bottonline}> 
-                <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-                <Image
-                  source={require('../assets/Compass.png')}
-                  style={styles.Compass}
-                ></Image>
-                <Text style={styles.Compassword}>Discover</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
-                <Image
-                  source={require('../assets/Barbershop.png')}
-                  style={styles.Barbershop}
-                ></Image>
-                <Text style={styles.Barbershopword}>Stylist</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => handleProfileNavigation()}>
-                {userAvatar ? (
-                  <Image source={selectableImages[userAvatar]} style={styles.avatar} />
-                ) : (
-                  <>
-                    <Image source={require('../assets/User.png')} style={styles.User} />
-                    <Text style={styles.Userword}>Profile</Text>
-                  </>
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
+          <BottomBar navigation={navigation} />
         </SafeAreaView>
     )
 }
@@ -326,7 +299,6 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: 'white',
-      padding: 20
     },
     backgroundImage: {
       flex: 1,
@@ -389,7 +361,8 @@ const styles = StyleSheet.create({
       width: 40,
     },
     StylistScroll: {
-      marginTop: 32
+      marginTop: 32,
+      paddingHorizontal: 20
     },
     mainScroll: {
     },
