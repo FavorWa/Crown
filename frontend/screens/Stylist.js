@@ -6,12 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from './User';
 import * as Location from 'expo-location';
 import RNPickerSelect from 'react-native-picker-select';
-import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
+import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
 import BottomBar from '../components/BottomBar';
 
 
 
-const backend_base_url = Platform.OS === 'android' ? BACKEND_BASE_ANDROID : BACKEND_BASE_IOS;
+const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
 
 
 export default function Stylist({ navigation }) {
@@ -163,13 +163,8 @@ export default function Stylist({ navigation }) {
         <SafeAreaView style={styles.container}>
           <View style={{ height: 50 }}>
             <Text style={styles.findastylist}> Find a Salon</Text>
-            <Text style={{ top: -30, left: 220, color: 'green', fontSize: 35, fontWeight: 'bold' }}>/</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
-              <Text style={{ left: 240, fontSize: 34, color: 'red', top: -70 }}>Stylist </Text>
-            </TouchableOpacity>
           </View>
           <Text style={styles.secondLine}> We'll help you find the perfect match. </Text>
-          
           <Image
             source={require('../assets/Rectangle4.png')}
             style={styles.searchBox}
@@ -233,7 +228,9 @@ export default function Stylist({ navigation }) {
               ></Image>
             </ScrollView>
           </View>
-
+          <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
+              <Text style={styles.inhouseStylistPage}> View In-House Stylists </Text>
+            </TouchableOpacity>
           <View style={styles.StylistScroll}>
             <ScrollView style={styles.mainScroll}>
 
@@ -407,4 +404,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#472415',
   },
+
+  inhouseStylistPage:{
+    borderColor: "#472415",
+        borderWidth: 2,
+        borderRadius: 10,
+        paddingHorizontal: 7,
+        paddingVertical: 4,
+        marginLeft: '5%',
+        marginBottom: 20,        
+        maxWidth: 200,
+        fontSize: 15,
+        textAlign: "center",
+        color: "#472415",
+        fontWeight: '600',
+  }
 });

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, Surface, Text, Divider, ActivityIndicator, Searchbar } from 'react-native-paper';
 import { StyleSheet, Image, View, ScrollView, TouchableOpacity, Platform} from 'react-native';
-import {BACKEND_DEV_IOS, BACKEND_DEV_AND, BACKEND_PROD, isProd} from '../secrets';
 import openWebPage from "../functions/openWebPage";
 import Homepage from "./HomePage";
 import Box from "../components/Box";
@@ -54,7 +53,7 @@ const Blogs = ({navigation}) => {
         }
       };
 
-    const sections = ["Today's Digest", "Styling 101", "The Latest on Products", "Hair Health", "Making an Impact"]
+    const sections = ["Today's Digest", "Styling 101",]
     const [blogs, setBlogs] = useState([]);
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -162,7 +161,7 @@ const Blogs = ({navigation}) => {
     }
 
     const getBlogs = async () => {
-        let url = "blogs/sections?"
+        let url = "/blogs/sections?"
 
         for (const section of sections) {
             url += `&sections=${section}`;
@@ -304,7 +303,8 @@ const styles = StyleSheet.create({
       },
 
     section: {
-        marginBottom: 20
+        marginBottom: 20,
+        marginTop: 20,
     },
 
     rectangle4: {
@@ -315,6 +315,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 28,
         top: 40,
+        
     },
     Compass: {
         aspectRatio: 1.2,
@@ -351,6 +352,7 @@ const styles = StyleSheet.create({
         borderColor: '#472415',
         marginHorizontal: 30,
         marginBottom: -210,
+        backgroundColor:'white',
       },
       avatar: {
         width: 55,

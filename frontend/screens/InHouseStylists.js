@@ -7,9 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { selectableImages } from './User';
 import * as Location from 'expo-location';
 import RNPickerSelect from 'react-native-picker-select';
-import { BACKEND_BASE_IOS, BACKEND_BASE_ANDROID } from '../secrets';
 import callApi from '../functions/callApi';
 import { AirbnbRating } from 'react-native-ratings';
+import BottomBar from '../components/BottomBar';
 
 
 const InHouseStylists = ({navigation}) => {
@@ -198,40 +198,7 @@ const InHouseStylists = ({navigation}) => {
               }) : null}
             </ScrollView>
           </View>
-
-          
-
-
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 0 }}>
-              <View style={styles.Bottonline}> 
-                <TouchableOpacity onPress={() => navigation.replace('Homepage')}>
-                <Image
-                  source={require('../assets/Compass.png')}
-                  style={styles.Compass}
-                ></Image>
-                <Text style={styles.Compassword}>Discover</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity onPress={() => navigation.navigate('InHouseStylists')}>
-                <Image
-                  source={require('../assets/Barbershop.png')}
-                  style={styles.Barbershop}
-                ></Image>
-                <Text style={styles.Barbershopword}>Stylist</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => handleProfileNavigation()}>
-                {userAvatar ? (
-                  <Image source={selectableImages[userAvatar]} style={styles.avatar} />
-                ) : (
-                  <>
-                    <Image source={require('../assets/User.png')} style={styles.User} />
-                    <Text style={styles.Userword}>Profile</Text>
-                  </>
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
+          <BottomBar navigation={navigation} />
         </SafeAreaView>
     )
 }
@@ -338,10 +305,12 @@ const styles = StyleSheet.create({
     },
     headline: {
       fontSize: 32,
+      marginLeft: '5%'
     },
     subtitle: {
       fontSize: 18,
       color: '#713200',
+      marginLeft: '5%'
     },
     searchBox: {
       tintColor: '#D9D9D9',
