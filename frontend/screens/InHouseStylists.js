@@ -117,7 +117,8 @@ const InHouseStylists = ({navigation}) => {
 
     const renderBusinessCard = (business) => {
         return (
-              <View style={styles.businessCardContainer}>
+              <View style={styles.businessCardContainer} key={business._id}>
+                
                 <View style={styles.businessCardContent}>
                   <TouchableOpacity onPress={() => {navigation.navigate(`StylistProfile`, {"_id": business._id})}}>
                     <View style={styles.businessTitleLine}>
@@ -141,7 +142,7 @@ const InHouseStylists = ({navigation}) => {
                       <ScrollView horizontal={true} >
                           {business.tags.map((tag) => {
                               return (
-                                  <View style={styles.stylistFeatureContainer}>
+                                  <View style={styles.stylistFeatureContainer} key={tag}>
                                       <Text style={styles.stylistFeature}>{tag}</Text>
                                   </View>
                               )
