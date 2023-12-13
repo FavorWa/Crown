@@ -190,7 +190,7 @@ export default function DrawerExample({ navigation }) {
                   style={{ alignSelf: 'center', height: 150, top: 10}}
               ></Image>
 
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Result')}>
                 <View style={{ top: 25, backgroundColor: '#E3A387', borderRadius: 10, borderWidth: 1, alignItems: 'center', height: 30, marginHorizontal: 5, width: 200, left: 180 }}>
                   <Text style={{ top: 3, fontSize: 18, fontWeight: '600' }}> See Your Quiz Results </Text>
                 </View>
@@ -198,7 +198,7 @@ export default function DrawerExample({ navigation }) {
 
               <Text style={{ fontSize: 24, left: 30, top: 40}}>Manage Appointments</Text>
               <TouchableOpacity>
-                <Text style={{ color: '#472415', top: 20, marginBottom: 20, left: 350, fontSize: 16, fontWeight: '600'}}>See all</Text>
+                <Text style={{ color: '#472415', top: 20, marginBottom: 20, left: '80%', fontSize: 16, fontWeight: '600'}}>See all</Text>
               </TouchableOpacity>
 
               <ScrollView horizontal>
@@ -208,7 +208,7 @@ export default function DrawerExample({ navigation }) {
 
               <Text style={{ fontSize: 24, left: 30, top: 40}}>You Recently Saved</Text>
               <TouchableOpacity>
-                <Text style={{ color: '#472415', top: 20, marginBottom: 20, left: 350, fontSize: 16, fontWeight: '600'}}>See all</Text>
+                <Text style={{ color: '#472415', top: 20, marginBottom: 20, left: '80%', fontSize: 16, fontWeight: '600'}}>See all</Text>
               </TouchableOpacity>
 
               <ScrollView horizontal>
