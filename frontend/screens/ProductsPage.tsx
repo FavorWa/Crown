@@ -6,6 +6,8 @@ import { useState, useEffect } from "react"
 import openWebPage from "../functions/openWebPage"
 import { Platform } from "react-native"
 import callApi from "../functions/callApi";
+import { BACKEND_DEV_AND,BACKEND_DEV_IOS,BACKEND_PROD,isProd } from '../secrets';
+
 
 interface Product {
     title: string,
@@ -26,8 +28,7 @@ const backend_base_url = Constants?.expoConfig?.hostUri
 
 */
 
-const backend_base_url = Platform.OS === 'android' ? 'http://10.0.2.2:8000' : 'http://localhost:8000';
-
+const backend_base_url = isProd ? BACKEND_PROD : (Platform.OS === 'android' ? BACKEND_DEV_AND : BACKEND_DEV_IOS);
 const Product = ({title, link, image, price}: Product) => {
 
     const handleProductPress = () => {
